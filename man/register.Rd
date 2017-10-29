@@ -35,7 +35,10 @@ If \code{NULL} (the default) don't filter based on any tags.}
 as a data frame.  ledger files can work if compatible with hledger.
 }
 \examples{
+   \dontrun{
      example_beancount_file <- tempfile(fileext = ".beancount")
      system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)
      df <- register(example_beancount_file)
+     head(df)   
+   }
 }

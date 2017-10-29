@@ -1,7 +1,7 @@
 Package: ledgeR
 Type: Package
 Title: Utilities for importing data from plaintext accounting files
-Version: 0.0.2
+Version: 0.0.3
 Author: Trevor L Davis
 Maintainer: Trevor L Davis <trevor.l.davis@gmail.com>
 URL: https://github.com/trevorld/ledgeR

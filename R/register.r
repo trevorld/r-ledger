@@ -35,7 +35,7 @@ register <- function(file, include_cleared = TRUE,
                  convert_to_market_value = FALSE,
                  tags = NULL) {
     if (grepl("bean$|beancount$", file)) {
-        hfile <- tempfile()
+        hfile <- tempfile(fileext = ".hledger")
         system(paste("bean-report","-o", hfile, file, "hledger"))
         if(!is.null(tags)) 
             tags <- paste0("Tag=", tags)

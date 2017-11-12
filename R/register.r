@@ -63,10 +63,14 @@ register <- function(file, include_cleared = TRUE,
     df <- read.csv(cfile)
     df <- dplyr::mutate(df, 
                 date = as.Date(date, "%Y/%m/%d"),
+                description = ifelse(grepl("\\|$", description), paste0(description, " "),
+                                     description),
                 description = ifelse(grepl("\\|", description), description,
-                                     paste(" | ", description)),
+                                     paste0(" | ", description)),
                 payee = sapply(strsplit(description, " \\| "), function(x) x[1]),
                 description = sapply(strsplit(description, " \\| "), function(x) x[2]),
+                payee = ifelse(payee == "", NA, payee),
+                description = ifelse(description == "", NA, description),
                 commodity = sapply(strsplit(amount, " "), function(x) x[2]),
                 amount = as.numeric(sapply(strsplit(amount, " "), function(x) x[1]))
                 )

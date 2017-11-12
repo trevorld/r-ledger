@@ -81,3 +81,11 @@ An example on filtering on the ``#trip-boston-2016`` in the example beancount fi
 
 Note there is currently in a bug in ``bean-report`` that leads us to lose the payee and description for 
 any transactions that uses a ``#tag`` or ``^link`` tag.
+
+.. Chart of trip expenses by year
+
+.. Tax computation cookbook
+
+.. Chart of net worth over time
+
+.. > expand.grid(year=2007:2009, month=sprintf("%02d", 1:12))

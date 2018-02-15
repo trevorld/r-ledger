@@ -14,7 +14,8 @@ globalVariables(c("description", "amount", "payee", "account", "commodity"))
 #' @param convert_to_cost  Convert transactions to their cost
 #' @param convert_to_market_value  Convert transactions to their market value
 #' @param tags Character vector of tags to filter.  
-#'     Beancount tags include initial \code{#} and links include initial \code{^}.
+#'     For beancount tags include the initial \code{#} and 
+#'     for beancount links include initial \code{^}.
 #'     If \code{NULL} (the default) don't filter based on any tags.
 #' @return  \code{register} returns a data frame.
 #'    
@@ -34,32 +35,61 @@ register <- function(file, include_cleared = TRUE,
                  convert_to_cost = FALSE,
                  convert_to_market_value = FALSE,
                  tags = NULL) {
-    if (grepl("bean$|beancount$", file)) {
+    if (grepl(".bean$|.beancount$", file)) {
         hfile <- tempfile(fileext = ".hledger")
         system(paste("bean-report","-o", hfile, file, "hledger"))
         if(!is.null(tags)) 
             tags <- paste0("Tag=", tags)
+        .register_hledger(hfile, include_cleared = include_cleared,
+                          include_pending = include_pending,
+                          include_unmarked = include_unmarked,
+                          convert_to_cost = convert_to_cost,
+                          convert_to_market_value = convert_to_market_value,
+                          tags = tags)
+    } else if (grepl(".hledger$", file)) {
+        .register_hledger(file, include_cleared = include_cleared,
+                          include_pending = include_pending,
+                          include_unmarked = include_unmarked,
+                          convert_to_cost = convert_to_cost,
+                          convert_to_market_value = convert_to_market_value,
+                          tags = tags)
+    } else if (grepl(".ledger$", file)) {
+        .register_ledger(file, include_cleared = include_cleared,
+                          include_pending = include_pending,
+                          include_unmarked = include_unmarked,
+                          convert_to_cost = convert_to_cost,
+                          convert_to_market_value = convert_to_market_value,
+                          tags = tags)
     } else {
-        hfile <- file
+        stop(paste("File", file, "is not supported"))
     }
-    hledger_flags <- ""
+}
+
+.register_hledger <- function(hfile, 
+                     include_cleared, 
+                     include_pending,
+                     include_unmarked, 
+                     convert_to_cost,
+                     convert_to_market_value,
+                     tags) {
+    flags <- ""
     if (include_cleared)
-        hledger_flags <- paste(hledger_flags, "--cleared")
+        flags <- paste(flags, "--cleared")
     if (include_pending)
-        hledger_flags <- paste(hledger_flags, "--pending")
+        flags <- paste(flags, "--pending")
     if (include_unmarked)
-        hledger_flags <- paste(hledger_flags, "--unmarked")
+        flags <- paste(flags, "--unmarked")
     if(convert_to_cost)
-        hledger_flags <- paste(hledger_flags, "--cost")
+        flags <- paste(flags, "--cost")
     if(convert_to_market_value)
-        hledger_flags <- paste(hledger_flags, "--market_value")
+        flags <- paste(flags, "--market_value")
     if(!is.null(tags)) {
         tags <- paste0("tag:", tags)
-        hledger_flags <- paste(hledger_flags, paste(tags, collapse=" "))
+        flags <- paste(flags, paste(tags, collapse=" "))
     }
 
     cfile <- tempfile(fileext = ".csv")
-    system(paste("hledger register -f", hfile, "-o", cfile, hledger_flags))
+    system(paste("hledger register -f", hfile, "-o", cfile, flags))
     df <- read.csv(cfile)
     df <- dplyr::mutate(df, 
                 date = as.Date(date, "%Y/%m/%d"),
@@ -73,6 +103,48 @@ register <- function(file, include_cleared = TRUE,
                 description = ifelse(description == "", NA, description),
                 commodity = sapply(strsplit(amount, " "), function(x) x[2]),
                 amount = as.numeric(sapply(strsplit(amount, " "), function(x) x[1]))
+                )
+    df <- dplyr::select(df, date, payee, description, account, amount, commodity)
+    df
+}
+
+.register_ledger <- function(lfile, 
+                     include_cleared, 
+                     include_pending,
+                     include_unmarked, 
+                     convert_to_cost,
+                     convert_to_market_value,
+                     tags) {
+    flags <- ""
+    if(convert_to_cost)
+        flags <- paste(flags, "--cost")
+    if(convert_to_market_value)
+        flags <- paste(flags, "--market")
+    if(!is.null(tags)) {
+        warning("tags == NULL is currently not supported for ledger format")
+    }
+
+    cfile <- tempfile(fileext = ".csv")
+    system(paste("ledger csv -f", lfile, "-o", cfile, flags))
+    df <- read.csv(cfile, header=FALSE)
+    names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "V8")
+    if (!include_cleared)
+        df <- dplyr::filter(df, mark != "\\*")
+    if (include_pending)
+        df <- dplyr::filter(df, mark != "!")
+    if (include_unmarked)
+        df <- dplyr::filter(df, mark != "")
+
+    df <- dplyr::mutate(df, 
+                date = as.Date(date, "%Y/%m/%d"),
+                description = ifelse(grepl("\\|$", description), paste0(description, " "),
+                                     description),
+                description = ifelse(grepl("\\|", description), description,
+                                     paste0(" | ", description)),
+                payee = sapply(strsplit(description, " \\| "), function(x) x[1]),
+                description = sapply(strsplit(description, " \\| "), function(x) x[2]),
+                payee = ifelse(payee == "", NA, payee),
+                description = ifelse(description == "", NA, description),
                 )
     df <- dplyr::select(df, date, payee, description, account, amount, commodity)
     df

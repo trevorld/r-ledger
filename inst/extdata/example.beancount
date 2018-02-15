@@ -1,0 +1,76 @@
+* Open Statements
+
+2015-12-31 open Assets:JT-Checking
+2015-12-31 open Assets:JT-Savings
+
+2015-12-31 open Liabilities:JT-Credit-Card
+
+2015-12-31 open Income:Interest:Taxable
+2015-12-31 open Income:Wages:Salary
+
+2015-12-31 open Expenses:Cash
+2015-12-31 open Expenses:Food:Grocery
+2015-12-31 open Expenses:Food:Restaurant
+2015-12-31 open Expenses:Shelter:Rent
+2014-12-31 open Expenses:Taxes:Federal
+2014-12-31 open Expenses:Taxes:Medicare
+2014-12-31 open Expenses:Taxes:State
+2014-12-31 open Expenses:Taxes:State-SDI
+2014-12-31 open Expenses:Taxes:Social-Security
+2014-12-31 open Expenses:Transportation:Auto
+
+2015-12-31 open Equity:Employer ;; Clearinghouse for paychecks
+2015-12-31 open Equity:Opening  ;; Starting equity
+2015-12-31 open Equity:Transfer ;; Transfers between accounts
+
+* Assets
+
+** JT-Checking
+
+2015-12-31 * "" "Opening Balances"
+    Assets:JT-Checking  5000.00 USD
+    Equity:Opening
+
+2016-01-01 * "Landlord" "Rent"
+    Assets:JT-Checking  -1500.00 USD 
+    Expenses:Shelter:Rent
+
+2016-01-05 * "" "Deposit to Checking Account"
+    Assets:JT-Checking  1382.00 USD
+    Equity:Transfer     
+
+2018-01-01 balance Assets:JT-Checking  4882.00 USD
+
+* Liabilities
+
+** JT-Credit-Card
+
+2016-01-01 * "Supermarket" "Grocery store"
+    Expenses:Food:Grocery   500.54 USD
+    Liabilities:JT-Credit-Card
+
+2016-01-10 * "Restaurant" "Restaurant" #tag ^link
+    Expenses:Food:Restaurant  20.07 USD
+    Liabilities:JT-Credit-Card
+
+* Equity
+
+** Employer
+
+2016-01-05 * "Stanford" "Salary Income"
+    Income:Wages:Salary    -1500.00 USD
+    Equity:Employer         
+2016-01-05 * "Uncle Sam" "Federal Income Tax Withholding"
+    Expenses:Taxes:Federal       82.55 USD
+    Equity:Employer             
+2016-01-05 * "State" "State Income Tax Withholding"
+    Expenses:Taxes:State       35.45 USD
+    Equity:Employer           
+2016-01-05 * "" "Deposit to Checking Account"
+    Equity:Transfer     1382.00 USD
+    Equity:Employer
+2018-01-01 balance Equity:Employer  0.00 USD
+
+** Opening
+
+2018-01-01 balance Equity:Transfer  0.00 USD

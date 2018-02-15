@@ -1,0 +1,30 @@
+language: r
+cache: packages
+r:
+    - release
+    - devel 
+# os:
+#     - linux
+#     - osx 
+matrix:
+    exclude:
+        r: devel
+        os: osx
+sudo: false
+latex: false
+warnings_are_errors: true
+cran: https://cran.rstudio.com
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+apt_packages:
+    - ledger
+    - hledger
+    - pip3
+install:
+    - pip3 install beancount
+r_github_packages:
+    - r-lib/covr
+after_success:
+    - Rscript -e 'covr::codecov()'

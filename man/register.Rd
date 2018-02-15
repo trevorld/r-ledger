@@ -24,7 +24,8 @@ ledger files that are compatible with hledger should work.}
 \item{convert_to_market_value}{Convert transactions to their market value}
 
 \item{tags}{Character vector of tags to filter.
-Beancount tags include initial \code{#} and links include initial \code{^}.
+For beancount tags include the initial \code{#} and 
+for beancount links include initial \code{^}.
 If \code{NULL} (the default) don't filter based on any tags.}
 }
 \value{

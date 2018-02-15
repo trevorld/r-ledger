@@ -1,0 +1,75 @@
+;; Open: 2014/12/31 close Expenses:Taxes:Federal
+
+;; Open: 2014/12/31 close Expenses:Taxes:Medicare
+
+;; Open: 2014/12/31 close Expenses:Taxes:State
+
+;; Open: 2014/12/31 close Expenses:Taxes:State-SDI
+
+;; Open: 2014/12/31 close Expenses:Taxes:Social-Security
+
+;; Open: 2014/12/31 close Expenses:Transportation:Auto
+
+;; Open: 2015/12/31 close Assets:JT-Checking
+
+;; Open: 2015/12/31 close Assets:JT-Savings
+
+;; Open: 2015/12/31 close Liabilities:JT-Credit-Card
+
+;; Open: 2015/12/31 close Income:Interest:Taxable
+
+;; Open: 2015/12/31 close Income:Wages:Salary
+
+;; Open: 2015/12/31 close Expenses:Cash
+
+;; Open: 2015/12/31 close Expenses:Food:Grocery
+
+;; Open: 2015/12/31 close Expenses:Food:Restaurant
+
+;; Open: 2015/12/31 close Expenses:Shelter:Rent
+
+;; Open: 2015/12/31 close Equity:Employer
+
+;; Open: 2015/12/31 close Equity:Opening
+
+;; Open: 2015/12/31 close Equity:Transfer
+
+2015/12/31 * Opening Balances
+  Assets:JT-Checking                                                    5000.00 USD
+  Equity:Opening                                                       -5000.00 USD
+
+2016/01/01 * Landlord | Rent
+  Assets:JT-Checking                                                   -1500.00 USD
+  Expenses:Shelter:Rent                                                 1500.00 USD
+
+2016/01/01 * Supermarket | Grocery store
+  Expenses:Food:Grocery                                                  500.54 USD
+  Liabilities:JT-Credit-Card                                            -500.54 USD
+
+2016/01/05 * Deposit to Checking Account
+  Assets:JT-Checking                                                    1382.00 USD
+  Equity:Transfer                                                      -1382.00 USD
+
+2016/01/05 * Stanford | Salary Income
+  Income:Wages:Salary                                                  -1500.00 USD
+  Equity:Employer                                                       1500.00 USD
+
+2016/01/05 * Uncle Sam | Federal Income Tax Withholding
+  Expenses:Taxes:Federal                                                  82.55 USD
+  Equity:Employer                                                        -82.55 USD
+
+2016/01/05 * State | State Income Tax Withholding
+  Expenses:Taxes:State                                                    35.45 USD
+  Equity:Employer                                                        -35.45 USD
+
+2016/01/05 * Deposit to Checking Account
+  Equity:Transfer                                                       1382.00 USD
+  Equity:Employer                                                      -1382.00 USD
+
+2016/01/10 * ;; Tag: #tag ;; Link: ^link Restaurant | Restaurant
+  Expenses:Food:Restaurant                                                20.07 USD
+  Liabilities:JT-Credit-Card                                             -20.07 USD
+
+
+
+

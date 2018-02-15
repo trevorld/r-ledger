@@ -22,7 +22,8 @@ addons:
     apt:
         packages:
             - ledger
-            - hledger
+#            - hledger # hledger in repos is too old :-(
+#            - beancount # beancount isn't packaged in repos :-(
 #            - pip3
 # after_install:
 #     - sudo pip3 install beancount

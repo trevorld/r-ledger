@@ -18,12 +18,14 @@ notifications:
   email:
     on_success: change
     on_failure: change
-apt_packages:
-    - ledger
-    - hledger
-#     - pip3
+addons:
+    apt:
+        packages:
+            - ledger
+            - hledger
+#            - pip3
 # after_install:
-#     - pip3 install beancount
+#     - sudo pip3 install beancount
 r_github_packages:
     - r-lib/covr
 after_success:

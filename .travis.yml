@@ -3,8 +3,8 @@ cache: packages
 r:
     - release
     - devel 
-# os:
-#     - linux
+os:
+    - linux
 #     - osx 
 matrix:
     exclude:
@@ -21,9 +21,9 @@ notifications:
 apt_packages:
     - ledger
     - hledger
-    - pip3
-install:
-    - pip3 install beancount
+#     - pip3
+# after_install:
+#     - pip3 install beancount
 r_github_packages:
     - r-lib/covr
 after_success:

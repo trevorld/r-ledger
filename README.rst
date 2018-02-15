@@ -5,9 +5,9 @@ ledgeR
     :target: https://travis-ci.org/trevorld/ledgeR
     :alt: Build Status
 
-.. image:: https://img.shields.io/codecov/c/github/trevorld/ledgeR/master.svg
-    :target: https://codecov.io/github/trevorld/ledgeR?branch=master
-    :alt: Coverage Status
+.. .. image:: https://img.shields.io/codecov/c/github/trevorld/ledgeR/master.svg
+..     :target: https://codecov.io/github/trevorld/ledgeR?branch=master
+..     :alt: Coverage Status
 
 ``ledgeR`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis and plotting.
 

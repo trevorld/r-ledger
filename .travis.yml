@@ -21,8 +21,8 @@ notifications:
 addons:
     apt:
         packages:
-            - ledger
-#            - hledger # hledger in repos is too old :-(
+#           - ledger     # ledger in trusty repos is too old :-( 
+#            - hledger   # hledger in trusty repos is too old :-(
 #            - beancount # beancount isn't packaged in repos :-(
 #            - pip3
 # after_install:

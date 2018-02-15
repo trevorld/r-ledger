@@ -11,7 +11,7 @@ ledgeR
 
 ``ledgeR`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis and plotting.
 
-Right now it only supports reading in the register from ``hledger`` files and ``beancount`` files.  ``ledger`` files may or may not work depending on whether ``hledger`` can parse them.
+Right now it supports reading in the register from ``ledger``, ``hledger`` files and ``beancount`` files.  
 
 Install
 =======

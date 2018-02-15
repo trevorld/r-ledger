@@ -1,4 +1,5 @@
-globalVariables(c("description", "amount", "payee", "account", "commodity"))
+# Not real global variables but used in dplyr statements
+globalVariables(c("description", "amount", "payee", "account", "commodity", "mark"))
 
 #' Import a hledger or beancount register
 #'
@@ -90,22 +91,29 @@ register <- function(file, include_cleared = TRUE,
 
     cfile <- tempfile(fileext = ".csv")
     system(paste("hledger register -f", hfile, "-o", cfile, flags))
-    df <- read.csv(cfile)
-    df <- dplyr::mutate(df, 
-                date = as.Date(date, "%Y/%m/%d"),
-                description = ifelse(grepl("\\|$", description), paste0(description, " "),
-                                     description),
-                description = ifelse(grepl("\\|", description), description,
-                                     paste0(" | ", description)),
-                payee = sapply(strsplit(description, " \\| "), function(x) x[1]),
-                description = sapply(strsplit(description, " \\| "), function(x) x[2]),
-                payee = ifelse(payee == "", NA, payee),
-                description = ifelse(description == "", NA, description),
-                commodity = sapply(strsplit(amount, " "), function(x) x[2]),
-                amount = as.numeric(sapply(strsplit(amount, " "), function(x) x[1]))
-                )
+    df <- read.csv(cfile, stringsAsFactors = FALSE)
+    df <- dplyr::mutate(df, date = as.Date(date, "%Y/%m/%d"))
+    df <- dplyr::mutate(df, description = ifelse(grepl("\\|$", description), 
+                                                 paste0(description, " "),
+                                                 description))
+    df <- dplyr::mutate(df, description = ifelse(grepl("\\|", description),
+                                                 description,
+                                                 paste0(" | ", description)))
+    df <- dplyr::mutate(df, payee = .left_of_split(description, " \\| "))
+    df <- dplyr::mutate(df, description = .right_of_split(description, " \\| "))
+    df <- dplyr::mutate(df, payee = ifelse(payee == "", NA, payee),
+                description = ifelse(description == "", NA, description))
+    df <- dplyr::mutate(df, commodity = .right_of_split(amount, " "))
+    df <- dplyr::mutate(df, amount = .left_of_split(amount, " "))
     df <- dplyr::select(df, date, payee, description, account, amount, commodity)
     df
+}
+
+.left_of_split <- function(strings, split) {
+    sapply(strsplit(strings, split), function(x) { x[1]})
+}
+.right_of_split <- function(strings, split) {
+    sapply(strsplit(strings, split), function(x) { x[2]})
 }
 
 .register_ledger <- function(lfile, 
@@ -126,7 +134,7 @@ register <- function(file, include_cleared = TRUE,
 
     cfile <- tempfile(fileext = ".csv")
     system(paste("ledger csv -f", lfile, "-o", cfile, flags))
-    df <- read.csv(cfile, header=FALSE)
+    df <- read.csv(cfile, header=FALSE, stringsAsFactors = FALSE)
     names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "V8")
     if (!include_cleared)
         df <- dplyr::filter(df, mark != "\\*")
@@ -141,8 +149,8 @@ register <- function(file, include_cleared = TRUE,
                                      description),
                 description = ifelse(grepl("\\|", description), description,
                                      paste0(" | ", description)),
-                payee = sapply(strsplit(description, " \\| "), function(x) x[1]),
-                description = sapply(strsplit(description, " \\| "), function(x) x[2]),
+                payee = .left_of_split(description, " \\| "),
+                description = .right_of_split(description, " \\| "),
                 payee = ifelse(payee == "", NA, payee),
                 description = ifelse(description == "", NA, description),
                 )

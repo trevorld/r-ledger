@@ -90,7 +90,7 @@ register <- function(file, include_cleared = TRUE,
     }
 
     cfile <- tempfile(fileext = ".csv")
-    system(paste("hledger register -f", hfile, "-o", cfile, flags))
+    system(paste0("hledger register --file=", hfile, " --output-file=", cfile, " ", flags))
     df <- read.csv(cfile, stringsAsFactors = FALSE)
     df <- dplyr::mutate(df, date = as.Date(date, "%Y/%m/%d"))
     df <- dplyr::mutate(df, description = ifelse(grepl("\\|$", description), 

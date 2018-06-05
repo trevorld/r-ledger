@@ -19,7 +19,7 @@ before_install:
     - mkdir -p ~/.local/bin ~/.stack
     - export PATH=$HOME/.local/bin:$PATH
     - wget -qO- https://get.haskellstack.org/ | sh -s - -f
-    - sudo stack install --resolver=lts hledger-lib-1.9 hledger-1.9
+    - sudo stack install --allow-different-user --resolver=lts hledger-lib-1.9 hledger-1.9
     ## Beancount
     - sudo apt-get install -y python3 python3-pip
     - sudo -H pip3 install beancount

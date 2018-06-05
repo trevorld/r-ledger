@@ -16,6 +16,8 @@ before_install:
     ## HLedger
     # - sudo apt-get install -y haskell-stack
     # - sudo stack upgrade
+    - mkdir -p ~/.local/bin ~/.stack
+    - export PATH=$HOME/.local/bin:$PATH
     - wget -qO- https://get.haskellstack.org/ | sh -s - -f
     - sudo stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     ## Beancount

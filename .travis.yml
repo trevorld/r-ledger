@@ -9,12 +9,14 @@ latex: false
 warnings_are_errors: true
 cran: https://cran.rstudio.com
 before_install:
-    - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ bionic main universe"
+    - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ xenial main universe"
     - sudo apt-get -qq update
     ## Ledger
     - sudo apt-get install -y ledger
     ## HLedger
-    - sudo apt-get install -y hledger
+    - sudo apt-get install -y haskell-stack
+    - sudo apt-get build-dep -y hledger
+    - sudo stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     ## Beancount
     - sudo apt-get install -y python3 python3-pip
     - sudo -H pip3 install beancount

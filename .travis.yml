@@ -9,7 +9,7 @@ latex: false
 warnings_are_errors: true
 cran: https://cran.rstudio.com
 before_install:
-    - sudo apt-get install -y pip3 stack
+    - sudo apt-get install -y python3-pip haskell-stack
     - sudo pip3 install beancount
     - sudo stack upgrade
     - sudo stack install --resolver=lts hledger-lib-1.9 hledger-1.9

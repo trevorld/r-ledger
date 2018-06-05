@@ -1,32 +1,25 @@
 language: r
-cache: packages
 r:
     - release
     - devel 
 os:
     - linux
-#     - osx 
-matrix:
-    exclude:
-        r: devel
-        os: osx
-sudo: false
+sudo: enabled
 latex: false
 warnings_are_errors: true
 cran: https://cran.rstudio.com
+before_install:
+    - sudo apt-get install -y pip3 stack
+    - sudo pip3 install beancount
+    - sudo stack upgrade
+    - sudo stack install --resolver=lts hledger-lib-1.9 hledger-1.9
+    - git clone git://github.com/ledger/ledger.git
+    - sudo ledger/acprep dependencies
+    - sudo ledger/acprep update
 notifications:
   email:
     on_success: change
     on_failure: change
-addons:
-    apt:
-        packages:
-#           - ledger     # ledger in trusty repos is too old :-( 
-#            - hledger   # hledger in trusty repos is too old :-(
-#            - beancount # beancount isn't packaged in repos :-(
-#            - pip3
-# after_install:
-#     - sudo pip3 install beancount
 r_github_packages:
     - r-lib/covr
 after_success:

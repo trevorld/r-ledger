@@ -17,7 +17,7 @@ Install
 =======
 
 Dependencies
-    #. `R <https://cran.r-project.org/>`_
+    #. `R <https://cran.r-project.org/>`_ and the R package ``dplyr``
     #. `ledger <https://www.ledger-cli.org/>`_ (if importing ledger files)
     #. `hledger <http://hledger.org/>`_ (if importing hledger files or beancount files)
     #. `beancount <http://furius.ca/beancount/>`_ (if importing beancount files)

@@ -9,8 +9,8 @@ latex: false
 warnings_are_errors: true
 cran: https://cran.rstudio.com
 before_install:
-    - sudo apt-get install -y python3-pip
-    - sudo pip3 install beancount
+    - sudo apt-get install -y python-pip
+    - sudo pip install beancount
     # Download and unpack the stack executable
     - mkdir -p ~/.local/bin
     - export PATH=$HOME/.local/bin:$PATH

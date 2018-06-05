@@ -14,8 +14,9 @@ before_install:
     ## Ledger
     - sudo apt-get install -y ledger
     ## HLedger
-    - sudo apt-get install -y haskell-stack
-    - sudo stack upgrade
+    # - sudo apt-get install -y haskell-stack
+    # - sudo stack upgrade
+    - wget -qO- https://get.haskellstack.org/ | sh -s - -f
     - sudo stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     ## Beancount
     - sudo apt-get install -y python3 python3-pip

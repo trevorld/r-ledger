@@ -27,6 +27,8 @@
 #'      system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)
 #'      df <- register(example_beancount_file)
 #'      head(df)   
+#'      df2 <- rio::import(example_beancount_file)
+#'      all.equal(df, df2)
 #'    }
 register <- function(file, include_cleared = TRUE, 
                  include_pending = TRUE,
@@ -37,6 +39,7 @@ register <- function(file, include_cleared = TRUE,
     if (grepl(".bean$|.beancount$", file)) {
         .assert_binary("bean-report")
         hfile <- tempfile(fileext = ".hledger")
+        on.exit(unlink(hfile))
         system(paste("bean-report","-o", hfile, file, "hledger"))
         if(!is.null(tags)) 
             tags <- paste0("Tag=", tags)
@@ -104,6 +107,7 @@ register <- function(file, include_cleared = TRUE,
     }
 
     cfile <- tempfile(fileext = ".csv")
+    on.exit(unlink(cfile))
     system(paste("hledger register -f", hfile, " -o", cfile, " ", flags))
     df <- read.csv(cfile, stringsAsFactors = FALSE)
     df <- dplyr::mutate(df, date = as.Date(date, "%Y/%m/%d"))
@@ -147,6 +151,7 @@ register <- function(file, include_cleared = TRUE,
     }
 
     cfile <- tempfile(fileext = ".csv")
+    on.exit(unlink(cfile))
     system(paste("ledger csv -f", lfile, "-o", cfile, flags))
     df <- read.csv(cfile, header=FALSE, stringsAsFactors = FALSE)
     names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "V8")

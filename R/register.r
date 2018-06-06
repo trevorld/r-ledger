@@ -67,6 +67,19 @@ register <- function(file, include_cleared = TRUE,
     }
 }
 
+#' @importFrom rio .import
+#' @export
+.import.rio_beancount <- register 
+
+#' @export
+.import.rio_bean <- register
+
+#' @export
+.import.rio_ledger <- register
+
+#' @export
+.import.rio_hledger <- register
+
 .register_hledger <- function(hfile, 
                      include_cleared, 
                      include_pending,
@@ -167,3 +180,4 @@ register <- function(file, include_cleared = TRUE,
     if(!.is_binary_on_path(binary))
         stop(paste(binary, "not found on path"))
 }
+

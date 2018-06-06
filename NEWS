@@ -1,0 +1,9 @@
+ledgeR 0.5.3
+============
+
+* Wrote and exported S3 methods so can use ``rio::import`` to read in registers (#7).
+* Now throws an error if required binaries not found (#8).
+* Fixed bug in importing hledger or beancount files (now automatically casts ``amount`` field to numeric).
+
+
+

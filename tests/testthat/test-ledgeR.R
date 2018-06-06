@@ -6,8 +6,7 @@ binaries <- c("ledger", "hledger", "bean-report")
 
 for (ii in 1:length(binaries)) {
     binary <- binaries[ii]
-    context(paste("Testing reading", binary, "register works"))
-    test_that("register works as expected", {
+    test_that(paste(binary, "register works as expected"), {
         file <- files[ii]
         if(!.is_binary_on_path(binary)) {
             throws_error(register(file))
@@ -15,5 +14,10 @@ for (ii in 1:length(binaries)) {
         }
         df <- register(file)
         expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 82.55)
+        if (exists('import', where=asNamespace('rio'), mode='function')) {
+            df <- rio::import(file)
+            expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 82.55)
+        }
+
     })
 }

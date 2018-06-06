@@ -62,7 +62,7 @@
   Expenses:Taxes:State                                                    35.45 USD
   Equity:Employer                                                        -35.45 USD
 
-2016/01/05 * Deposit to Checking Account
+2016/01/05 ! Deposit to Checking Account
   Equity:Transfer                                                       1382.00 USD
   Equity:Employer                                                      -1382.00 USD
 

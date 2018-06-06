@@ -1,18 +1,18 @@
 Package: ledgeR
 Type: Package
 Title: Utilities for Importing Data from Plaintext Accounting Files
-Version: 0.5.2
+Version: 0.5.3
 Author: Trevor L Davis
 Maintainer: Trevor L Davis <trevor.l.davis@gmail.com>
 URL: https://github.com/trevorld/ledgeR
 BugReports: https://github.com/trevorld/ledgeR/issues
 Description: Utilities for querying plaintext accounting files from Ledger, HLedger, and Beancount.
 Imports:
-    dplyr
+    dplyr, rlang
 Suggests:
     testthat
-SystemRequirements: ledger (>= 3.1) to read ledger files,
-    hledger (>= 1.4) to read hledger or beancount files,
-    beancount to read beancount files
+SystemRequirements: to read ledger files you'll need ledger (>= 3.1),
+    to read hledger files you'll need hledger (>= 1.4),
+    to read beancount files you'll need beancount (>= 2.0) and hledger (>= 1.4)
 License: MIT + file LICENSE
 RoxygenNote: 6.0.1

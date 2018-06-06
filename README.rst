@@ -5,9 +5,9 @@ ledgeR
     :target: https://travis-ci.org/trevorld/ledgeR
     :alt: Build Status
 
-.. .. image:: https://img.shields.io/codecov/c/github/trevorld/ledgeR/master.svg
-..     :target: https://codecov.io/github/trevorld/ledgeR?branch=master
-..     :alt: Coverage Status
+.. image:: https://img.shields.io/codecov/c/github/trevorld/ledgeR/master.svg
+    :target: https://codecov.io/github/trevorld/ledgeR?branch=master
+    :alt: Coverage Status
 
 ``ledgeR`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis and plotting.
 
@@ -17,7 +17,7 @@ Install
 =======
 
 Dependencies
-    #. `R <https://cran.r-project.org/>`_ and the R package ``dplyr``
+    #. `R <https://cran.r-project.org/>`_ and the R packages ``dplyr`` and ``rlang``
     #. `ledger <https://www.ledger-cli.org/>`_ (if importing ledger files)
     #. `hledger <http://hledger.org/>`_ (if importing hledger files or beancount files)
     #. `beancount <http://furius.ca/beancount/>`_ (if importing beancount files)

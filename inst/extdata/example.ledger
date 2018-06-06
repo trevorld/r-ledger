@@ -54,15 +54,15 @@ account Equity:Transfer
   Income:Wages:Salary                                              -1500.00 USD
   Equity:Employer                                                  1500.00 USD
 
-2016/01/05 ! Uncle Sam | Federal Income Tax Withholding
+2016/01/05 * Uncle Sam | Federal Income Tax Withholding
   Expenses:Taxes:Federal                                           82.55 USD
   Equity:Employer                                                  -82.55 USD
 
-2016/01/05   State | State Income Tax Withholding
+2016/01/05 * State | State Income Tax Withholding
   Expenses:Taxes:State                                             35.45 USD
   Equity:Employer                                                  -35.45 USD
 
-2016/01/05 * Deposit to Checking Account
+2016/01/05 ! Deposit to Checking Account
   Equity:Transfer                                                  1382.00 USD
   Equity:Employer                                                  -1382.00 USD
 

@@ -2,4 +2,5 @@
 
 export(register)
 import(dplyr)
+importFrom(rlang,.data)
 importFrom(utils,read.csv)

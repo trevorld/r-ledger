@@ -10,6 +10,8 @@ account Expenses:Taxes:Social-Security
 
 account Expenses:Transportation:Auto                   
 
+account Assets:JT-Brokerage                            
+
 account Assets:JT-Checking                             
 
 account Assets:JT-Savings                              
@@ -42,11 +44,19 @@ account Equity:Transfer
   Assets:JT-Checking                                               -1500.00 USD
   Expenses:Shelter:Rent                                            1500.00 USD
 
-2016/01/01 * Supermarket | Grocery store
+2016/01/01 * Brokerage | Buy Stock
+  Assets:JT-Checking                                               -1000 USD
+  Equity:Transfer                                                  1000 USD
+
+2016/01/01 * Brokerage | Buy Stock
+  Assets:JT-Brokerage                                              4 SP {250 USD}
+  Equity:Transfer                                                  -1000 USD
+
+2016/01/01 * ;; Link: ^grocery Supermarket | Grocery store
   Expenses:Food:Grocery                                            500.54 USD
   Liabilities:JT-Credit-Card                                       -500.54 USD
 
-2016/01/05 * Deposit to Checking Account
+2016/01/05 ! Deposit to Checking Account
   Assets:JT-Checking                                               1382.00 USD
   Equity:Transfer                                                  -1382.00 USD
 
@@ -62,13 +72,16 @@ account Equity:Transfer
   Expenses:Taxes:State                                             35.45 USD
   Equity:Employer                                                  -35.45 USD
 
-2016/01/05 ! Deposit to Checking Account
+2016/01/05 * Deposit to Checking Account
   Equity:Transfer                                                  1382.00 USD
   Equity:Employer                                                  -1382.00 USD
 
-2016/01/10 * ;; Tag: #tag ;; Link: ^link Restaurant | Restaurant
+P 2016/01/10 00:00:00 SP                        500 USD
+
+2016/01/10 * ;; Tag: #restaurant Restaurant | Restaurant
   Expenses:Food:Restaurant                                         20.07 USD
   Liabilities:JT-Credit-Card                                       -20.07 USD
+
 
 
 

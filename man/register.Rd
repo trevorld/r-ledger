@@ -4,42 +4,35 @@
 \alias{register}
 \title{Import a hledger or beancount register}
 \usage{
-register(file, include_cleared = TRUE, include_pending = TRUE,
-  include_unmarked = TRUE, convert_to_cost = FALSE,
-  convert_to_market_value = FALSE, tags = NULL)
+register(file, flags = NULL)
 }
 \arguments{
-\item{file}{Filename for an hledger or beancount file.
-ledger files that are compatible with hledger should work.}
+\item{file}{Filename for a ledger, hledger, or beancount file.}
 
-\item{include_cleared}{Include cleared transactions}
-
-\item{include_pending}{Include pending transactions}
-
-\item{include_unmarked}{Include unmarked transactions 
-(effectively ignored for beancount files)}
-
-\item{convert_to_cost}{Convert transactions to their cost}
-
-\item{convert_to_market_value}{Convert transactions to their market value}
-
-\item{tags}{Character vector of tags to filter.
-For beancount tags include the initial \code{#} and 
-for beancount links include initial \code{^}.
-If \code{NULL} (the default) don't filter based on any tags.}
+\item{flags}{Character vector of additional command line flags to pass 
+to either \code{ledger csv} or \code{hledger register}.}
 }
 \value{
 \code{register} returns a data frame.
 }
 \description{
-\code{register} imports the register from an hledger or beancount file 
-as a data frame.  ledger files can work if compatible with hledger.
+\code{register} imports the register from a ledger, hledger, or beancount file as a data frame.
 }
 \examples{
    \dontrun{
-     example_beancount_file <- tempfile(fileext = ".beancount")
-     system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)
-     df <- register(example_beancount_file)
+     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledgeR") 
+     dfb <- register(example_beancount_file)
      head(df)   
+
+     dfb2 <- rio::import(example_beancount_file)
+     all.equal(dfb, dfb2)
+
+     example_hledger_file <- system.file("extdata", "example.hledger", package = "ledgeR") 
+     dfh <- register(example_hledger_file)
+     head(dfh)
+
+     example_ledger_file <- system.file("extdata", "example.ledger", package = "ledgeR") 
+     dfl <- register(example_ledger_file)
+     head(dfl)
    }
 }

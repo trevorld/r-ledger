@@ -1,5 +1,6 @@
 * Open Statements
 
+2015-12-31 open Assets:JT-Brokerage
 2015-12-31 open Assets:JT-Checking
 2015-12-31 open Assets:JT-Savings
 
@@ -23,6 +24,10 @@
 2015-12-31 open Equity:Opening  ;; Starting equity
 2015-12-31 open Equity:Transfer ;; Transfers between accounts
 
+* Prices
+
+2016-01-10 price SP 500 USD
+
 * Assets
 
 ** JT-Checking
@@ -30,26 +35,33 @@
 2015-12-31 * "" "Opening Balances"
     Assets:JT-Checking  5000.00 USD
     Equity:Opening
-
 2016-01-01 * "Landlord" "Rent"
     Assets:JT-Checking  -1500.00 USD 
     Expenses:Shelter:Rent
-
-2016-01-05 * "" "Deposit to Checking Account"
+2016-01-01 * "Brokerage" "Buy Stock"
+    Assets:JT-Checking -1000 USD
+    Equity:Transfer
+2016-01-05 ! "" "Deposit to Checking Account"
     Assets:JT-Checking  1382.00 USD
     Equity:Transfer     
+2018-01-01 balance Assets:JT-Checking  3882.00 USD
 
-2018-01-01 balance Assets:JT-Checking  4882.00 USD
+** JT-Brokerage
+
+2016-01-01 * "Brokerage" "Buy Stock"
+    Assets:JT-Brokerage   4 SP {250 USD}
+    Equity:Transfer
+2018-01-01 balance Assets:JT-Brokerage  4 SP
 
 * Liabilities
 
 ** JT-Credit-Card
 
-2016-01-01 * "Supermarket" "Grocery store"
+2016-01-01 * "Supermarket" "Grocery store" ^grocery
     Expenses:Food:Grocery   500.54 USD
     Liabilities:JT-Credit-Card
 
-2016-01-10 * "Restaurant" "Restaurant" #tag ^link
+2016-01-10 * "Restaurant" "Restaurant" #restaurant
     Expenses:Food:Restaurant  20.07 USD
     Liabilities:JT-Credit-Card
 
@@ -66,7 +78,7 @@
 2016-01-05 * "State" "State Income Tax Withholding"
     Expenses:Taxes:State       35.45 USD
     Equity:Employer           
-2016-01-05 ! "" "Deposit to Checking Account"
+2016-01-05 * "" "Deposit to Checking Account"
     Equity:Transfer     1382.00 USD
     Equity:Employer
 2018-01-01 balance Equity:Employer  0.00 USD

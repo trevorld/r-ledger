@@ -9,6 +9,7 @@
 #'    
 #' @import dplyr
 #' @importFrom utils read.csv
+#' @importFrom tools file_ext
 #' @importFrom rlang .data
 #' @export
 #' @examples
@@ -30,21 +31,22 @@
 #'    }
 register <- function(file, flags = NULL) {
     flags <- paste(flags, collapse=" ")
-    if (grepl(".bean$|.beancount$", file)) {
+    ext <- tools::file_ext(file)
+    if (ext %in% c("bean", "beancount")) {
         .assert_binary("bean-report")
         .assert_binary("hledger")
         hfile <- tempfile(fileext = ".hledger")
         on.exit(unlink(hfile))
         system(paste("bean-report","-o", hfile, file, "hledger"))
         .register_hledger(hfile, flags = flags)
-    } else if (grepl(".hledger$", file)) {
+    } else if (ext == "hledger") {
         .assert_binary("hledger")
         .register_hledger(file, flags = flags)
-    } else if (grepl(".ledger$", file)) {
+    } else if (ext == "ledger") {
         .assert_binary("ledger")
         .register_ledger(file, flags = flags)
     } else {
-        stop(paste("File", file, "is not supported"))
+        stop(paste("File extension", ext, "is not supported"))
     }
 }
 

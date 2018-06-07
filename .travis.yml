@@ -8,6 +8,11 @@ sudo: enabled
 latex: false
 warnings_are_errors: true
 cran: https://cran.rstudio.com
+cache: packages
+cache:
+  directories:
+    - $HOME/.stack/
+    - $HOME/.local/bin/
 before_install:
     - sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu/ xenial main universe"
     - sudo apt-get -qq update

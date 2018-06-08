@@ -45,8 +45,8 @@ for (ii in 1:length(binaries)) {
             df <- rio::import(file)
             expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 3*82.55)
         }
-        skip_on_cran("bean-example takes too long")
         if (binary == "bean-report") {
+            skip_on_cran()
             example_beancount_file <- tempfile(fileext = ".beancount")
             on.exit(unlink(example_beancount_file))
             system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)

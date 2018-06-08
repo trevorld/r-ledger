@@ -5,7 +5,8 @@
 \title{Compute net worth}
 \usage{
 net_worth(file, date = Sys.Date() + 1,
-  regex = "^Assets|^Liabilities|<Revalued>", flags = NULL)
+  regex = "^Assets|^Liabilities|<Revalued>", flags = switch(file_ext(file),
+  ledger = "--market", "--value"))
 }
 \arguments{
 \item{file}{Filename for a ledger, hledger, or beancount file.}

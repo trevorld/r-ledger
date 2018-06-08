@@ -26,7 +26,8 @@
 
 * Prices
 
-2016-01-10 price SP 500 USD
+2016-01-1 price SP 250 USD
+2018-01-1 price SP 500 USD
 
 * Assets
 
@@ -41,10 +42,16 @@
 2016-01-01 * "Brokerage" "Buy Stock"
     Assets:JT-Checking -1000 USD
     Equity:Transfer
-2016-01-05 ! "" "Deposit to Checking Account"
+2016-01-05 * "" "Deposit to Checking Account"
     Assets:JT-Checking  1382.00 USD
     Equity:Transfer     
-2018-01-01 balance Assets:JT-Checking  3882.00 USD
+2016-01-10 balance Assets:JT-Checking  3882.00 USD
+2017-01-05 * "" "Deposit to Checking Account"
+    Assets:JT-Checking  1382.00 USD
+    Equity:Transfer     
+2018-01-05 ! "" "Deposit to Checking Account"
+    Assets:JT-Checking  1382.00 USD
+    Equity:Transfer     
 
 ** JT-Brokerage
 
@@ -81,8 +88,37 @@
 2016-01-05 * "" "Deposit to Checking Account"
     Equity:Transfer     1382.00 USD
     Equity:Employer
-2018-01-01 balance Equity:Employer  0.00 USD
+2016-01-06 balance Equity:Employer  0.00 USD
+
+2017-01-05 * "Stanford" "Salary Income"
+    Income:Wages:Salary    -1500.00 USD
+    Equity:Employer         
+2017-01-05 * "Uncle Sam" "Federal Income Tax Withholding"
+    Expenses:Taxes:Federal       82.55 USD
+    Equity:Employer             
+2017-01-05 * "State" "State Income Tax Withholding"
+    Expenses:Taxes:State       35.45 USD
+    Equity:Employer           
+2017-01-05 * "" "Deposit to Checking Account"
+    Equity:Transfer     1382.00 USD
+    Equity:Employer
+2017-01-06 balance Equity:Employer  0.00 USD
+
+2018-01-05 * "Stanford" "Salary Income"
+    Income:Wages:Salary    -1500.00 USD
+    Equity:Employer         
+2018-01-05 * "Uncle Sam" "Federal Income Tax Withholding"
+    Expenses:Taxes:Federal       82.55 USD
+    Equity:Employer             
+2018-01-05 * "State" "State Income Tax Withholding"
+    Expenses:Taxes:State       35.45 USD
+    Equity:Employer           
+2018-01-05 * "" "Deposit to Checking Account"
+    Equity:Transfer     1382.00 USD
+    Equity:Employer
+2018-01-06 balance Equity:Employer  0.00 USD
 
 ** Opening
 
-2018-01-01 balance Equity:Transfer  0.00 USD
+2016-01-10 balance Equity:Transfer  0.00 USD
+2018-01-10 balance Equity:Transfer  0.00 USD

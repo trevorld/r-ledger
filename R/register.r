@@ -38,26 +38,30 @@ register <- function(file, flags = NULL) {
         hfile <- tempfile(fileext = ".hledger")
         on.exit(unlink(hfile))
         system(paste("bean-report","-o", hfile, file, "hledger"))
-        .register_hledger(hfile, flags = flags)
+        df <- .register_hledger(hfile, flags)
     } else if (ext == "hledger") {
         .assert_binary("hledger")
-        .register_hledger(file, flags = flags)
+        df <- .register_hledger(file, flags)
     } else if (ext == "ledger") {
         .assert_binary("ledger")
-        .register_ledger(file, flags = flags)
+        df <- .register_ledger(file, flags)
     } else {
         stop(paste("File extension", ext, "is not supported"))
     }
+    dplyr::select(df, "date", "mark", "payee", "description", "account", "amount",
+                  "commodity", matches("historical_cost"), matches("hc_commodity"),
+                  matches("market_value"), matches("mv_commodity"))
 }
 
-.register_hledger <- function(hfile, flags="") {
+.register_hledger <- function(hfile, flags) {
     df <- .register_hledger_helper(hfile, flags)
     df_c <- .register_hledger_helper(hfile, paste(flags, "--cost"))
     df$historical_cost <- df_c$amount
+    df$hc_commodity <- df_c$commodity
     df_m <- .register_hledger_helper(hfile, paste(flags, "--value"))
     df$market_value <- df_m$amount
-    dplyr::select(df, date, "payee", "description", "account", "amount",
-                            "commodity", "historical_cost", "market_value", "mark")
+    df$mv_commodity <- df_m$commodity
+    df
 }
 
 .register_hledger_helper <- function(hfile, flags="") {
@@ -108,14 +112,9 @@ register <- function(file, flags = NULL) {
     sapply(strsplit(strings, split), function(x) { x[2]})
 }
 
-.register_ledger <- function(lfile, flags="") {
+.register_ledger <- function(lfile, flags) {
     df <- .read_ledger(lfile, flags)
-    df_c <- .read_ledger(lfile, paste(flags, "--cost"))
-    df$historical_cost <- df_c$amount
-    # df_m <- .read_ledger(lfile, paste(flags, "--market"))
-    # df$market_value <- df_m$amount
-    dplyr::select(df, date, "payee", "description", "account", "amount",
-                            "commodity", "historical_cost", "mark")
+    df
 }
 
 .read_ledger <- function(lfile, flags) {

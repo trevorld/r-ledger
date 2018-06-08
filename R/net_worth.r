@@ -16,15 +16,14 @@
 #'    }
 #'    
 #' @export
-net_worth <- function(file, date=Sys.Date()+1, regex = "^Assets|^Liabilities|<Revalued>", flags=NULL) {
+net_worth <- function(file, date=Sys.Date()+1, regex = "^Assets|^Liabilities|<Revalued>", flags=switch(file_ext(file), ledger = "--market", "--value")) {
     df <- data.frame(date=as.Date(date), net_worth = sapply(date, .net_worth_helper, file, regex, flags))
     rownames(df) <- NULL
     df
 }
 
 .net_worth_helper <- function(date, file, regex, flags) {
-    mv_flag <- switch(file_ext(file), ledger = "--market", "--value")
-    flags <- paste(flags, paste0("--end=", date), mv_flag)
+    flags <- paste(flags, paste0("--end=", date))
     df <- dplyr::filter(register(file, flags), grepl(regex, .data$account))
     if(length(unique(df$commodity)) > 1)
         stop("Non-unique market value commodity")

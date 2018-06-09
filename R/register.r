@@ -1,3 +1,39 @@
+#' Determine default tool chain used for reading in register
+#'
+#' \code{default_toolchain} determines default tool chain used for reading in register.
+#'
+#' @param file Filename for a ledger, hledger, or beancount file.
+#'
+#' @export
+default_toolchain <- function(file) {
+    ext <- tools::file_ext(file)
+    toolchain <- NULL
+    if (ext == "ledger") {
+        if (.is_toolchain_supported("ledger")) {
+            toolchain <- "ledger"
+        } else if (.is_toolchain_supported("hledger")) {
+            warning("ledger not found on path trying hledger instead")
+            toolchain <- "hledger"
+        }
+    } else if (ext == "hledger") {
+        if (.is_toolchain_supported("hledger")) {
+            toolchain <- "hledger"
+        } else if (.is_toolchain_supported("ledger")) {
+            warning("hledger not found on path trying ledger instead")
+            toolchain <- "ledger"
+        }
+    } else if (ext %in% c("bean", "beancount")) {
+        if (.is_toolchain_supported("bean-report_hledger")) {
+            toolchain <- "bean-report_hledger"
+        } else if (.is_toolchain_supported("bean-report_ledger")) {
+            toolchain <- "bean-report_ledger"
+        }
+    }
+    if (is.null(toolchain))
+        stop(paste("Couldn't find an acceptable toolchain for", ext))
+    toolchain
+}
+
 #' Import a hledger or beancount register
 #'
 #' \code{register} imports the register from a ledger, hledger, or beancount file as a data frame.
@@ -5,6 +41,8 @@
 #' @param file Filename for a ledger, hledger, or beancount file.
 #' @param flags Character vector of additional command line flags to pass 
 #'     to either \code{ledger csv} or \code{hledger register}.
+#' @param toolchain Toolchain used to read in register. 
+#'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
 #' @return  \code{register} returns a data frame.
 #'    
 #' @import dplyr
@@ -29,28 +67,33 @@
 #'      dfl <- register(example_ledger_file)
 #'      head(dfl)
 #'    }
-register <- function(file, flags = NULL) {
+register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
+    .assert_toolchain(toolchain)
     flags <- paste(flags, collapse=" ")
-    ext <- tools::file_ext(file)
-    if (ext %in% c("bean", "beancount")) {
-        .assert_binary("bean-report")
-        .assert_binary("hledger")
-        hfile <- tempfile(fileext = ".hledger")
-        on.exit(unlink(hfile))
-        system(paste("bean-report","-o", hfile, file, "hledger"))
-        df <- .register_hledger(hfile, flags)
-    } else if (ext == "hledger") {
-        .assert_binary("hledger")
-        df <- .register_hledger(file, flags)
-    } else if (ext == "ledger") {
-        .assert_binary("ledger")
+    if (toolchain == "ledger") {
         df <- .register_ledger(file, flags)
+    } else if (toolchain == "hledger") {
+        df <- .register_hledger(file, flags)
+    } else if (toolchain == "bean-report_ledger") {
+        file <- .bean_report(file, "ledger")
+        on.exit(unlink(file))
+        df <- .register_ledger(file, flags)
+    } else if (toolchain == "bean-report_hledger") {
+        file <- .bean_report(file, "hledger")
+        on.exit(unlink(file))
+        df <- .register_hledger(file, flags)
     } else {
-        stop(paste("File extension", ext, "is not supported"))
+        stop(paste("toolchain", toolchain, "is not supported"))
     }
     dplyr::select(df, "date", "mark", "payee", "description", "account", "amount",
                   "commodity", matches("historical_cost"), matches("hc_commodity"),
                   matches("market_value"), matches("mv_commodity"))
+}
+
+.bean_report <- function(file, format) {
+    tfile <- tempfile(fileext = paste0(".", format))
+    system(paste("bean-report", "-o", tfile, file, format))
+    tfile
 }
 
 .register_hledger <- function(hfile, flags) {
@@ -58,7 +101,7 @@ register <- function(file, flags = NULL) {
     df_c <- .register_hledger_helper(hfile, paste(flags, "--cost"))
     df$historical_cost <- df_c$amount
     df$hc_commodity <- df_c$commodity
-    df_m <- .register_hledger_helper(hfile, paste(flags, "--value"))
+    df_m <- .register_hledger_helper(hfile, paste(flags, "-V"))
     df$market_value <- df_m$amount
     df$mv_commodity <- df_m$commodity
     df
@@ -79,7 +122,9 @@ register <- function(file, flags = NULL) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
     cmd <- paste("hledger register -f", hfile, " -o", cfile, " ", flags)
-    system(cmd)
+    system(cmd, ignore.stderr=TRUE)
+    if (!file.exists(cfile))
+        stop("hledger had an import error")
     read.csv(cfile, stringsAsFactors = FALSE)
 }
 
@@ -121,7 +166,9 @@ register <- function(file, flags = NULL) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
     cmd <- paste("ledger csv -f", lfile, "-o", cfile, flags)
-    system(cmd)
+    system(cmd, ignore.stderr=TRUE)
+    if (!file.exists(cfile))
+        stop("ledger had an import error")
     .clean_ledger(read.csv(cfile, header=FALSE, stringsAsFactors = FALSE))
 }
 
@@ -145,10 +192,23 @@ register <- function(file, flags = NULL) {
 .is_binary_on_path <- function(binary) {
     any(Sys.which(binary) != "")
 }
+.is_toolchain_supported <- function(toolchain) {
+    if (toolchain == "ledger") {
+        .is_binary_on_path("ledger")
+    } else if (toolchain == "hledger") {
+        .is_binary_on_path("ledger")
+    } else if (toolchain == "bean-report_ledger") {
+        .is_binary_on_path("ledger") && .is_binary_on_path("bean-report")
+    } else if (toolchain == "bean-report_hledger") {
+        .is_binary_on_path("hledger") && .is_binary_on_path("bean-report")
+    } else {
+        FALSE
+    }
+}
 
-.assert_binary <- function(binary) {
-    if(!.is_binary_on_path(binary))
-        stop(paste(binary, "not found on path"))
+.assert_toolchain <- function(toolchain) {
+    if(!.is_toolchain_supported(toolchain))
+        stop(paste(toolchain, "binaries not found on path"))
 }
 
 #' @importFrom rio .import

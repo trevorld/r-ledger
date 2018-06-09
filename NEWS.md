@@ -1,3 +1,9 @@
+ledgeR 0.6.0
+============
+
+* Add ``toolchain`` argument to ``register`` and ``net_worth``.
+* Add new columns to ``net_worth``.
+
 ledgeR 0.5.3
 ============
 

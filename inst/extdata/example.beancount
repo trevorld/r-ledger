@@ -1,3 +1,7 @@
+* Plugins/Options
+
+option "operating_currency" "USD"
+
 * Open Statements
 
 2015-12-31 open Assets:JT-Brokerage

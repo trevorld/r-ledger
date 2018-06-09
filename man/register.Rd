@@ -4,13 +4,16 @@
 \alias{register}
 \title{Import a hledger or beancount register}
 \usage{
-register(file, flags = NULL)
+register(file, flags = NULL, toolchain = default_toolchain(file))
 }
 \arguments{
 \item{file}{Filename for a ledger, hledger, or beancount file.}
 
 \item{flags}{Character vector of additional command line flags to pass 
 to either \code{ledger csv} or \code{hledger register}.}
+
+\item{toolchain}{Toolchain used to read in register. 
+Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 }
 \value{
 \code{register} returns a data frame.

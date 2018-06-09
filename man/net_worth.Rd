@@ -4,25 +4,28 @@
 \alias{net_worth}
 \title{Compute net worth}
 \usage{
-net_worth(file, date = Sys.Date() + 1,
-  regex = "^Assets|^Liabilities|<Revalued>", flags = switch(file_ext(file),
-  ledger = "--market", "--value"))
+net_worth(file, date = Sys.Date() + 1, regex = c("asset", "liabilit",
+  "revalued"), flags = "-V", toolchain = default_toolchain(file))
 }
 \arguments{
 \item{file}{Filename for a ledger, hledger, or beancount file.}
 
-\item{date}{Vector of dates to compute net worth for 
-(technically computes net worth of the day before each date).}
+\item{date}{Vector of dates to compute net worth for.}
 
-\item{regex}{Regular expression string.}
+\item{regex}{Regular expression string to match account column on.}
 
-\item{flags}{Extra flags to pass to \code{register}.}
+\item{flags}{Extra flags to pass to \code{register}.
+If using \code{ledger} may want to try something like \code{"-X USD"}.}
+
+\item{toolchain}{Toolchain used to read in register. 
+Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 }
 \value{
 \code{net_worth} returns a data frame
 }
 \description{
-Compute net worth
+Computes net worth for a vector of dates.  
+Computes net worth at the beginning of the day before any transactions have occurred.
 }
 \examples{
    \dontrun{

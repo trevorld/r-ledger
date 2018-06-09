@@ -1,3 +1,5 @@
+# Copyright (c) 2018 Trevor L. Davis <trevor.l.davis@gmail.com>  
+
 #' Determine default tool chain used for reading in register
 #'
 #' \code{default_toolchain} determines default tool chain used for reading in register.

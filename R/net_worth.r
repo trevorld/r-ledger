@@ -1,3 +1,5 @@
+# Copyright (c) 2018 Trevor L. Davis <trevor.l.davis@gmail.com>  
+
 #' Compute net worth
 #'
 #' Computes net worth for a vector of dates.  

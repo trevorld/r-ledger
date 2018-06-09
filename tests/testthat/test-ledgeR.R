@@ -20,6 +20,16 @@ test_that("default_toolchain works as expected", {
 })
 test_that("register works as expected", {
     expect_error(register("test.docx", toolchain="docx"), "docx binaries not found on path")
+    if(.is_toolchain_supported("ledger"))
+        expect_error(register("test.docx", toolchain="ledger"), "ledger had an import error")
+})
+test_that("default_toolchain works as expected", {
+    if(.is_toolchain_supported("ledger"))
+        expect_equal(default_toolchain("test.ledger"), "ledger")
+    if(.is_toolchain_supported("hledger"))
+        expect_equal(default_toolchain("test.hledger"), "hledger")
+    if(.is_toolchain_supported("bean-report_hledger"))
+        expect_equal(default_toolchain("test.beancount"), "bean-report_hledger")
 })
 
 skip_toolchain <- function(file, toolchain) {

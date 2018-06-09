@@ -82,9 +82,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
         file <- .bean_report(file, "hledger")
         on.exit(unlink(file))
         df <- .register_hledger(file, flags)
-    } else {
-        stop(paste("toolchain", toolchain, "is not supported"))
-    }
+    } 
     dplyr::select(df, "date", "mark", "payee", "description", "account", "amount",
                   "commodity", matches("historical_cost"), matches("hc_commodity"),
                   matches("market_value"), matches("mv_commodity"))

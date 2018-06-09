@@ -1,7 +1,7 @@
 ledger
 ======
 
-.. image:: https://travis-ci.org/trevorld/ledger.png?branch=master
+.. image:: https://travis-ci.org/trevorld/ledgeR.png?branch=master
     :target: https://travis-ci.org/trevorld/ledger
     :alt: Build Status
 

@@ -23,18 +23,18 @@ Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 }
 \examples{
    \dontrun{
-     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledgeR") 
+     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
      dfb <- register(example_beancount_file)
      head(df)   
 
      dfb2 <- rio::import(example_beancount_file)
      all.equal(dfb, dfb2)
 
-     example_hledger_file <- system.file("extdata", "example.hledger", package = "ledgeR") 
+     example_hledger_file <- system.file("extdata", "example.hledger", package = "ledger") 
      dfh <- register(example_hledger_file)
      head(dfh)
 
-     example_ledger_file <- system.file("extdata", "example.ledger", package = "ledgeR") 
+     example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
      dfl <- register(example_ledger_file)
      head(dfl)
    }

@@ -1,10 +1,10 @@
-ledgeR 0.6.0
+ledger 0.6.0
 ============
 
 * Add ``toolchain`` argument to ``register`` and ``net_worth``.
 * Add new columns to ``net_worth``.
 
-ledgeR 0.5.3
+ledger 0.5.3
 ============
 
 * Removed ``include_cleared``, ``include_pending``, ``include_unmarked``, ``convert_to_cost``, and ``convert_to_market_value`` arguments from ``register`` (#6).

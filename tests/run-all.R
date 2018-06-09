@@ -1,5 +1,5 @@
-library("ledgeR")
+library("ledger")
 library("dplyr")
 library("testthat")
 
-test_check("ledgeR")
+test_check("ledger")

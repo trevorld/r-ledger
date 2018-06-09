@@ -1,11 +1,11 @@
 # Copyright 2018 Trevor L Davis <trevor.l.davis@gmail.com>
 
-lfile <- system.file("extdata", "example.ledger", package = "ledgeR")
-hfile <- system.file("extdata", "example.hledger", package = "ledgeR")
-bfile <- system.file("extdata", "example.beancount", package = "ledgeR")
-lefile <- system.file("extdata", "empty.ledger", package = "ledgeR")
-hefile <- system.file("extdata", "empty.hledger", package = "ledgeR")
-befile <- system.file("extdata", "empty.beancount", package = "ledgeR")
+lfile <- system.file("extdata", "example.ledger", package = "ledger")
+hfile <- system.file("extdata", "example.hledger", package = "ledger")
+bfile <- system.file("extdata", "example.beancount", package = "ledger")
+lefile <- system.file("extdata", "empty.ledger", package = "ledger")
+hefile <- system.file("extdata", "empty.hledger", package = "ledger")
+befile <- system.file("extdata", "empty.beancount", package = "ledger")
 df_file <- data.frame(file = c(rep(c(lfile, hfile, bfile), each=2)),
                       efile = c(rep(c(lefile, hefile, befile), each=2)),
                       toolchain = c(rep(c("ledger", "hledger"), 2),
@@ -51,8 +51,8 @@ for (ii in 1:nrow(df_file)) {
     toolchain <- df_file$toolchain[ii]
     file <- df_file$file[ii]
     empty_file <- df_file$efile[ii]
-    register <- function(...) { ledgeR::register(..., toolchain=toolchain) }
-    net_worth <- function(...) { ledgeR::net_worth(..., toolchain=toolchain) }
+    register <- function(...) { ledger::register(..., toolchain=toolchain) }
+    net_worth <- function(...) { ledger::net_worth(..., toolchain=toolchain) }
 
     test_that(paste("register works as expected on", basename(file), "using", toolchain), {
         skip_toolchain(file, toolchain)

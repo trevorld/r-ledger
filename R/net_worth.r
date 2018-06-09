@@ -13,7 +13,7 @@
 #' @return  \code{net_worth} returns a data frame
 #' @examples
 #'    \dontrun{
-#'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledgeR") 
+#'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
 #'      net_worth(example_beancount_file)
 #'      net_worth(example_beancount_file, c("2016-01-01", "2017-01-01", "2018-01-01"))
 #'    }

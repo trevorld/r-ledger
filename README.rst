@@ -1,8 +1,8 @@
 ledger
 ======
 
-.. image:: https://travis-ci.org/trevorld/ledgeR.png?branch=master
-    :target: https://travis-ci.org/trevorld/ledgeR
+.. image:: https://travis-ci.org/trevorld/ledger.png?branch=master
+    :target: https://travis-ci.org/trevorld/ledger
     :alt: Build Status
 
 .. image:: https://img.shields.io/codecov/c/github/trevorld/ledger/master.svg

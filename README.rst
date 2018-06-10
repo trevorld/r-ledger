@@ -9,7 +9,7 @@ ledger
     :target: https://codecov.io/github/trevorld/ledger?branch=master
     :alt: Coverage Status
 
-``ledger`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis and plotting.
+``ledger`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis, plotting, and export.
 
 Right now it supports reading in the register from ``ledger``, ``hledger``, and ``beancount`` files.  
 
@@ -111,7 +111,7 @@ Here is an example of using the ``flags`` argument (in this case passed to ``hle
     2     Expenses:Food:Coffee      52.00
     3 Expenses:Food:Restaurant    1353.95
 
-**Note:** There is currently a bug in ``bean-report`` that leads us to lose the payee and description for any transactions that uses a ``#tag`` (or ``^link``) tag in a beancount file.
+**Note:** There is `currently a bug <https://bitbucket.org/blais/beancount/issues/199/bean-report-hledger-ledger-puts-link-tag>`__ in ``bean-report`` that leads us to lose the payee and description for any transactions that uses a ``#tag`` (or ``^link``) tag in a beancount file.
 
 Using rio::import and rio::convert
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,19 +131,36 @@ This allows one to use ``rio::convert`` to easily convert plaintext accounting f
 net_worth
 ~~~~~~~~~
 
-An example of using the ``net_worth`` function::
+Some examples of using the ``net_worth`` function::
 
     > example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
     > net_worth(example_ledger_file)
-    # A tibble: 1 x 5
-            date net_worth assets liabilities revalued
-          <date>     <dbl>  <dbl>       <dbl>    <dbl>
-    1 2018-06-10   8125.39   7646     -520.61     1000
+    # A tibble: 1 x 6
+            date commodity net_worth assets liabilities revalued
+          <date>     <chr>     <dbl>  <dbl>       <dbl>    <dbl>
+    1 2018-06-11       USD   8125.39   7646     -520.61     1000
     > example_hledger_file <- system.file("extdata", "example.hledger", package = "ledger") 
     > net_worth(example_hledger_file, c("2016-01-01", "2017-01-01", "2018-01-01"))
-    # A tibble: 3 x 4
-            date net_worth assets liabilities
-          <date>     <dbl>  <dbl>       <dbl>
-    1 2016-01-01   5000.00   5000        0.00
-    2 2017-01-01   4361.39   4882     -520.61
-    3 2018-01-01   6743.39   7264     -520.61
+    # A tibble: 3 x 5
+            date commodity net_worth assets liabilities
+          <date>     <chr>     <dbl>  <dbl>       <dbl>
+    1 2016-01-01       USD   5000.00   5000        0.00
+    2 2017-01-01       USD   4361.39   4882     -520.61
+    3 2018-01-01       USD   6743.39   7264     -520.61
+    > example_beancount_file <- tempfile(fileext = ".beancount")
+    > system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)
+    > ledger::net_worth(example_beancount_file)
+    # A tibble: 4 x 5
+            date commodity net_worth   assets liabilities
+          <date>     <chr>     <dbl>    <dbl>       <dbl>
+    1 2018-06-11    IRAUSD    4100.0   4100.0        0.00
+    2 2018-06-11       USD  104011.7 107221.6    -3209.91
+    3 2018-06-11     VACHR    -128.0   -128.0        0.00
+    4 2018-06-11      <NA>       0.0      0.0        0.00
+    > system(paste("bean-report", example_beancount_file, "networth"))
+    Currency   Net Worth
+    --------  ----------
+    USD       104,011.74
+    --------  ----------
+
+**Note:** There is `currently a bug <https://github.com/simonmichael/hledger/issues/810>`__ in ``hledger register -f file.hledger -o file.csv`` where commodities are missing when the amount is zero.

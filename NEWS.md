@@ -1,3 +1,8 @@
+ledger 0.7.0
+============
+
+* Removed ``regex`` argument from ``net_worth`` while adding ``include``, ``exlude``, and ``ignore_case`` arguments.  
+
 ledger 0.6.0
 ============
 

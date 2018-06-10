@@ -100,15 +100,9 @@ for (ii in 1:nrow(df_file)) {
             skip(paste(toolchain, "not supported"))
         }
         expect_equal(net_worth(file)$net_worth, 8125.39)
+        expect_equal(net_worth(file, include=".*", exclude=c("^Equity", "^Income", "^Expenses"))$net_worth, 8125.39)
         expect_equal(net_worth(file, c("2016-01-01", "2017-01-01", "2018-01-01"))$net_worth,
                      c(5000, 4361.39, 6743.39))
-        if (toolchain %in% c("bean-report_ledger", "bean-report_hledger")) {
-            skip_on_cran()
-            example_beancount_file <- tempfile(fileext = ".beancount")
-            on.exit(unlink(example_beancount_file))
-            system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)
-            expect_error(net_worth(example_beancount_file), "Non-unique market value commodity")
-        }
     })
 
     test_that(paste("register works as expected on", basename(file), "using", toolchain), {

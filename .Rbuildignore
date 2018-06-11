@@ -2,3 +2,4 @@ Rakefile
 CONTRIBUTING
 README.rst
 ^\.travis\.yml$
+^\.travis$

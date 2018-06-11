@@ -3,7 +3,11 @@ ledger
 
 .. image:: https://travis-ci.org/trevorld/ledger.png?branch=master
     :target: https://travis-ci.org/trevorld/ledger
-    :alt: Build Status
+    :alt: Travis-CI Build Status
+
+.. image:: https://ci.appveyor.com/api/projects/status/github/trevorld/ledger?branch=master&svg=true
+    :target: https://ci.appveyor.com/project/trevorld/ledger
+    :alt: AppVeyor Build Status
 
 .. image:: https://img.shields.io/codecov/c/github/trevorld/ledger/master.svg
     :target: https://codecov.io/github/trevorld/ledger?branch=master

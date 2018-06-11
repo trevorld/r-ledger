@@ -11,7 +11,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     wget -qO- https://get.haskellstack.org/ | sh -s - -f
     stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     # Beancount
-    brew install python3
+    brew upgrade python
     pip3 install beancount
 
 else

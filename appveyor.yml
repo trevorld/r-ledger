@@ -22,7 +22,7 @@ test_script:
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack install --resolver=lts hledger-lib-1.9 hledger-1.9
-  - cmd: %PIP3% install beancount
+  - cmd: "%PIP3% install beancount"
   - travis-tool.sh run_tests
 
 on_failure:

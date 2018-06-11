@@ -28,5 +28,6 @@ else
     stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     # Beancount
     sudo apt-get install -y python3 python3-pip
+    pip3 install beancount
 
 fi

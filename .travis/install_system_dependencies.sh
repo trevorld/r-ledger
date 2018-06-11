@@ -12,7 +12,8 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     # Beancount
     brew upgrade python
-    pip3 install beancount
+    # pip3 install beancount
+    sudo -H pip3 install beancount
 
 else
 
@@ -27,6 +28,5 @@ else
     stack install --resolver=lts hledger-lib-1.9 hledger-1.9
     # Beancount
     sudo apt-get install -y python3 python3-pip
-    pip3 install beancount
 
 fi

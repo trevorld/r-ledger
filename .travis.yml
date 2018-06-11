@@ -21,7 +21,7 @@ cache:
     - $HOME/.local/bin/
     - $HOME/Library/Caches/Homebrew
 before_install:
-    - ./.travis/install_system_dependencies.sh
+    - bash ./.travis/install_system_dependencies.sh
 notifications:
   email:
     on_success: change

@@ -16,8 +16,8 @@ cache:
 # Adapt as necessary starting from here
 
 environment:
-    PYTHON3: "C:\\Python36"
-    PIP3: "C:\\Python36\Scripts\pip"
+    PYTHON3: C:\\Python36
+    PIP3: C:\\Python36\Scripts\pip
 
 build_script:
   - travis-tool.sh install_deps

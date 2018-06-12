@@ -23,7 +23,7 @@ build_script:
   - travis-tool.sh install_deps
 
 test_script:
-  - cmd: set PATH=%PYTHON3%\scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
+  - cmd: set PATH=%PYTHON3%\Scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack install --resolver=lts hledger-lib-1.9 hledger-1.9

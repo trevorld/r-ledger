@@ -29,6 +29,9 @@ test_script:
   - cmd: set PATH=%PYTHON3%\scripts;%PATH%
   - cmd: "%PIP3% install beancount"
   - travis-tool.sh run_tests
+  - cmd: ledger --version
+  - cmd: hledger --version
+  - cmd: bean-report --version
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*

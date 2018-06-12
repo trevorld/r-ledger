@@ -28,10 +28,10 @@ test_script:
   - cmd: stack install --resolver=lts hledger-lib-1.9 hledger-1.9
   - cmd: set PATH=%PYTHON3%\scripts;%PATH%
   - cmd: "%PIP3% install beancount"
-  - travis-tool.sh run_tests
   - cmd: ledger --version
   - cmd: hledger --version
   - cmd: bean-report --version
+  - travis-tool.sh run_tests
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*

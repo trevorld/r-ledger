@@ -23,19 +23,19 @@ build_script:
   - travis-tool.sh install_deps
 
 test_script:
+  - cmd: set PATH=%PYTHON3%\scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack install --resolver=lts hledger-lib-1.9 hledger-1.9
-  - cmd: set PATH=%PYTHON3%\scripts;%PATH%
   - cmd: "%PIP3% install beancount"
-  - cmd: ledger --version
-  - cmd: hledger --version
-  - cmd: bean-report --version
   - travis-tool.sh run_tests
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
+  - cmd: ledger --version
+  - cmd: hledger --version
+  - cmd: bean-report --version
 
 artifacts:
   - path: '*.Rcheck\**\*.log'

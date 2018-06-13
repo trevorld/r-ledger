@@ -15,10 +15,10 @@ cache:
 
 # Adapt as necessary starting from here
 
-environment:
-    PYTHON3: C:\Python35
-    PYTHON3ALT: C:\python35
-    PIP3: C:\Python35\Scripts\pip
+# environment:
+#     PYTHON3: C:\Python35
+#     PYTHON3ALT: C:\python35
+#     PIP3: C:\Python35\Scripts\pip
 
 build_script:
   - travis-tool.sh install_deps
@@ -28,7 +28,8 @@ test_script:
   # - cinst ledger
   - cinst haskell-stack
   - cmd: stack install --resolver=lts hledger-lib-1.9 hledger-1.9
-  - cmd: "%PIP3% install beancount"
+  # - cmd: "%PIP3% install beancount"
+  - cmd: "pip install beancount"
   - travis-tool.sh run_tests
 
 on_failure:

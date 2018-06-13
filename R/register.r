@@ -96,9 +96,11 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
                   matches("market_value"), matches("mv_commodity"))
 }
 
+.nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
+
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
-    system(paste("bean-report", "-o", tfile, file, format))
+    system(paste("bean-report", "-o", .nf(tfile), .nf(file), format))
     tfile
 }
 
@@ -127,7 +129,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_hledger <- function(hfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    cmd <- paste("hledger register -f", hfile, " -o", cfile, " ", flags)
+    cmd <- paste("hledger register -f", .nf(hfile), " -o", .nf(cfile), " ", flags)
     # system(cmd, ignore.stderr=TRUE)
     system(cmd)
     if (!file.exists(cfile))
@@ -172,7 +174,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_ledger <- function(lfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    cmd <- paste("ledger csv -f", lfile, "-o", cfile, flags)
+    cmd <- paste("ledger csv -f", .nf(lfile), "-o", .nf(cfile), flags)
     # system(cmd, ignore.stderr=TRUE)
     system(cmd)
     if (!file.exists(cfile))

@@ -15,27 +15,26 @@ cache:
 
 # Adapt as necessary starting from here
 
-# environment:
-#     PYTHON3: C:\Python35
-#     PYTHON3ALT: C:\python35
-#     PIP3: C:\Python35\Scripts\pip
+environment:
+    PYTHON3: C:\Python35
+    PYTHON3ALT: C:\python35
+    PIP3: C:\Python35\Scripts\pip
 
 build_script:
   - travis-tool.sh install_deps
 
 test_script:
   - cmd: set PATH=%PYTHON3%\Scripts;%PYTHON3ALT\Scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
-  # - cinst ledger
+  - cinst ledger
   - cinst haskell-stack
-  - cmd: stack install --resolver=lts hledger-lib-1.9 hledger-1.9
-  # - cmd: "%PIP3% install beancount"
-  - cmd: "pip install beancount"
+  - cmd: stack install --quiet --resolver=lts hledger-lib-1.9 hledger-1.9
+  - cmd: "%PIP3% --quiet install beancount"
   - travis-tool.sh run_tests
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
-  # - cmd: ledger --version
+  - cmd: ledger --version
   - cmd: hledger --version
   - cmd: bean-report --version
 

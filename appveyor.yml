@@ -27,7 +27,7 @@ test_script:
   - cmd: set PATH=%PYTHON3%\Scripts;%PYTHON3ALT\Scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
   - cinst ledger
   - cinst haskell-stack
-  - cmd: stack install --quiet --resolver=lts hledger-lib-1.9 hledger-1.9
+  - cmd: stack --silent install --resolver=lts hledger-lib-1.9 hledger-1.9
   - cmd: "%PIP3% --quiet install beancount"
   - travis-tool.sh run_tests
 

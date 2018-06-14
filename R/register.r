@@ -96,11 +96,13 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
                   matches("market_value"), matches("mv_commodity"))
 }
 
+# get AppVeyor to work?
 .nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
+.cmd <- function(command) { normalizePath(as.character(Sys.which(command))) }
 
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
-    system(paste("bean-report", "-o", .nf(tfile), .nf(file), format))
+    system(paste(.cmd("bean-report"), "-o", .nf(tfile), .nf(file), format))
     tfile
 }
 
@@ -129,7 +131,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_hledger <- function(hfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    cmd <- paste("hledger register -f", .nf(hfile), " -o", .nf(cfile), " ", flags)
+    cmd <- paste(.cmd("hledger"), "register -f", .nf(hfile), " -o", .nf(cfile), flags)
     # system(cmd, ignore.stderr=TRUE)
     system(cmd)
     if (!file.exists(cfile))
@@ -174,7 +176,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_ledger <- function(lfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    cmd <- paste("ledger csv -f", .nf(lfile), "-o", .nf(cfile), flags)
+    cmd <- paste(.cmd("ledger"), "csv -f", .nf(lfile), "-o", .nf(cfile), flags)
     # system(cmd, ignore.stderr=TRUE)
     system(cmd)
     if (!file.exists(cfile))
@@ -200,7 +202,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 }
 
 .is_binary_on_path <- function(binary) {
-    any(Sys.which(binary) != "")
+    Sys.which(binary) != ""
 }
 .is_toolchain_supported <- function(toolchain) {
     if (toolchain == "ledger") {

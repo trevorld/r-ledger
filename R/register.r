@@ -77,7 +77,6 @@ default_toolchain <- function(file) {
 #'    }
 register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     .assert_toolchain(toolchain)
-    flags <- paste(flags, collapse=" ")
     if (toolchain == "ledger") {
         df <- .register_ledger(file, flags)
     } else if (toolchain == "hledger") {
@@ -102,27 +101,30 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
-    system(paste(.cmd("bean-report"), "-o", .nf(tfile), .nf(file), format))
+    args <- c("-o", .nf(tfile), .nf(file), format)
+    # cmd <- paste(.cmd("bean-report"), paste(args, collapse=" "))
+    # system(cmd)
+    system2("bean-report", args)
     tfile
 }
 
 .register_hledger <- function(hfile, flags) {
     df <- .register_hledger_helper(hfile, flags)
-    df_c <- .register_hledger_helper(hfile, paste(flags, "--cost"))
+    df_c <- .register_hledger_helper(hfile, c(flags, "--cost"))
     df$historical_cost <- df_c$amount
     df$hc_commodity <- df_c$commodity
-    df_m <- .register_hledger_helper(hfile, paste(flags, "-V"))
+    df_m <- .register_hledger_helper(hfile, c(flags, "-V"))
     df$market_value <- df_m$amount
     df$mv_commodity <- df_m$commodity
     df
 }
 
 .register_hledger_helper <- function(hfile, flags="") {
-    df_c <- .read_hledger(hfile, paste(flags, "--cleared"))
+    df_c <- .read_hledger(hfile, c(flags, "--cleared"))
     df_c <- dplyr::mutate(df_c, mark = "*")
-    df_p <- .read_hledger(hfile, paste(flags, "--pending"))
+    df_p <- .read_hledger(hfile, c(flags, "--pending"))
     df_p <- dplyr::mutate(df_p, mark = "!")
-    df_u <- .read_hledger(hfile, paste(flags, "--unmarked"))
+    df_u <- .read_hledger(hfile, c(flags, "--unmarked"))
     df_u <- dplyr::mutate(df_u, mark = "")
     df <- dplyr::bind_rows(df_c, df_p, df_u)
     .clean_hledger(df)
@@ -131,9 +133,11 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_hledger <- function(hfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    cmd <- paste(.cmd("hledger"), "register -f", .nf(hfile), " -o", .nf(cfile), flags)
+    args <- c("register", "-f", .nf(hfile), "-o", .nf(cfile), flags)
+    # cmd <- paste(.cmd("hledger"), paste(args, collapse=" "))
     # system(cmd, ignore.stderr=TRUE)
-    system(cmd)
+    # system(cmd)
+    system2("hledger", args)
     if (!file.exists(cfile))
         stop("hledger had an import error")
     read.csv(cfile, stringsAsFactors = FALSE)
@@ -176,9 +180,11 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_ledger <- function(lfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    cmd <- paste(.cmd("ledger"), "csv -f", .nf(lfile), "-o", .nf(cfile), flags)
+    args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
+    # cmd <- paste(.cmd("ledger"), paste(args, collapse=" "))
     # system(cmd, ignore.stderr=TRUE)
-    system(cmd)
+    # system(cmd)
+    system2("ledger", args)
     if (!file.exists(cfile))
         stop("ledger had an import error")
     .clean_ledger(read.csv(cfile, header=FALSE, stringsAsFactors = FALSE))

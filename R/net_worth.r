@@ -43,7 +43,7 @@ net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit",
 
 #' @importFrom tidyr spread
 .net_worth_helper <- function(date, file, include, exclude, flags, toolchain, ignore_case) {
-    flags <- paste(flags, paste0("--end=", date))
+    flags <- c(flags, paste0("--end=", date))
     df <- register(file, flags, toolchain)
     include <- paste(include, collapse="|")
     df <- dplyr::filter(df, grepl(include, .data$account, ignore.case=ignore_case))

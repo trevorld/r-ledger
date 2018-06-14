@@ -77,6 +77,10 @@ default_toolchain <- function(file) {
 #'    }
 register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     .assert_toolchain(toolchain)
+    tfile <- tempfile(fileext = paste0(".", file_ext(file)))
+    on.exit(unlink(tfile))
+    file.copy(file, tfile)
+    file < tfile
     if (toolchain == "ledger") {
         df <- .register_ledger(file, flags)
     } else if (toolchain == "hledger") {

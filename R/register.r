@@ -77,10 +77,10 @@ default_toolchain <- function(file) {
 #'    }
 register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     .assert_toolchain(toolchain)
-    tfile <- tempfile(fileext = paste0(".", file_ext(file)))
-    on.exit(unlink(tfile))
-    file.copy(file, tfile)
-    file < tfile
+    # tfile <- tempfile(fileext = paste0(".", file_ext(file)))
+    # on.exit(unlink(tfile))
+    # file.copy(file, tfile)
+    # file < tfile
     if (toolchain == "ledger") {
         df <- .register_ledger(file, flags)
     } else if (toolchain == "hledger") {
@@ -106,9 +106,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
     args <- c("-o", .nf(tfile), .nf(file), format)
-    # cmd <- paste(.cmd("bean-report"), paste(args, collapse=" "))
-    # system(cmd)
-    system2("bean-report", args)
+    .system("bean-report", args)
     tfile
 }
 
@@ -138,13 +136,15 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
     args <- c("register", "-f", .nf(hfile), "-o", .nf(cfile), flags)
-    # cmd <- paste(.cmd("hledger"), paste(args, collapse=" "))
-    # system(cmd, ignore.stderr=TRUE)
-    # system(cmd)
-    system2("hledger", args)
-    if (!file.exists(cfile))
-        stop("hledger had an import error")
+    .system("hledger", args)
     read.csv(cfile, stringsAsFactors = FALSE)
+}
+
+.system <- function(cmd, args) {
+    tryCatch(system2(cmd, args, stdout=TRUE, stderr=TRUE),
+             warning = function(w) {
+                stop(paste(c(paste(cmd, "had an import error:"), w), collapse="\n"))
+             })
 }
 
 .clean_hledger <- function(df) {
@@ -185,12 +185,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
     args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
-    # cmd <- paste(.cmd("ledger"), paste(args, collapse=" "))
-    # system(cmd, ignore.stderr=TRUE)
-    # system(cmd)
-    system2("ledger", args)
-    if (!file.exists(cfile))
-        stop("ledger had an import error")
+    .system("ledger", args)
     .clean_ledger(read.csv(cfile, header=FALSE, stringsAsFactors = FALSE))
 }
 

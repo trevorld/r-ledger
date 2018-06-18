@@ -37,8 +37,6 @@ on_failure:
   - cmd: ledger --version
   - cmd: hledger --version
   - cmd: bean-report --version
-  - cmd: bean-example -o test.bean
-  - cmd: bean-report -o test.hledger test.bean hledger
 
 artifacts:
   - path: '*.Rcheck\**\*.log'

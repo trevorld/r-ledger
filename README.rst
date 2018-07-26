@@ -13,6 +13,10 @@ ledger
     :target: https://codecov.io/github/trevorld/ledger?branch=master
     :alt: Coverage Status
 
+.. image:: http://www.repostatus.org/badges/latest/wip.svg
+   :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
+   :target: http://www.repostatus.org/#wip
+
 ``ledger`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis, plotting, and export.
 
 Right now it supports reading in the register from ``ledger``, ``hledger``, and ``beancount`` files.  

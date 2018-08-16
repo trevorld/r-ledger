@@ -12,16 +12,17 @@ df_file <- data.frame(file = c(rep(c(lfile, hfile, bfile), each=2)),
                                     "bean-report_ledger", "bean-report_hledger"),
                       stringsAsFactors=FALSE)
 
+context("Various assertions work as expected")
 test_that(".assert_toolchain works as expected", {
     expect_error(.assert_toolchain("does-not-exist"), "does-not-exist binaries not found on path")
 })
 test_that("default_toolchain works as expected", {
-    expect_error(register("test.docx"), "Couldn't find an acceptable toolchain for docx")
+    expect_error(ledger::register("test.docx"), "Couldn't find an acceptable toolchain for docx")
 })
 test_that("register works as expected", {
-    expect_error(register("test.docx", toolchain="docx"), "docx binaries not found on path")
+    expect_error(ledger::register("test.docx", toolchain="docx"), "docx binaries not found on path")
     if(.is_toolchain_supported("ledger"))
-        expect_error(register("test.docx", toolchain="ledger"), "ledger had an import error")
+        expect_error(ledger::register("test.docx", toolchain="ledger"), "ledger had an import error")
 })
 test_that("default_toolchain works as expected", {
     if(.is_toolchain_supported("ledger"))
@@ -34,16 +35,16 @@ test_that("default_toolchain works as expected", {
 
 skip_toolchain <- function(file, toolchain) {
     if(!.is_toolchain_supported(toolchain)) {
-        expect_error(register(file))
+        expect_error(ledger::register(file))
         skip(paste(toolchain, "binaries not found"))
     }
 }
 
 skip_hledger <- function(file, toolchain) {
-    ext <- file_ext(file)
+    ext <- tools::file_ext(file)
     if (ext == "ledger" && toolchain == "hledger") {
-        expect_error(register(file))
-        skip("hledger can't read in example.ledger")
+        # expect_error(ledger::register(file))
+        skip("hledger sometimes can't read in example.ledger")
     }
 }
 
@@ -51,6 +52,7 @@ for (ii in 1:nrow(df_file)) {
     toolchain <- df_file$toolchain[ii]
     file <- df_file$file[ii]
     empty_file <- df_file$efile[ii]
+    context(paste(file, toolchain, "works as expected"))
     register <- function(...) { ledger::register(..., toolchain=toolchain) }
     net_worth <- function(...) { ledger::net_worth(..., toolchain=toolchain) }
 

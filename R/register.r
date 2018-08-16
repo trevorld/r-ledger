@@ -101,7 +101,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 
 # get AppVeyor to work?
 .nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
-.cmd <- function(command) { normalizePath(as.character(Sys.which(command))) }
+# .cmd <- function(command) { normalizePath(as.character(Sys.which(command))) }
 
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))

@@ -4,8 +4,8 @@
 \alias{net_worth}
 \title{Compute net worth}
 \usage{
-net_worth(file, date = Sys.Date() + 1, include = c("^asset", "^liabilit",
-  "^<revalued>"), exclude = NULL, flags = "-V",
+net_worth(file, date = Sys.Date() + 1, include = c("^asset",
+  "^liabilit", "^<revalued>"), exclude = NULL, flags = "-V",
   toolchain = default_toolchain(file), ignore_case = TRUE)
 }
 \arguments{

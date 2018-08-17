@@ -105,7 +105,18 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
-    args <- c("-o", .nf(tfile), .nf(file), format)
+    if ( .Platform$OS.type == "windows") {
+        # bean-report may choke on absolute file paths?
+	tbfile <- tempfile(fileext = ".bean")
+	on.exit(unlink(tbfile))
+	file.copy(file, tbfile)
+        wd <- getwd()
+        on.exit(setwd(wd))
+        setwd(tempdir())
+        args <- c("-o", basename(tfile), basename(tbfile), format)
+    } else {
+        args <- c("-o", .nf(tfile), .nf(file), format)
+    }
     .system("bean-report", args)
     tfile
 }
@@ -184,7 +195,18 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 .read_ledger <- function(lfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
+    if ( .Platform$OS.type == "windows") {
+        # ledger seems to choke on absolute file paths...
+        tlfile <- tempfile(fileext = ".ledger")
+        on.exit(unlink(tlfile))
+        file.copy(lfile, tlfile)
+        wd <- getwd()
+        on.exit(setwd(wd))
+        setwd(tempdir())
+        args <- c("csv", "-f", basename(tlfile), "-o", basename(cfile), flags)
+    } else {
+        args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
+    }
     .system("ledger", args)
     .clean_ledger(read.csv(cfile, header=FALSE, stringsAsFactors = FALSE))
 }
@@ -213,7 +235,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     if (toolchain == "ledger") {
         .is_binary_on_path("ledger")
     } else if (toolchain == "hledger") {
-        .is_binary_on_path("ledger")
+        .is_binary_on_path("hledger")
     } else if (toolchain == "bean-report_ledger") {
         .is_binary_on_path("ledger") && .is_binary_on_path("bean-report")
     } else if (toolchain == "bean-report_hledger") {

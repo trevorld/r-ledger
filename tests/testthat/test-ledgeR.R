@@ -35,7 +35,7 @@ test_that("default_toolchain works as expected", {
 
 skip_toolchain <- function(file, toolchain) {
     if(!.is_toolchain_supported(toolchain)) {
-        expect_error(ledger::register(file))
+        expect_error(ledger::register(file, toolchain=toolchain))
         skip(paste(toolchain, "binaries not found"))
     }
 }

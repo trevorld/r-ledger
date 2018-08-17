@@ -38,6 +38,8 @@ skip_toolchain <- function(file, toolchain) {
         expect_error(ledger::register(file, toolchain=toolchain))
         skip(paste(toolchain, "binaries not found"))
     }
+    # if (toolchain %in% c("bean-report_ledger", "bean-report_hledger"))
+    #     skip_on_os("windows")
 }
 
 skip_hledger <- function(file, toolchain) {

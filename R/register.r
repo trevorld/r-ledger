@@ -105,18 +105,19 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
-    if ( .Platform$OS.type == "windows") {
-        # bean-report may choke on absolute file paths?
-	tbfile <- tempfile(fileext = ".bean")
-	on.exit(unlink(tbfile))
-	file.copy(file, tbfile)
-        wd <- getwd()
-        on.exit(setwd(wd))
-        setwd(tempdir())
-        args <- c("-o", basename(tfile), basename(tbfile), format)
-    } else {
-        args <- c("-o", .nf(tfile), .nf(file), format)
-    }
+    # if ( .Platform$OS.type == "windows") {
+    #     # bean-report may choke on absolute file paths?
+    #     tbfile <- tempfile(fileext = ".bean")
+    #     on.exit(unlink(tbfile))
+    #     file.copy(file, tbfile)
+    #     wd <- getwd()
+    #     on.exit(setwd(wd))
+    #     setwd(tempdir())
+    #     args <- c("-o", basename(tfile), basename(tbfile), format)
+    # } else {
+    #     args <- c("-o", .nf(tfile), .nf(file), format)
+    # }
+    args <- c("-o", .nf(tfile), .nf(file), format)
     .system("bean-report", args, quiet=FALSE)
     tfile
 }

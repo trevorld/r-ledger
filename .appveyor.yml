@@ -17,12 +17,10 @@ cache:
 
 # Adapt as necessary starting from here
 
-
 environment:
     PYTHON3: C:\Python35
     PYTHON3ALT: C:\python35
     PIP3: C:\Python35\Scripts\pip
-
 
 build_script:
   - travis-tool.sh install_deps

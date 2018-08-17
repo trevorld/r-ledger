@@ -117,7 +117,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     } else {
         args <- c("-o", .nf(tfile), .nf(file), format)
     }
-    .system("bean-report", args)
+    .system("bean-report", args, quiet=FALSE)
     tfile
 }
 
@@ -151,11 +151,15 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     read.csv(cfile, stringsAsFactors = FALSE)
 }
 
-.system <- function(cmd, args) {
+.system <- function(cmd, args, quiet=TRUE) {
+    if(quiet) {
     tryCatch(system2(cmd, args, stdout=TRUE, stderr=TRUE),
              warning = function(w) {
                 stop(paste(c(paste(cmd, "had an import error:"), w), collapse="\n"))
              })
+    } else {
+        system2(cmd, args)
+    }
 }
 
 .clean_hledger <- function(df) {

@@ -12,6 +12,8 @@ install:
 
 cache:
   - C:\RLibrary
+  - C:\Users\appveyor\AppData\Roaming\local\bin
+  - "%LOCALAPPDATA\\Programs\\stack"
 
 # Adapt as necessary starting from here
 
@@ -21,9 +23,6 @@ environment:
     PYTHON3ALT: C:\python35
     PIP3: C:\Python35\Scripts\pip
 
-cache:
-  - C:\Users\appveyor\AppData\Roaming\local\bin
-  - "%LOCALAPPDATA\\Programs\\stack"
 
 build_script:
   - travis-tool.sh install_deps

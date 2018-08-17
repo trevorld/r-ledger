@@ -13,7 +13,7 @@ install:
 cache:
   - C:\RLibrary
   - C:\Users\appveyor\AppData\Roaming\local\bin
-  - "%LOCALAPPDATA\\Programs\\stack"
+  - "%LOCALAPPDATA%\\Programs\\stack"
 
 # Adapt as necessary starting from here
 

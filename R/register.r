@@ -105,6 +105,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     tfile <- tempfile(fileext = paste0(".", format))
     args <- c("-o", .nf(tfile), .nf(file), format)
     if ( .Platform$OS.type == "windows") {
+        # bean-report on Windows seems to choke when called from system2
         shell(paste("bean-report -o", .nf(tfile), .nf(file), format), mustWork=TRUE)
     } else {
         .system("bean-report", args)
@@ -187,7 +188,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
     if ( .Platform$OS.type == "windows") {
-        # ledger seems to choke on absolute file paths...
+        # ledger on Windows seems to choke on absolute file paths 
         tlfile <- tempfile(fileext = ".ledger")
         on.exit(unlink(tlfile))
         file.copy(lfile, tlfile)

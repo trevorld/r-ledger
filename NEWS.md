@@ -1,7 +1,7 @@
 ledger 0.8.0
 ============
 
-* Implemented a workaround to get ``register`` working with the pre-compiled ``ledger `` binary for Windows.
+* Implemented a workaround to get ``register`` working with ``ledger `` and ``bean-report`` on Windows (#15).
 
 ledger 0.7.0
 ============

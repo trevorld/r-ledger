@@ -1,3 +1,8 @@
+ledger 0.8.0
+============
+
+* Implemented a workaround to get ``register`` working with the pre-compiled ``ledger `` binary for Windows.
+
 ledger 0.7.0
 ============
 

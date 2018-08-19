@@ -99,26 +99,16 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
                   matches("market_value"), matches("mv_commodity"))
 }
 
-# get AppVeyor to work?
 .nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
-# .cmd <- function(command) { normalizePath(as.character(Sys.which(command))) }
 
 .bean_report <- function(file, format) {
     tfile <- tempfile(fileext = paste0(".", format))
-    # if ( .Platform$OS.type == "windows") {
-    #     # bean-report may choke on absolute file paths?
-    #     tbfile <- tempfile(fileext = ".bean")
-    #     on.exit(unlink(tbfile))
-    #     file.copy(file, tbfile)
-    #     wd <- getwd()
-    #     on.exit(setwd(wd))
-    #     setwd(tempdir())
-    #     args <- c("-o", basename(tfile), basename(tbfile), format)
-    # } else {
-    #     args <- c("-o", .nf(tfile), .nf(file), format)
-    # }
     args <- c("-o", .nf(tfile), .nf(file), format)
-    .system("bean-report", args, quiet=FALSE)
+    if ( .Platform$OS.type == "windows") {
+        shell(paste("bean-report -o", .nf(tfile), .nf(file), format), mustWork=TRUE)
+    } else {
+        .system("bean-report", args)
+    }
     tfile
 }
 
@@ -152,16 +142,12 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     read.csv(cfile, stringsAsFactors = FALSE)
 }
 
-.system <- function(cmd, args, quiet=TRUE) {
-    if(quiet) {
+.system <- function(cmd, args) {
     tryCatch(system2(cmd, args, stdout=TRUE, stderr=TRUE),
              warning = function(w) {
                 stop(paste(c(paste(cmd, "had an import error:"), w), collapse="\n"))
              })
-    } else {
-        system2(cmd, args)
-    }
-}
+} 
 
 .clean_hledger <- function(df) {
     if (nrow(df)) {

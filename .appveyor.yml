@@ -30,7 +30,7 @@ test_script:
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack --silent install --resolver=lts hledger-lib-1.9 hledger-1.9
-  - cmd: "%PYTHON3%\pip --quiet install beancount"
+  - cmd: "%PYTHON3%\\pip --quiet install beancount"
   - travis-tool.sh run_tests
 
 on_failure:

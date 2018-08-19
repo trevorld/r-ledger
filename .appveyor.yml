@@ -41,7 +41,7 @@ on_failure:
   - cmd: hledger --version
   - cmd: bean-report --version
   - ps: bean-report --version
-  - ps: bean-example -o example.bean
+  - ps: cp inst/extdata/example.beancount example.bean
   - ps: bean-report -o example.hledger example.bean hledger
   - ps: head example.hledger
   - ps: Rscript -e 'system2("bean-report", c("-o", "example2.hledger", "example.bean", "hledger"))'

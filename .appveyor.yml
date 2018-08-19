@@ -20,13 +20,14 @@ cache:
 environment:
     PYTHON3: C:\Python35
     PYTHON3ALT: C:\python35
+    PYTHON3ALT2: c:\python35
     PIP3: C:\Python35\Scripts\pip
 
 build_script:
   - travis-tool.sh install_deps
 
 test_script:
-  - cmd: set PATH=%PYTHON3%\Scripts;%PYTHON3ALT\Scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
+  - cmd: set PATH=%PYTHON3%\Scripts;%PYTHON3ALT%\Scripts;%PYTHON3ALT2%\Scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack --silent install --resolver=lts hledger-lib-1.9 hledger-1.9
@@ -39,6 +40,12 @@ on_failure:
   - cmd: ledger --version
   - cmd: hledger --version
   - cmd: bean-report --version
+  - ps: bean-report --version
+  - ps: bean-example -o example.bean
+  - ps: bean-report -o example.hledger example.bean hledger
+  - ps: head example.hledger
+  - ps: Rscript -e 'system2("bean-report", c("-o", "example2.hledger", "example.bean", "hledger"))'
+  - ps: head example2.hledger
 
 on_success:
   - Rscript -e "covr::codecov()"

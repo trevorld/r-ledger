@@ -3,4 +3,4 @@ CONTRIBUTING
 README.rst
 ^\.travis\.yml$
 ^\.travis$
-^appveyor\.yml$
+^.appveyor\.yml$

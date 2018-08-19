@@ -18,16 +18,16 @@ cache:
 # Adapt as necessary starting from here
 
 environment:
-    PYTHON3: C:\Python35
-    PYTHON3ALT: C:\python35
-    PYTHON3ALT2: c:\python35
+    PYTHON3: C:\Python35\Scripts
+    PYTHON3ALT: C:\python35\Scripts
+    PYTHON3ALT2: c:\Python35\Scripts
     PIP3: C:\Python35\Scripts\pip
 
 build_script:
   - travis-tool.sh install_deps
 
 test_script:
-  - cmd: set PATH=%PYTHON3%\Scripts;%PYTHON3ALT%\Scripts;%PYTHON3ALT2%\Scripts;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
+  - cmd: set PATH=%PYTHON3%;%PYTHON3ALT%;%PYTHON3ALT2%;C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack --silent install --resolver=lts hledger-lib-1.9 hledger-1.9

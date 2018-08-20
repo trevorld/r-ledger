@@ -1,16 +1,16 @@
 ledger
 ======
 
-.. image:: https://travis-ci.org/trevorld/ledger.png?branch=master
-    :target: https://travis-ci.org/trevorld/ledger
+.. image:: https://travis-ci.org/trevorld/r-ledger.png?branch=master
+    :target: https://travis-ci.org/trevorld/r-ledger
     :alt: Travis-CI Build Status
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/trevorld/ledger?branch=master&svg=true
-    :target: https://ci.appveyor.com/project/trevorld/ledger
+.. image:: https://ci.appveyor.com/api/projects/status/github/trevorld/r-ledger?branch=master&svg=true
+    :target: https://ci.appveyor.com/project/trevorld/r-ledger
     :alt: AppVeyor Build Status
 
-.. image:: https://img.shields.io/codecov/c/github/trevorld/ledger/master.svg
-    :target: https://codecov.io/github/trevorld/ledger?branch=master
+.. image:: https://img.shields.io/codecov/c/github/trevorld/r-ledger/master.svg
+    :target: https://codecov.io/github/trevorld/r-ledger?branch=master
     :alt: Coverage Status
 
 .. image:: http://www.repostatus.org/badges/latest/wip.svg
@@ -31,7 +31,7 @@ This package depends on `R <https://cran.r-project.org/>`_ and the R packages ``
 To install the development version of the ``ledger`` package (and its R package dependencies) use the ``install_github`` function from the ``devtools`` package in R::
     
     if(!require("devtools")) { install.packages("devtools") }
-    devtools::install_github("trevorld/ledger")
+    devtools::install_github("trevorld/r-ledger")
 
 This package also has some system dependencies depending on which plaintext accounting files you wish to read to be able to read in:
 

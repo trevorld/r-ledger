@@ -1,6 +1,10 @@
 ledger
 ======
 
+.. image:: https://www.r-pkg.org/badges/version/ledger
+    :target: https://cran.r-project.org/package=ledger
+    :alt: CRAN Status Badge
+
 .. image:: https://travis-ci.org/trevorld/r-ledger.png?branch=master
     :target: https://travis-ci.org/trevorld/r-ledger
     :alt: Travis-CI Build Status

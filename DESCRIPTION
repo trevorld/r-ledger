@@ -1,7 +1,7 @@
 Package: ledger
 Type: Package
 Title: Utilities for Importing Data from Plaintext Accounting Files
-Version: 0.8.0-2
+Version: 1.0.0
 Author: Trevor L Davis
 Maintainer: Trevor L Davis <trevor.l.davis@gmail.com>
 URL: https://github.com/trevorld/r-ledger

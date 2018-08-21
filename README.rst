@@ -13,9 +13,9 @@ ledger
     :target: https://codecov.io/github/trevorld/r-ledger?branch=master
     :alt: Coverage Status
 
-.. image:: http://www.repostatus.org/badges/latest/wip.svg
-   :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
-   :target: http://www.repostatus.org/#wip
+.. image:: http://www.repostatus.org/badges/latest/active.svg
+   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
+   :target: http://www.repostatus.org/#active
 
 ``ledger`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis, plotting, and export.
 

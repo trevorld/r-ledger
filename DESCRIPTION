@@ -1,6 +1,6 @@
 Package: ledger
 Type: Package
-Title: Utilities for Importing Data from Plaintext Accounting Files
+Title: Utilities for Importing Data from Plain Text Accounting Files
 Version: 1.0.1
 Author: Trevor L Davis
 Maintainer: Trevor L Davis <trevor.l.davis@gmail.com>

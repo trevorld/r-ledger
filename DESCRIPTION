@@ -1,12 +1,12 @@
 Package: ledger
 Type: Package
 Title: Utilities for Importing Data from Plaintext Accounting Files
-Version: 1.0.0
+Version: 1.0.1
 Author: Trevor L Davis
 Maintainer: Trevor L Davis <trevor.l.davis@gmail.com>
 URL: https://github.com/trevorld/r-ledger
 BugReports: https://github.com/trevorld/r-ledger/issues
-Description: Utilities for querying plaintext accounting files from Ledger, HLedger, and Beancount.
+Description: Utilities for querying plain text accounting files from 'Ledger', 'HLedger', and 'Beancount'.
 Imports:
     dplyr (>= 0.7.0), rio, rlang, tidyr (>= 0.7.0), tools
 Suggests:

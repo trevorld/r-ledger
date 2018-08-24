@@ -21,7 +21,7 @@ ledger
    :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
    :target: http://www.repostatus.org/#active
 
-``ledger`` is an R package to import data from plaintext accounting software like Ledger, HLedger, and Beancount into an R data frame for convenient analysis, plotting, and export.
+``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <http://hledger.org/>`_, and `Beancount <http://furius.ca/beancount/>`_ into an R data frame for convenient analysis, plotting, and export.
 
 Right now it supports reading in the register from ``ledger``, ``hledger``, and ``beancount`` files.  
 

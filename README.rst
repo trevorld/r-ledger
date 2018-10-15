@@ -17,6 +17,10 @@ ledger
     :target: https://codecov.io/github/trevorld/r-ledger?branch=master
     :alt: Coverage Status
 
+.. image:: https://cranlogs.r-pkg.org/badges/ledger
+    :target: https://cran.r-project.org/package=ledger
+    :alt: RStudio CRAN mirror downloads
+
 .. image:: http://www.repostatus.org/badges/latest/active.svg
    :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
    :target: http://www.repostatus.org/#active

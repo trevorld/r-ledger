@@ -1,3 +1,8 @@
+ledger 1.1.0
+============
+
+* Now ``register`` preserves transaction comments when importing ledger files (#16).  Thanks Jenya Sovetkin for patch.
+
 ledger 0.8.0
 ============
 

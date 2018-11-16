@@ -96,7 +96,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     } 
     dplyr::select(df, "date", "mark", "payee", "description", "account", "amount",
                   "commodity", matches("historical_cost"), matches("hc_commodity"),
-                  matches("market_value"), matches("mv_commodity"))
+                  matches("market_value"), matches("mv_commodity"), matches("comment"))
 }
 
 .nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
@@ -204,7 +204,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
 }
 
 .clean_ledger <- function(df) {
-    names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "V8")
+    names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "comment")
 
     df <- dplyr::mutate(df, 
                 date = as.Date(date, "%Y/%m/%d"),

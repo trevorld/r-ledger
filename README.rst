@@ -36,10 +36,10 @@ Installation
 
 This package depends on `R <https://cran.r-project.org/>`_ and the R packages ``dplyr``, ``rio``, ``rlang``, and ``tidyr``.
 
-To install the development version of the ``ledger`` package (and its R package dependencies) use the ``install_github`` function from the ``devtools`` package in R::
+To install the development version of the ``ledger`` package (and its R package dependencies) use the ``install_github`` function from the ``remotes`` package in R::
     
-    if(!require("devtools")) { install.packages("devtools") }
-    devtools::install_github("trevorld/r-ledger")
+    if(!require("remotes")) { install.packages("remotes") }
+    remotes::install_github("trevorld/r-ledger")
 
 This package also has some system dependencies depending on which plaintext accounting files you wish to read to be able to read in:
 

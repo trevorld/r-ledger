@@ -45,17 +45,16 @@ default_toolchain <- function(file) {
 
 #' Import a hledger or beancount register
 #'
-#' \code{register} imports the register from a ledger, hledger, or beancount file as a data frame.
+#' \code{register} imports the register from a ledger, hledger, or beancount file as a tibble.
 #' 
 #' @param file Filename for a ledger, hledger, or beancount file.
 #' @param flags Character vector of additional command line flags to pass 
 #'     to either \code{ledger csv} or \code{hledger register}.
 #' @param toolchain Toolchain used to read in register. 
 #'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
-#' @return  \code{register} returns a data frame.
+#' @return  \code{register} returns a tibble.
 #'    
 #' @import dplyr
-#' @importFrom utils read.csv
 #' @importFrom tools file_ext
 #' @importFrom rlang .data
 #' @export
@@ -78,10 +77,6 @@ default_toolchain <- function(file) {
 #'    }
 register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     .assert_toolchain(toolchain)
-    # tfile <- tempfile(fileext = paste0(".", file_ext(file)))
-    # on.exit(unlink(tfile))
-    # file.copy(file, tfile)
-    # file < tfile
     if (toolchain == "ledger") {
         df <- .register_ledger(file, flags)
     } else if (toolchain == "hledger") {
@@ -141,7 +136,13 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     on.exit(unlink(cfile))
     args <- c("register", "-f", .nf(hfile), "-o", .nf(cfile), flags)
     .system("hledger", args)
-    read.csv(cfile, stringsAsFactors = FALSE)
+    .read_csv(cfile)
+}
+
+#' @importFrom tibble as_tibble
+#' @importFrom utils read.csv
+.read_csv <- function(cfile, ...) {
+    as_tibble(read.csv(cfile, stringsAsFactors=FALSE, ...))
 }
 
 .system <- function(cmd, args) {
@@ -201,7 +202,7 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
         args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
     }
     .system("ledger", args)
-    .clean_ledger(read.csv(cfile, header=FALSE, stringsAsFactors = FALSE))
+    .clean_ledger(.read_csv(cfile, header=FALSE))
 }
 
 .clean_ledger <- function(df) {

@@ -22,7 +22,7 @@
 #' @param toolchain Toolchain used to read in register. 
 #'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
 #' @param ignore_case logical value of whether to ignore case in regular expressions or not.
-#' @return  \code{net_worth} returns a data frame
+#' @return  \code{net_worth} returns a tibble
 #' @examples
 #'    \dontrun{
 #'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 

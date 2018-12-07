@@ -16,10 +16,10 @@ to either \code{ledger csv} or \code{hledger register}.}
 Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 }
 \value{
-\code{register} returns a data frame.
+\code{register} returns a tibble.
 }
 \description{
-\code{register} imports the register from a ledger, hledger, or beancount file as a data frame.
+\code{register} imports the register from a ledger, hledger, or beancount file as a tibble.
 }
 \examples{
    \dontrun{

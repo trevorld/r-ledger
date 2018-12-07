@@ -28,7 +28,7 @@ Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 \item{ignore_case}{logical value of whether to ignore case in regular expressions or not.}
 }
 \value{
-\code{net_worth} returns a data frame
+\code{net_worth} returns a tibble
 }
 \description{
 Computes net worth for a vector of dates.  

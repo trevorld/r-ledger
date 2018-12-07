@@ -62,6 +62,7 @@ for (ii in 1:nrow(df_file)) {
 
         df <- register(file)
         expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 3*82.55)
+        expect_true(tibble::is_tibble(df))
 
         mark <- unique(dplyr::filter(df, description == "Federal Income Tax Withholding")$mark)
         expect_equal(mark, "*")
@@ -72,7 +73,7 @@ for (ii in 1:nrow(df_file)) {
         investment <- dplyr::filter(df, account == "Assets:JT-Brokerage")
         expect_equal(investment$amount, 4)
 
-        if (exists('import', where=asNamespace('rio'), mode='function')) {
+        if (system.file(package="rio") != "") {
             df2 <- rio::import(file, toolchain=toolchain)
             ftax_sum <- sum(dplyr::filter(df2, account == "Expenses:Taxes:Federal")$amount)
             expect_equal(ftax_sum, 3*82.55)
@@ -87,7 +88,7 @@ for (ii in 1:nrow(df_file)) {
             # df <- register(file, flags="tag:Link=\\^grocery")
             # expect_equal(dplyr::filter(df, account == "Expenses:Food:Restaurant")$amount, 500.54)
         } else {
-            expect_equal(dplyr::filter(df, account == "Assets:JT-Brokerage")$market_value, NULL)
+            expect_warning(investment$market_value)
             expect_error(register(file, flags="tag:Tag=#restaurant"))
             expect_error(register(file, flags="tag:Link=^grocery"))
         }
@@ -101,7 +102,9 @@ for (ii in 1:nrow(df_file)) {
             expect_error(register(file))
             skip(paste(toolchain, "not supported"))
         }
-        expect_equal(net_worth(file)$net_worth, 8125.39)
+        df <- net_worth(file)
+        expect_true(tibble::is_tibble(df))
+        expect_equal(df$net_worth, 8125.39)
         expect_equal(net_worth(file, include=".*", exclude=c("^Equity", "^Income", "^Expenses"))$net_worth, 8125.39)
         expect_equal(net_worth(file, c("2016-01-01", "2017-01-01", "2018-01-01"))$net_worth,
                      c(5000, 4361.39, 6743.39))

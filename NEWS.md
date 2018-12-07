@@ -1,7 +1,20 @@
-ledger 1.1.0
+ledger 2.0.0
 ============
 
+Breaking changes
+----------------
+
+* Now ``register`` returns a ``tibble`` instead of a ``data.frame``.  Most users of ``ledger`` won't need to change any code.
+
+Minor improvements and fixes
+----------------------------
+
 * Now ``register`` preserves transaction comments when importing ledger files (#16).  Thanks Jenya Sovetkin for patch.
+
+ledger 1.0.1
+============
+
+* Initial release on CRAN.
 
 ledger 0.8.0
 ============

@@ -34,14 +34,15 @@ Right now it supports reading in the register from ``ledger``, ``hledger``, and 
 Installation
 ------------
 
-This package depends on `R <https://cran.r-project.org/>`_ and the R packages ``dplyr``, ``rio``, ``rlang``, and ``tidyr``.
+To install the last version released to CRAN use the following command::
+
+    > install.packages("ledger")
 
 To install the development version of the ``ledger`` package (and its R package dependencies) use the ``install_github`` function from the ``remotes`` package in R::
     
-    if(!require("remotes")) { install.packages("remotes") }
-    remotes::install_github("trevorld/r-ledger")
+    > remotes::install_github("trevorld/r-ledger")
 
-This package also has some system dependencies depending on which plaintext accounting files you wish to read to be able to read in:
+This package also has some system dependencies that need to be installed depending on which plaintext accounting files you wish to read to be able to read in:
 
 ledger
     * `ledger <https://www.ledger-cli.org/>`_ (>= 3.1) OR for a subset of files hledger (>= 1.4)

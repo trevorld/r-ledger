@@ -1,5 +1,6 @@
 Rakefile
 CONTRIBUTING
+examples.rst
 README.rst
 ^\.travis\.yml$
 ^\.travis$

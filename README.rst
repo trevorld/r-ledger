@@ -223,7 +223,7 @@ Some examples using the ``prune_coa`` function to simplify the "Chart of Account
      9 Income      USD              -385823.
     10 Income      VACHR               -385 
     11 Liabilities USD                -2723.
-    > df %>% prune_coa(2) %>% group_by(account, mv_commodity) %>% summarize(market_value = sum(market_value)) %>% print()
+    > df %>% prune_coa(2) %>% group_by(account, mv_commodity) %>% summarize(market_value = sum(market_value))
     # A tibble: 18 x 3
     # Groups:   account [?]
        account                     mv_commodity market_value

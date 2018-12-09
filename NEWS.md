@@ -6,6 +6,11 @@ Breaking changes
 
 * Now ``register`` returns a ``tibble`` instead of a ``data.frame``.  Most users of ``ledger`` won't need to change any code.
 
+New functions
+-------------
+
+* Now has ``prune_coa`` and ``prune_coa_string`` functions to help simplify plaintext accounting "Chart of Accounts" names to a given maximum depth.
+
 Minor improvements and fixes
 ----------------------------
 

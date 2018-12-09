@@ -66,7 +66,10 @@ To run the unit tests you'll also need the suggested R package ``testthat``.
 Examples
 --------
 
-The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also exports S3 methods so one can use ``rio::import`` to read in a register and a ``net_worth`` convenience function.
+API
++++
+
+The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also exports S3 methods so one can use ``rio::import`` to read in a register, a ``net_worth`` convenience function, and a ``prune_coa`` convenience function.
 
 register
 ~~~~~~~~
@@ -194,3 +197,53 @@ Some examples of using the ``net_worth`` function::
     --------  ----------
 
 **Note:** There is `currently a bug <https://github.com/simonmichael/hledger/issues/810>`__ in ``hledger register -f file.hledger -o file.csv`` where commodities are missing when the amount is zero.
+
+prune_coa
+~~~~~~~~~
+
+Some examples using the ``prune_coa`` function to simplify the "Chart of Account" names to a given maximum depth::
+
+    > library("dplyr")
+    > example_beancount_file <- tempfile(fileext = ".beancount")
+    > system(paste("bean-example -o", example_beancount_file), ignore.stderr=TRUE)
+    > df <- register(example_beancount_file) %>% dplyr::filter(!is.na(commodity))
+    > df %>% prune_coa() %>% group_by(account, mv_commodity) %>% summarize(market_value = sum(market_value))
+    # A tibble: 11 x 3
+    # Groups:   account [?]
+       account     mv_commodity market_value
+       <chr>       <chr>               <dbl>
+     1 Assets      IRAUSD                 0 
+     2 Assets      USD               121570.
+     3 Assets      VACHR                 41 
+     4 Equity      USD                -3749.
+     5 Expenses    IRAUSD             55000 
+     6 Expenses    USD               277815.
+     7 Expenses    VACHR                344 
+     8 Income      IRAUSD            -55000 
+     9 Income      USD              -385823.
+    10 Income      VACHR               -385 
+    11 Liabilities USD                -2723.
+    > df %>% prune_coa(2) %>% group_by(account, mv_commodity) %>% summarize(market_value = sum(market_value)) %>% print()
+    # A tibble: 18 x 3
+    # Groups:   account [?]
+       account                     mv_commodity market_value
+       <chr>                       <chr>               <dbl>
+     1 Assets:US                   IRAUSD             0     
+     2 Assets:US                   USD           121570.    
+     3 Assets:US                   VACHR             41     
+     4 Equity:Opening-Balances     USD            -3749.    
+     5 Equity:Rounding             USD               -0.0495
+     6 Expenses:Financial          USD              609.    
+     7 Expenses:Food               USD            20069.    
+     8 Expenses:Health             USD             7461.    
+     9 Expenses:Home               USD            91181.    
+    10 Expenses:Taxes              IRAUSD         55000     
+    11 Expenses:Taxes              USD           154414.    
+    12 Expenses:Transport          USD             4080     
+    13 Expenses:Vacation           VACHR            344     
+    14 Income:US                   IRAUSD        -55000     
+    15 Income:US                   USD          -385823.    
+    16 Income:US                   VACHR           -385     
+    17 Liabilities:AccountsPayable USD                0     
+    18 Liabilities:US              USD            -2723.
+    

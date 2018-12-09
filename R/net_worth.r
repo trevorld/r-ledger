@@ -12,7 +12,8 @@
 #' Computes net worth at the beginning of the day before any transactions have occurred.
 #' 
 #' @param file Filename for a ledger, hledger, or beancount file.
-#' @param date Vector of dates to compute net worth for.
+#' @param date Vector of dates to compute net worth for.  
+#'      For each only the transactions (and price statements) before that date are used in the net worth calculation.
 #' @param include Character vector of regular expressions of accounts to include in the net worth calculation.  
 #'      Use \code{".*"} to include everything.
 #' @param exclude Character vector of regular expressions of accounts to exclude from the net worth calculation.  
@@ -43,8 +44,10 @@ net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit",
 
 #' @importFrom tidyr spread
 .net_worth_helper <- function(date, file, include, exclude, flags, toolchain, ignore_case) {
-    flags <- c(flags, paste0("--end=", date))
-    df <- register(file, flags, toolchain)
+    df <- switch(toolchain,
+                 ledger = register_ledger(file, flags, date),
+                 hledger = register_hledger(file, flags=flags, date=date, add_mark=FALSE, add_cost=FALSE, add_value=FALSE),
+                 register(file, flags=flags, date=date)) #### beancount
     include <- paste(include, collapse="|")
     df <- dplyr::filter(df, grepl(include, .data$account, ignore.case=ignore_case))
     if (!is.null(exclude)) {

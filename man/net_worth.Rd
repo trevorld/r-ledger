@@ -11,7 +11,8 @@ net_worth(file, date = Sys.Date() + 1, include = c("^asset",
 \arguments{
 \item{file}{Filename for a ledger, hledger, or beancount file.}
 
-\item{date}{Vector of dates to compute net worth for.}
+\item{date}{Vector of dates to compute net worth for.
+For each only the transactions (and price statements) before that date are used in the net worth calculation.}
 
 \item{include}{Character vector of regular expressions of accounts to include in the net worth calculation.
 Use \code{".*"} to include everything.}

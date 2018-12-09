@@ -48,10 +48,13 @@ default_toolchain <- function(file) {
 #' \code{register} imports the register from a ledger, hledger, or beancount file as a tibble.
 #' 
 #' @param file Filename for a ledger, hledger, or beancount file.
+#' @param ... Arguments passed on to either \code{register_ledger}, \code{register_hledger}, or \code{register_beancount}
 #' @param flags Character vector of additional command line flags to pass 
 #'     to either \code{ledger csv} or \code{hledger register}.
 #' @param toolchain Toolchain used to read in register. 
 #'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
+#' @param date End date.  
+#'     Only transactions (and price statements) before this date are used.  
 #' @return  \code{register} returns a tibble.
 #'    
 #' @import dplyr
@@ -60,37 +63,38 @@ default_toolchain <- function(file) {
 #' @export
 #' @examples
 #'    \dontrun{
-#'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
-#'      dfb <- register(example_beancount_file)
-#'      head(df)   
 #'
-#'      dfb2 <- rio::import(example_beancount_file)
-#'      all.equal(dfb, dfb2)
+#'      example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
+#'      dfl <- register(example_ledger_file)
+#'      head(dfl)
 #'
 #'      example_hledger_file <- system.file("extdata", "example.hledger", package = "ledger") 
 #'      dfh <- register(example_hledger_file)
 #'      head(dfh)
 #'
-#'      example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
-#'      dfl <- register(example_ledger_file)
-#'      head(dfl)
+#'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
+#'      dfb <- register(example_beancount_file)
+#'      head(dfb)
 #'    }
-register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
+register <- function(file, ..., toolchain = default_toolchain(file), date=NULL) {
     .assert_toolchain(toolchain)
     if (toolchain == "ledger") {
-        df <- .register_ledger(file, flags)
+        df <- register_ledger(file, ..., date=date)
     } else if (toolchain == "hledger") {
-        df <- .register_hledger(file, flags)
+        df <- register_hledger(file, ..., date=date)
     } else if (toolchain == "bean-report_ledger") {
         file <- .bean_report(file, "ledger")
         on.exit(unlink(file))
-        df <- .register_ledger(file, flags)
+        df <- register_ledger(file, ..., date=date)
     } else if (toolchain == "bean-report_hledger") {
         file <- .bean_report(file, "hledger")
         on.exit(unlink(file))
-        df <- .register_hledger(file, flags)
+        df <- register_hledger(file, ..., date=date)
     } 
-    dplyr::select(df, "date", "mark", "payee", "description", "account", "amount",
+}
+
+.select_columns <- function(df) {
+    dplyr::select(df, "date", matches("mark$"), "payee", "description", "account", "amount",
                   "commodity", matches("historical_cost"), matches("hc_commodity"),
                   matches("market_value"), matches("mv_commodity"), matches("comment"))
 }
@@ -109,25 +113,40 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     tfile
 }
 
-.register_hledger <- function(hfile, flags) {
-    df <- .register_hledger_helper(hfile, flags)
-    df_c <- .register_hledger_helper(hfile, c(flags, "--cost"))
-    df$historical_cost <- df_c$amount
-    df$hc_commodity <- df_c$commodity
-    df_m <- .register_hledger_helper(hfile, c(flags, "-V"))
-    df$market_value <- df_m$amount
-    df$mv_commodity <- df_m$commodity
-    df
+#' @rdname register
+#' @param add_mark Whether to add a column with the mark information.  Only relevant for hledger files.
+#' @param add_cost Whether to add historical cost columns.  Only relevant for hledger files.
+#' @param add_value Whether to add market value columns.  Only relevant for hledger files.
+#' @export 
+register_hledger <- function(file, flags="", date=NULL, add_mark=TRUE, add_cost=TRUE, add_value=TRUE) {
+    if(!is.null(date))
+        flags <- c(flags, paste0("--end=", date))
+    df <- .register_hledger_helper(file, flags, add_mark)
+    if (add_cost) {
+        df_c <- .register_hledger_helper(file, c(flags, "--cost"), add_mark)
+        df$historical_cost <- df_c$amount
+        df$hc_commodity <- df_c$commodity
+    }
+    if (add_value) {
+        df_m <- .register_hledger_helper(file, c(flags, "-V"), add_mark)
+        df$market_value <- df_m$amount
+        df$mv_commodity <- df_m$commodity
+    }
+    .select_columns(df)
 }
 
-.register_hledger_helper <- function(hfile, flags="") {
-    df_c <- .read_hledger(hfile, c(flags, "--cleared"))
-    df_c <- dplyr::mutate(df_c, mark = "*")
-    df_p <- .read_hledger(hfile, c(flags, "--pending"))
-    df_p <- dplyr::mutate(df_p, mark = "!")
-    df_u <- .read_hledger(hfile, c(flags, "--unmarked"))
-    df_u <- dplyr::mutate(df_u, mark = "")
-    df <- dplyr::bind_rows(df_c, df_p, df_u)
+.register_hledger_helper <- function(hfile, flags="", add_mark=TRUE) {
+    if(add_mark) {
+        df_c <- .read_hledger(hfile, c(flags, "--cleared"))
+        df_c <- dplyr::mutate(df_c, mark = "*")
+        df_p <- .read_hledger(hfile, c(flags, "--pending"))
+        df_p <- dplyr::mutate(df_p, mark = "!")
+        df_u <- .read_hledger(hfile, c(flags, "--unmarked"))
+        df_u <- dplyr::mutate(df_u, mark = "")
+        df <- dplyr::bind_rows(df_c, df_p, df_u)
+    } else {
+        df <- .read_hledger(hfile, flags)
+    }
     .clean_hledger(df)
 }
 
@@ -181,9 +200,13 @@ register <- function(file, flags = NULL, toolchain = default_toolchain(file)) {
     sapply(strsplit(strings, split), function(x) { x[2]})
 }
 
-.register_ledger <- function(lfile, flags) {
-    df <- .read_ledger(lfile, flags)
-    df
+#' @rdname register
+#' @export
+register_ledger <- function(file, flags="", date=NULL) {
+    if(!is.null(date))
+        flags <- c(flags, paste0("--end=", date))
+    df <- .read_ledger(file, flags)
+    .select_columns(df)
 }
 
 .read_ledger <- function(lfile, flags) {

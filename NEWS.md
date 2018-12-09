@@ -10,10 +10,12 @@ New functions
 -------------
 
 * Now has ``prune_coa`` and ``prune_coa_string`` functions to help simplify plaintext accounting "Chart of Accounts" names to a given maximum depth.
+* Lower level ``register_ledger`` and ``register_hledger`` functions are now exported (and documented).
 
 Minor improvements and fixes
 ----------------------------
 
+* ``register`` now has an optional ``date`` argument than can be used to exclude transactions and price statements before that date.
 * Now ``register`` preserves transaction comments when importing ledger files (#16).  Thanks Jenya Sovetkin for patch.
 
 ledger 1.0.1

@@ -6,10 +6,9 @@ bfile <- system.file("extdata", "example.beancount", package = "ledger")
 lefile <- system.file("extdata", "empty.ledger", package = "ledger")
 hefile <- system.file("extdata", "empty.hledger", package = "ledger")
 befile <- system.file("extdata", "empty.beancount", package = "ledger")
-df_file <- data.frame(file = c(rep(c(lfile, hfile, bfile), each=2)),
-                      efile = c(rep(c(lefile, hefile, befile), each=2)),
-                      toolchain = c(rep(c("ledger", "hledger"), 2),
-                                    "bean-report_ledger", "bean-report_hledger"),
+df_file <- data.frame(file = c(lfile, hfile, bfile, bfile),
+                      efile = c(lefile, hefile, befile, befile),
+                      toolchain = c("ledger", "hledger", "bean-report_ledger", "bean-report_hledger"),
                       stringsAsFactors=FALSE)
 
 context("Various assertions work as expected")
@@ -40,14 +39,6 @@ skip_toolchain <- function(file, toolchain) {
     }
 }
 
-skip_hledger <- function(file, toolchain) {
-    ext <- tools::file_ext(file)
-    if (ext == "ledger" && toolchain == "hledger") {
-        # expect_error(ledger::register(file))
-        skip("hledger sometimes can't read in example.ledger")
-    }
-}
-
 for (ii in 1:nrow(df_file)) {
     toolchain <- df_file$toolchain[ii]
     file <- df_file$file[ii]
@@ -58,7 +49,6 @@ for (ii in 1:nrow(df_file)) {
 
     test_that(paste("register works as expected on", basename(file), "using", toolchain), {
         skip_toolchain(file, toolchain)
-        skip_hledger(file, toolchain)
 
         df <- register(file)
         expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 3*82.55)
@@ -96,7 +86,6 @@ for (ii in 1:nrow(df_file)) {
 
     test_that(paste("net_worth works as expected on", basename(file), "using", toolchain), {
         skip_toolchain(file, toolchain)
-        skip_hledger(file, toolchain)
 
         if(!.is_toolchain_supported(toolchain)) {
             expect_error(register(file))

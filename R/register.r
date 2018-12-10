@@ -16,30 +16,12 @@
 #' @export
 default_toolchain <- function(file) {
     ext <- tools::file_ext(file)
-    toolchain <- NULL
-    if (ext == "ledger") {
-        if (.is_toolchain_supported("ledger")) {
-            toolchain <- "ledger"
-        } else if (.is_toolchain_supported("hledger")) {
-            warning("ledger not found on path trying hledger instead")
-            toolchain <- "hledger"
-        }
-    } else if (ext == "hledger") {
-        if (.is_toolchain_supported("hledger")) {
-            toolchain <- "hledger"
-        } else if (.is_toolchain_supported("ledger")) {
-            warning("hledger not found on path trying ledger instead")
-            toolchain <- "ledger"
-        }
-    } else if (ext %in% c("bean", "beancount")) {
-        if (.is_toolchain_supported("beancount")) {
-            toolchain <- "beancount"
-        } else if (.is_toolchain_supported("bean-report_hledger")) {
-            toolchain <- "bean-report_hledger"
-        } else if (.is_toolchain_supported("bean-report_ledger")) {
-            toolchain <- "bean-report_ledger"
-        }
-    }
+    toolchain <- switch(ext,
+                        ledger = "ledger",
+                        hledger = "hledger",
+                        bean = "beancount",
+                        beancount = "beancount",
+                        NULL)
     if (is.null(toolchain))
         stop(paste("Couldn't find an acceptable toolchain for", ext))
     toolchain

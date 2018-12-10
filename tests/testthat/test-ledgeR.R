@@ -6,9 +6,9 @@ bfile <- system.file("extdata", "example.beancount", package = "ledger")
 lefile <- system.file("extdata", "empty.ledger", package = "ledger")
 hefile <- system.file("extdata", "empty.hledger", package = "ledger")
 befile <- system.file("extdata", "empty.beancount", package = "ledger")
-df_file <- data.frame(file = c(lfile, hfile, bfile, bfile),
-                      efile = c(lefile, hefile, befile, befile),
-                      toolchain = c("ledger", "hledger", "bean-report_ledger", "bean-report_hledger"),
+df_file <- data.frame(file = c(lfile, hfile, bfile, bfile, bfile),
+                      efile = c(lefile, hefile, befile, befile, befile),
+                      toolchain = c("ledger", "hledger", "beancount", "bean-report_ledger", "bean-report_hledger"),
                       stringsAsFactors=FALSE)
 
 context("Various assertions work as expected")
@@ -28,8 +28,8 @@ test_that("default_toolchain works as expected", {
         expect_equal(default_toolchain("test.ledger"), "ledger")
     if(.is_toolchain_supported("hledger"))
         expect_equal(default_toolchain("test.hledger"), "hledger")
-    if(.is_toolchain_supported("bean-report_hledger"))
-        expect_equal(default_toolchain("test.beancount"), "bean-report_hledger")
+    if(.is_toolchain_supported("beancount"))
+        expect_equal(default_toolchain("test.beancount"), "beancount")
 })
 
 skip_toolchain <- function(file, toolchain) {
@@ -70,17 +70,17 @@ for (ii in 1:nrow(df_file)) {
             expect_equal(df, df2)
         }
 
-        if (! toolchain %in% c("ledger", "bean-report_ledger")) {
+        if (toolchain %in% c("hledger", "bean-report_hledger")) {
             expect_equal(investment$historical_cost, 1000)
             expect_equal(investment$market_value, 2000)
             df <- register(file, flags="tag:Tag=#restaurant")
             expect_equal(dplyr::filter(df, account == "Expenses:Food:Restaurant")$amount, 20.07)
-            # df <- register(file, flags="tag:Link=\\^grocery")
-            # expect_equal(dplyr::filter(df, account == "Expenses:Food:Restaurant")$amount, 500.54)
         } else {
-            expect_warning(investment$market_value)
             expect_error(register(file, flags="tag:Tag=#restaurant"))
             expect_error(register(file, flags="tag:Link=^grocery"))
+        }
+        if (toolchain %in% c("ledger", "bean-report_ledger")) {
+            expect_warning(investment$market_value)
         }
     })
 

@@ -27,6 +27,8 @@
 #' prune_coa_string(df$account, 2)
 #' 
 #' @importFrom rlang :=
+#' @importFrom rlang sym
+#' @importFrom rlang enquo
 #' @export
 prune_coa <- function(df, depth=1, variable, name) {
     if (missing(variable))

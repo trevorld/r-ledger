@@ -30,8 +30,8 @@ option "operating_currency" "USD"
 
 * Prices
 
-2016-01-1 price SP 250 USD
-2018-01-1 price SP 500 USD
+2016-01-01 price SP 250 USD
+2018-01-01 price SP 500 USD
 
 * Assets
 

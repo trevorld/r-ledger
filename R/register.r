@@ -32,7 +32,9 @@ default_toolchain <- function(file) {
             toolchain <- "ledger"
         }
     } else if (ext %in% c("bean", "beancount")) {
-        if (.is_toolchain_supported("bean-report_hledger")) {
+        if (.is_toolchain_supported("beancount")) {
+            toolchain <- "beancount"
+        } else if (.is_toolchain_supported("bean-report_hledger")) {
             toolchain <- "bean-report_hledger"
         } else if (.is_toolchain_supported("bean-report_ledger")) {
             toolchain <- "bean-report_ledger"
@@ -54,49 +56,59 @@ default_toolchain <- function(file) {
 #' @param toolchain Toolchain used to read in register. 
 #'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
 #' @param date End date.  
-#'     Only transactions (and price statements) before this date are used.  
+#'     Only transactions (and implicitly price statements) before this date are used.  
 #' @return  \code{register} returns a tibble.
 #'    
-#' @import dplyr
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
 #' @importFrom tools file_ext
 #' @importFrom rlang .data
 #' @export
 #' @examples
-#'    \dontrun{
-#'
+#'  if (Sys.which("ledger") != "") {
 #'      example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
 #'      dfl <- register(example_ledger_file)
 #'      head(dfl)
-#'
+#'  }
+#'  if (Sys.which("hledger") != "") {
 #'      example_hledger_file <- system.file("extdata", "example.hledger", package = "ledger") 
 #'      dfh <- register(example_hledger_file)
 #'      head(dfh)
-#'
+#'  }
+#'  if (Sys.which("bean-query") != "") {
 #'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
 #'      dfb <- register(example_beancount_file)
 #'      head(dfb)
-#'    }
+#'  }
 register <- function(file, ..., toolchain = default_toolchain(file), date=NULL) {
     .assert_toolchain(toolchain)
-    if (toolchain == "ledger") {
-        df <- register_ledger(file, ..., date=date)
-    } else if (toolchain == "hledger") {
-        df <- register_hledger(file, ..., date=date)
-    } else if (toolchain == "bean-report_ledger") {
-        file <- .bean_report(file, "ledger")
-        on.exit(unlink(file))
-        df <- register_ledger(file, ..., date=date)
-    } else if (toolchain == "bean-report_hledger") {
-        file <- .bean_report(file, "hledger")
-        on.exit(unlink(file))
-        df <- register_hledger(file, ..., date=date)
-    } 
+    switch(toolchain,
+        "ledger" = register_ledger(file, ..., date=date),
+        "hledger" = register_hledger(file, ..., date=date),
+        "beancount" = register_beancount(file, ..., date=date),
+        "bean-report_ledger" = {
+            file <- .bean_report(file, "ledger")
+            on.exit(unlink(file))
+            df <- register_ledger(file, ..., date=date)
+        },
+        "bean-report_hledger" = {
+            file <- .bean_report(file, "hledger")
+            on.exit(unlink(file))
+            df <- register_hledger(file, ..., date=date)
+        }
+    )
 }
 
+#' @importFrom tidyselect matches
 .select_columns <- function(df) {
-    dplyr::select(df, "date", matches("mark$"), "payee", "description", "account", "amount",
-                  "commodity", matches("historical_cost"), matches("hc_commodity"),
-                  matches("market_value"), matches("mv_commodity"), matches("comment"))
+    dplyr::select(df, "date", tidyselect::matches("mark$"),
+                  "payee", "description", "account", "amount", "commodity",
+                 tidyselect::matches("historical_cost"), 
+                 tidyselect::matches("hc_commodity"),
+                 tidyselect::matches("market_value"),
+                 tidyselect::matches("mv_commodity"), 
+                 tidyselect::matches("comment"),
+                 tidyselect::matches("tags"))
 }
 
 .nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
@@ -111,6 +123,64 @@ register <- function(file, ..., toolchain = default_toolchain(file), date=NULL) 
         .system("bean-report", args)
     }
     tfile
+}
+
+#' @importFrom stringr str_trim
+#' @importFrom tidyr separate
+#' @rdname register
+#' @export
+register_beancount <- function(file, date=NULL) {
+    cfile <- tempfile(fileext = paste0(".csv"))
+    query <- paste("select date, flag as mark, account, payee,",
+                  "narration as description,",
+                  "number as amount, currency as commodity,",
+                  "number(cost(position)) as historical_cost,",
+                  "currency(cost(position)) as hc_commodity,",
+                  "tags,")
+    #            "value(position), tags") 
+    if (!is.null(date)) {
+       query <- paste(query, 
+                  sprintf("number(value(position,%s)) as market_value,", date),
+                  sprintf("currency(value(position,%s)) as mv_commodity", date),
+                  "from close on", date) 
+    } else {
+       query <- paste(query, "number(value(position)) as market_value,",
+                      "currency(value(position)) as mv_commodity") 
+    }
+
+    args <- c("-f", "csv", "-o", .nf(cfile), .nf(file), shQuote(query))
+
+    if ( .Platform$OS.type == "windows") {
+        # bean-report on Windows seems to choke when called from system2
+        shell(paste("bean-query -f csv -o", .nf(cfile), .nf(file), shQuote(query)), mustWork=TRUE)
+    } else {
+        .system("bean-query", args)
+    }
+    df <- .read_csv(cfile)
+    if(nrow(df) == 0) {
+        df <- tibble::tibble(date = as.Date(character()),
+                             mark = character(),
+                             account = character(),
+                             payee = character(),
+                             description = character(),
+                             amount = numeric(),
+                             commodity = character(),
+                             historical_cost = numeric(),
+                             hc_commodity = character(),
+                             market_value = numeric(),
+                             mv_commodity = character(),
+                             tags = character())
+    }
+    df <- dplyr::mutate(df,
+                        mark = str_trim(.data$mark),
+                        account = str_trim(.data$account),
+                        payee = str_trim(.data$payee),
+                        description = str_trim(.data$description),
+                        commodity = str_trim(.data$commodity),
+                        hc_commodity = str_trim(.data$hc_commodity),
+                        mv_commodity = str_trim(.data$mv_commodity),
+                        tags = str_trim(.data$tags))
+    .select_columns(df)
 }
 
 #' @rdname register
@@ -241,6 +311,8 @@ register_ledger <- function(file, flags="", date=NULL) {
                 description = .right_of_split(.data$description, " \\| "),
                 payee = ifelse(.data$payee == "", NA, .data$payee),
                 description = ifelse(.data$description == "", NA, .data$description),
+                payee = as.character(.data$payee),
+                comment = as.character(.data$comment)
                 )
     df
 }
@@ -253,6 +325,8 @@ register_ledger <- function(file, flags="", date=NULL) {
         .is_binary_on_path("ledger")
     } else if (toolchain == "hledger") {
         .is_binary_on_path("hledger")
+    } else if (toolchain == "beancount") {
+        .is_binary_on_path("bean-query")
     } else if (toolchain == "bean-report_ledger") {
         .is_binary_on_path("ledger") && .is_binary_on_path("bean-report")
     } else if (toolchain == "bean-report_hledger") {

@@ -42,12 +42,18 @@ net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit",
     df
 }
 
+#' @importFrom dplyr group_by
+#' @importFrom dplyr left_join
+#' @importFrom dplyr summarize
 #' @importFrom tidyr spread
+#' @importFrom tidyselect one_of
 .net_worth_helper <- function(date, file, include, exclude, flags, toolchain, ignore_case) {
     df <- switch(toolchain,
                  ledger = register_ledger(file, flags, date),
                  hledger = register_hledger(file, flags=flags, date=date, add_mark=FALSE, add_cost=FALSE, add_value=FALSE),
-                 register(file, flags=flags, date=date)) #### beancount
+                 beancount = dplyr::mutate(register_beancount(file, date),
+                                       amount = .data$market_value, commodity = .data$mv_commodity),
+                 register(file, flags=flags, date=date, toolchain=toolchain)) # deprecated toolchains
     include <- paste(include, collapse="|")
     df <- dplyr::filter(df, grepl(include, .data$account, ignore.case=ignore_case))
     if (!is.null(exclude)) {
@@ -57,12 +63,12 @@ net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit",
     df <- dplyr::filter(df, grepl(include, .data$account, ignore.case=ignore_case))
     df <- dplyr::mutate(df, account = tolower(gsub("^([[:alnum:]]*)?:.*", "\\1", .data$account)))
     df <- dplyr::mutate(df, account = gsub("<revalued>", "revalued", .data$account))
-    df_by <- summarize(group_by(df, .data$account, .data$commodity), total = sum(.data$amount))
-    df_by <- spread(df_by, .data$account, .data$total)
+    df_by <- dplyr::summarize(dplyr::group_by(df, .data$account, .data$commodity), total = sum(.data$amount))
+    df_by <- tidyr::spread(df_by, .data$account, .data$total)
     old_names <- names(df_by)
-    df_nw <- summarize(group_by(df, .data$commodity), net_worth = sum(.data$amount))
-    df_nw <- left_join(df_by, df_nw, by="commodity")
-    df_nw$date <- as.Date(date)
-    df_nw <- dplyr::select(df_nw, "date", "commodity", "net_worth", one_of(old_names))
+    df_nw <- dplyr::summarize(dplyr::group_by(df, .data$commodity), net_worth = sum(.data$amount))
+    df_nw <- dplyr::left_join(df_by, df_nw, by="commodity")
+    df_nw <- dplyr::mutate(df_nw, date=as.Date(date))
+    df_nw <- dplyr::select(df_nw, "date", "commodity", "net_worth", tidyselect::one_of(old_names))
     df_nw
 }

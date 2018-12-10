@@ -33,7 +33,7 @@
 #' @export
 net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit","^<revalued>"), exclude=NULL,
                       flags="-V", toolchain = default_toolchain(file), ignore_case=TRUE) {
-    df <- dplyr::bind_rows(lapply(date, .net_worth_helper, 
+    df <- bind_rows(lapply(date, .net_worth_helper, 
                                   file, include, exclude, flags, toolchain, ignore_case))
     for (name in names(df)) {
         if (! name %in% c("commodity", "date"))
@@ -42,6 +42,7 @@ net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit",
     df
 }
 
+#' @importFrom dplyr filter
 #' @importFrom dplyr group_by
 #' @importFrom dplyr left_join
 #' @importFrom dplyr summarize
@@ -51,24 +52,24 @@ net_worth <- function(file, date=Sys.Date()+1, include = c("^asset","^liabilit",
     df <- switch(toolchain,
                  ledger = register_ledger(file, flags, date),
                  hledger = register_hledger(file, flags=flags, date=date, add_mark=FALSE, add_cost=FALSE, add_value=FALSE),
-                 beancount = dplyr::mutate(register_beancount(file, date),
+                 beancount = mutate(register_beancount(file, date),
                                        amount = .data$market_value, commodity = .data$mv_commodity),
                  register(file, flags=flags, date=date, toolchain=toolchain)) # deprecated toolchains
     include <- paste(include, collapse="|")
-    df <- dplyr::filter(df, grepl(include, .data$account, ignore.case=ignore_case))
+    df <- filter(df, grepl(include, .data$account, ignore.case=ignore_case))
     if (!is.null(exclude)) {
         exclude <- paste(exclude, collapse="|")
-        df <- dplyr::filter(df, !grepl(exclude, .data$account, ignore.case=ignore_case))
+        df <- filter(df, !grepl(exclude, .data$account, ignore.case=ignore_case))
     }
-    df <- dplyr::filter(df, grepl(include, .data$account, ignore.case=ignore_case))
-    df <- dplyr::mutate(df, account = tolower(gsub("^([[:alnum:]]*)?:.*", "\\1", .data$account)))
-    df <- dplyr::mutate(df, account = gsub("<revalued>", "revalued", .data$account))
-    df_by <- dplyr::summarize(dplyr::group_by(df, .data$account, .data$commodity), total = sum(.data$amount))
+    df <- filter(df, grepl(include, .data$account, ignore.case=ignore_case))
+    df <- mutate(df, account = tolower(gsub("^([[:alnum:]]*)?:.*", "\\1", .data$account)))
+    df <- mutate(df, account = gsub("<revalued>", "revalued", .data$account))
+    df_by <- summarize(group_by(df, .data$account, .data$commodity), total = sum(.data$amount))
     df_by <- tidyr::spread(df_by, .data$account, .data$total)
     old_names <- names(df_by)
-    df_nw <- dplyr::summarize(dplyr::group_by(df, .data$commodity), net_worth = sum(.data$amount))
-    df_nw <- dplyr::left_join(df_by, df_nw, by="commodity")
-    df_nw <- dplyr::mutate(df_nw, date=as.Date(date))
-    df_nw <- dplyr::select(df_nw, "date", "commodity", "net_worth", tidyselect::one_of(old_names))
+    df_nw <- summarize(group_by(df, .data$commodity), net_worth = sum(.data$amount))
+    df_nw <- left_join(df_by, df_nw, by="commodity")
+    df_nw <- mutate(df_nw, date=as.Date(date))
+    df_nw <- select(df_nw, "date", "commodity", "net_worth", tidyselect::one_of(old_names))
     df_nw
 }

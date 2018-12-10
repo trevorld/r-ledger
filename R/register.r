@@ -41,6 +41,7 @@ default_toolchain <- function(file) {
 #'     Only transactions (and implicitly price statements) before this date are used.  
 #' @return  \code{register} returns a tibble.
 #'    
+#' @importFrom dplyr bind_rows
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom tools file_ext
@@ -83,14 +84,14 @@ register <- function(file, ..., toolchain = default_toolchain(file), date=NULL) 
 
 #' @importFrom tidyselect matches
 .select_columns <- function(df) {
-    dplyr::select(df, "date", tidyselect::matches("mark$"),
-                  "payee", "description", "account", "amount", "commodity",
-                 tidyselect::matches("historical_cost"), 
-                 tidyselect::matches("hc_commodity"),
-                 tidyselect::matches("market_value"),
-                 tidyselect::matches("mv_commodity"), 
-                 tidyselect::matches("comment"),
-                 tidyselect::matches("tags"))
+    select(df, "date", tidyselect::matches("mark$"),
+              "payee", "description", "account", "amount", "commodity",
+             tidyselect::matches("historical_cost"), 
+             tidyselect::matches("hc_commodity"),
+             tidyselect::matches("market_value"),
+             tidyselect::matches("mv_commodity"), 
+             tidyselect::matches("comment"),
+             tidyselect::matches("tags"))
 }
 
 .nf <- function(filename) { shQuote(normalizePath(filename, mustWork=FALSE)) }
@@ -107,6 +108,7 @@ register <- function(file, ..., toolchain = default_toolchain(file), date=NULL) 
     tfile
 }
 
+#' @importFrom stringr str_squish
 #' @importFrom stringr str_trim
 #' @importFrom tidyr separate
 #' @rdname register
@@ -140,7 +142,7 @@ register_beancount <- function(file, date=NULL) {
     }
     df <- .read_csv(cfile)
     if(nrow(df) == 0) {
-        df <- tibble::tibble(date = as.Date(character()),
+        df <- tibble(date = as.Date(character()),
                              mark = character(),
                              account = character(),
                              payee = character(),
@@ -153,7 +155,7 @@ register_beancount <- function(file, date=NULL) {
                              mv_commodity = character(),
                              tags = character())
     }
-    df <- dplyr::mutate(df,
+    df <- mutate(df,
                         mark = str_trim(.data$mark),
                         account = str_trim(.data$account),
                         payee = str_trim(.data$payee),
@@ -161,7 +163,7 @@ register_beancount <- function(file, date=NULL) {
                         commodity = str_trim(.data$commodity),
                         hc_commodity = str_trim(.data$hc_commodity),
                         mv_commodity = str_trim(.data$mv_commodity),
-                        tags = str_trim(.data$tags))
+                        tags = str_squish(.data$tags))
     .select_columns(df)
 }
 
@@ -190,12 +192,12 @@ register_hledger <- function(file, flags="", date=NULL, add_mark=TRUE, add_cost=
 .register_hledger_helper <- function(hfile, flags="", add_mark=TRUE) {
     if(add_mark) {
         df_c <- .read_hledger(hfile, c(flags, "--cleared"))
-        df_c <- dplyr::mutate(df_c, mark = "*")
+        df_c <- mutate(df_c, mark = "*")
         df_p <- .read_hledger(hfile, c(flags, "--pending"))
-        df_p <- dplyr::mutate(df_p, mark = "!")
+        df_p <- mutate(df_p, mark = "!")
         df_u <- .read_hledger(hfile, c(flags, "--unmarked"))
-        df_u <- dplyr::mutate(df_u, mark = "")
-        df <- dplyr::bind_rows(df_c, df_p, df_u)
+        df_u <- mutate(df_u, mark = "")
+        df <- bind_rows(df_c, df_p, df_u)
     } else {
         df <- .read_hledger(hfile, flags)
     }
@@ -210,6 +212,7 @@ register_hledger <- function(file, flags="", date=NULL, add_mark=TRUE, add_cost=
     .read_csv(cfile)
 }
 
+#' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
 #' @importFrom utils read.csv
 .read_csv <- function(cfile, ...) {
@@ -225,21 +228,21 @@ register_hledger <- function(file, flags="", date=NULL, add_mark=TRUE, add_cost=
 
 .clean_hledger <- function(df) {
     if (nrow(df)) {
-        df <- dplyr::mutate(df, date = as.Date(date, "%Y/%m/%d"))
-        df <- dplyr::mutate(df, description = ifelse(grepl("\\|$", .data$description), 
+        df <- mutate(df, date = as.Date(date, "%Y/%m/%d"))
+        df <- mutate(df, description = ifelse(grepl("\\|$", .data$description), 
                                                      paste0(.data$description, " "),
                                                      .data$description))
-        df <- dplyr::mutate(df, description = ifelse(grepl("\\|", .data$description),
+        df <- mutate(df, description = ifelse(grepl("\\|", .data$description),
                                                      .data$description,
                                                      paste0(" | ", .data$description)))
-        df <- dplyr::mutate(df, payee = .left_of_split(.data$description, " \\| "))
-        df <- dplyr::mutate(df, description = .right_of_split(.data$description, " \\| "))
-        df <- dplyr::mutate(df, payee = ifelse(.data$payee == "", NA, .data$payee),
+        df <- mutate(df, payee = .left_of_split(.data$description, " \\| "))
+        df <- mutate(df, description = .right_of_split(.data$description, " \\| "))
+        df <- mutate(df, payee = ifelse(.data$payee == "", NA, .data$payee),
                     description = ifelse(.data$description == "", NA, .data$description))
-        df <- dplyr::mutate(df, commodity = .right_of_split(.data$amount, " "))
-        df <- dplyr::mutate(df, amount = as.numeric(.left_of_split(.data$amount, " ")))
+        df <- mutate(df, commodity = .right_of_split(.data$amount, " "))
+        df <- mutate(df, amount = as.numeric(.left_of_split(.data$amount, " ")))
     } else {
-        df <- dplyr::mutate(df, payee = .data$description, commodity = .data$amount)
+        df <- mutate(df, payee = .data$description, commodity = .data$amount)
     }
     df
 }
@@ -283,7 +286,7 @@ register_ledger <- function(file, flags="", date=NULL) {
 .clean_ledger <- function(df) {
     names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "comment")
 
-    df <- dplyr::mutate(df, 
+    df <- mutate(df, 
                 date = as.Date(date, "%Y/%m/%d"),
                 description = ifelse(grepl("\\|$", .data$description), paste0(.data$description, " "),
                                      .data$description),

@@ -22,7 +22,7 @@ register_ledger(file, flags = "", date = NULL)
 \item{...}{Arguments passed on to either \code{register_ledger}, \code{register_hledger}, or \code{register_beancount}}
 
 \item{toolchain}{Toolchain used to read in register. 
-Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
+Either "ledger", "hledger", "beancount", "bean-report_ledger", or "bean-report_hledger".}
 
 \item{date}{End date.
 Only transactions (and implicitly price statements) before this date are used.}

@@ -54,7 +54,7 @@ default_toolchain <- function(file) {
 #' @param flags Character vector of additional command line flags to pass 
 #'     to either \code{ledger csv} or \code{hledger register}.
 #' @param toolchain Toolchain used to read in register. 
-#'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
+#'     Either "ledger", "hledger", "beancount", "bean-report_ledger", or "bean-report_hledger".
 #' @param date End date.  
 #'     Only transactions (and implicitly price statements) before this date are used.  
 #' @return  \code{register} returns a tibble.

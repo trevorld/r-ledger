@@ -2,6 +2,7 @@ Rakefile
 CONTRIBUTING
 examples.rst
 README.rst
+^\.appveyor\.yml$
 ^\.travis\.yml$
 ^\.travis$
 ^.appveyor\.yml$

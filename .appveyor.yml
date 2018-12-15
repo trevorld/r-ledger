@@ -37,14 +37,14 @@ test_script:
   - cinst haskell-stack
   - cmd: stack --silent install --resolver=lts hledger-lib-1.9 hledger-1.9
   - cmd: "%PYTHON3%\\pip --quiet install beancount"
+  - cmd: ledger --version
+  - cmd: hledger --version
+  - cmd: bean-report --version
   - travis-tool.sh run_tests
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
-  - cmd: ledger --version
-  - cmd: hledger --version
-  - cmd: bean-report --version
 
 on_success:
   - Rscript -e "covr::codecov()"

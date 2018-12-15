@@ -22,6 +22,9 @@ cache:
     - $HOME/Library/Caches/Homebrew
 before_install:
     - bash ./.travis/install_system_dependencies.sh
+    - ledger --version
+    - hledger --version
+    - bean-query --version
 notifications:
   email:
     on_success: change

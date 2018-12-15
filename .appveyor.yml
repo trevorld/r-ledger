@@ -18,8 +18,14 @@ cache:
 # Adapt as necessary starting from here
 
 environment:
-  PYTHON3: C:\Python35\Scripts
-  PYTHON3ALT: C:\python35\Scripts
+  global:
+      PYTHON3: C:\Python35\Scripts
+      PYTHON3ALT: C:\python35\Scripts
+      USE_RTOOLS: true
+  matrix:
+    - R_VERSION: devel
+
+    - R_VERSION: release
 
 build_script:
   - travis-tool.sh install_deps

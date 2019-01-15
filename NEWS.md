@@ -4,10 +4,10 @@ ledger 2.0.0
 Breaking changes
 ----------------
 
-* Now ``register`` returns a ``tibble`` instead of a ``data.frame`` and by default
-  reads in ``beancount`` files using the output from ``bean-query`` 
-  instead of ``bean-report`` followed up by ``hledger``.  
-  Most users of the ``ledger`` R package won't need to change any code.
+* Now ``register`` returns a ``tibble`` instead of a ``data.frame``.
+* By default now reads in ``beancount`` files using the output from ``bean-query`` 
+  instead of ``bean-report`` followed up by ``hledger``.
+* Most users of the ``ledger`` R package won't need to change any code.
 
 New functions
 -------------

@@ -35,7 +35,7 @@ test_script:
 # - cmd: set PATH=C:\Users\appveyor\AppData\Roaming\local\bin;%PATH%;
   - cinst ledger
   - cinst haskell-stack
-  - cmd: stack --silent install --resolver=lts hledger-lib-1.9 hledger-1.9
+  - cmd: stack --silent install --resolver=lts-12 hledger-lib-1.12 hledger-1.12
   - cmd: "%PYTHON3%\\pip --quiet install beancount"
   - cmd: ledger --version
   - cmd: hledger --version

@@ -18,7 +18,7 @@ New functions
 Minor improvements and fixes
 ----------------------------
 
-* ``register`` now has an ``date`` argument than can be used to exclude transactions 
+* ``register`` now has a ``date`` argument than can be used to exclude transactions 
   (and implicitly price statements) before that date.
 * ``register`` now preserves transaction comments when importing ledger files (#16).  Thanks Jenya Sovetkin for patch.
 * ``register`` now preserves tags when importing beancount files.

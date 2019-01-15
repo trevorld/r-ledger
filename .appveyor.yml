@@ -36,6 +36,7 @@ test_script:
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack --silent install --resolver=lts-12 hledger-lib-1.12 hledger-1.12
+  - cmd: stack --silent install --resolver=lts-12 megaparsec-7.0.4 cassava-megaparsec-2.0.0 config-ini-0.2.3.0 hledger-lib-1.12 hledger-1.12
   - cmd: "%PYTHON3%\\pip --quiet install beancount"
   - cmd: ledger --version
   - cmd: hledger --version

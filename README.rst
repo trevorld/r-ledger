@@ -55,7 +55,7 @@ beancount
 
 To install hledger and beancount run::
 
-    $ stack install --resolver=lts hledger-lib-1.9 hledger-1.9
+    $ stack install --resolver=lts-12 hledger-lib-1.12 hledger-1.12
     $ pip3 install beancount
 
 `Several pre-compiled Ledger binaries are available <https://www.ledger-cli.org/download.html>`_ (often found in several open source repos).

@@ -1,3 +1,8 @@
+ledger 2.0.1
+============
+
+* For ``ledger`` files ``register`` no longer filters out transactions with amount equal to zero (#13).
+
 ledger 2.0.0
 ============
 

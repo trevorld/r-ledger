@@ -260,6 +260,7 @@ register_hledger <- function(file, flags="", date=NULL, add_mark=TRUE, add_cost=
 register_ledger <- function(file, flags="", date=NULL) {
     if(!is.null(date))
         flags <- c(flags, paste0("--end=", date))
+    flags <- c(flags, "--empty")
     df <- .read_ledger(file, flags)
     .select_columns(df)
 }

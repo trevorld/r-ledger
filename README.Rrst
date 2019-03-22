@@ -21,9 +21,9 @@ ledger
     :target: https://cran.r-project.org/package=ledger
     :alt: RStudio CRAN mirror downloads
 
-.. image:: http://www.repostatus.org/badges/latest/active.svg
-   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
-   :target: http://www.repostatus.org/#active
+.. image:: http://www.repostatus.org/badges/latest/inactive.svg
+   :alt: Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed: support/maintenance will be provided as time allows.
+   :target: http://www.repostatus.org/#inactive
 
 ``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <http://hledger.org/>`_, and `Beancount <http://furius.ca/beancount/>`_ into an R data frame for convenient analysis, plotting, and export.
 
@@ -50,13 +50,13 @@ To install the development version of the ``ledger`` package (and its R package 
 This package also has some system dependencies that need to be installed depending on which plaintext accounting files you wish to read to be able to read in:
 
 ledger
-    * `ledger <https://www.ledger-cli.org/>`_ (>= 3.1) 
+    `ledger <https://www.ledger-cli.org/>`_ (>= 3.1) 
 
 hledger
-    * `hledger <http://hledger.org/>`_ (>= 1.4)
+    `hledger <http://hledger.org/>`_ (>= 1.4)
 
 beancount
-    * `beancount <http://furius.ca/beancount/>`_ (>= 2.0)
+    `beancount <http://furius.ca/beancount/>`_ (>= 2.0)
 
 To install hledger and beancount run the following in your shell:
 

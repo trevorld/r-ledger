@@ -1,101 +1,98 @@
 ledger
 ======
 
-[![CRAN Status Badge](https://www.r-pkg.org/badges/version/ledger)](https://cran.r-project.org/package=ledger)
+.. image:: https://www.r-pkg.org/badges/version/ledger
+    :target: https://cran.r-project.org/package=ledger
+    :alt: CRAN Status Badge
 
-[![Travis-CI Build Status](https://travis-ci.org/trevorld/r-ledger.png?branch=master)](https://travis-ci.org/trevorld/r-ledger)
+.. image:: https://travis-ci.org/trevorld/r-ledger.png?branch=master
+    :target: https://travis-ci.org/trevorld/r-ledger
+    :alt: Travis-CI Build Status
 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/trevorld/r-ledger?branch=master&svg=true)](https://ci.appveyor.com/project/trevorld/r-ledger)
+.. image:: https://ci.appveyor.com/api/projects/status/github/trevorld/r-ledger?branch=master&svg=true
+    :target: https://ci.appveyor.com/project/trevorld/r-ledger
+    :alt: AppVeyor Build Status
 
-[![Coverage Status](https://img.shields.io/codecov/c/github/trevorld/r-ledger/master.svg)](https://codecov.io/github/trevorld/r-ledger?branch=master)
+.. image:: https://img.shields.io/codecov/c/github/trevorld/r-ledger/master.svg
+    :target: https://codecov.io/github/trevorld/r-ledger?branch=master
+    :alt: Coverage Status
 
-[![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/ledger)](https://cran.r-project.org/package=ledger)
+.. image:: https://cranlogs.r-pkg.org/badges/ledger
+    :target: https://cran.r-project.org/package=ledger
+    :alt: RStudio CRAN mirror downloads
 
-[![Project Status: Active -- The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+.. image:: http://www.repostatus.org/badges/latest/active.svg
+   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
+   :target: http://www.repostatus.org/#active
 
-`ledger` is an R package to import data from [plain text
-accounting](https://plaintextaccounting.org/) software like
-[Ledger](https://www.ledger-cli.org/), [HLedger](http://hledger.org/),
-and [Beancount](http://furius.ca/beancount/) into an R data frame for
-convenient analysis, plotting, and export.
+``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <http://hledger.org/>`_, and `Beancount <http://furius.ca/beancount/>`_ into an R data frame for convenient analysis, plotting, and export.
 
-Right now it supports reading in the register from `ledger`, `hledger`,
-and `beancount` files.
+Right now it supports reading in the register from ``ledger``, ``hledger``, and ``beancount`` files.  
 
-::: {.contents}
-:::
+.. contents::
 
 Installation
 ------------
 
-To install the last version released to CRAN use the following command
-in R:
+To install the last version released to CRAN use the following command in R:
 
-``` {.sourceCode .r}
-install.packages("ledger")
-```
+.. code:: r
 
-To install the development version of the `ledger` package (and its R
-package dependencies) use the `install_github` function from the
-`remotes` package in R:
+    install.packages("ledger")
 
-``` {.sourceCode .r}
-install.packages("remotes")
-remotes::install_github("trevorld/r-ledger")
-```
+To install the development version of the ``ledger`` package (and its R package dependencies) use the ``install_github`` function from the ``remotes`` package in R:
 
-This package also has some system dependencies that need to be installed
-depending on which plaintext accounting files you wish to read to be
-able to read in:
+.. code:: r
+    
+    install.packages("remotes")
+    remotes::install_github("trevorld/r-ledger")
+
+This package also has some system dependencies that need to be installed depending on which plaintext accounting files you wish to read to be able to read in:
 
 ledger
-
-:   -   [ledger](https://www.ledger-cli.org/) (\>= 3.1)
+    * `ledger <https://www.ledger-cli.org/>`_ (>= 3.1) 
 
 hledger
-
-:   -   [hledger](http://hledger.org/) (\>= 1.4)
+    * `hledger <http://hledger.org/>`_ (>= 1.4)
 
 beancount
-
-:   -   [beancount](http://furius.ca/beancount/) (\>= 2.0)
+    * `beancount <http://furius.ca/beancount/>`_ (>= 2.0)
 
 To install hledger and beancount run the following in your shell:
 
-``` {.sourceCode .bash}
-stack install --resolver=lts-12 megaparsec-7.0.4 cassava-megaparsec-2.0.0 config-ini-0.2.3.0 hledger-lib-1.12 hledger-1.12
-pip3 install beancount
-```
+.. code:: bash
 
-[Several pre-compiled Ledger binaries are
-available](https://www.ledger-cli.org/download.html) (often found in
-several open source repos).
+    stack install --resolver=lts-12 megaparsec-7.0.4 cassava-megaparsec-2.0.0 config-ini-0.2.3.0 hledger-lib-1.12 hledger-1.12
+    pip3 install beancount
 
-To run the unit tests you\'ll also need the suggested R package
-`testthat`.
+`Several pre-compiled Ledger binaries are available <https://www.ledger-cli.org/download.html>`_ (often found in several open source repos).
+
+To run the unit tests you'll also need the suggested R package ``testthat``.
 
 Examples
 --------
 
-### API
+API
++++
 
-The main function of this package is `register` which reads in the
-register of a plaintext accounting file. This package also exports S3
-methods so one can use `rio::import` to read in a register, a
-`net_worth` convenience function, and a `prune_coa` convenience
-function.
+The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also exports S3 methods so one can use ``rio::import`` to read in a register, a ``net_worth`` convenience function, and a ``prune_coa`` convenience function.
 
-#### register
+register
+~~~~~~~~
 
 Here are some examples of very basic files stored within the package:
 
-::: {.sourcecode}
-r
 
-library(\"ledger\") options(width=180) ledger\_file \<-
-system.file(\"extdata\", \"example.ledger\", package = \"ledger\")
-register(ledger\_file)
-:::
+.. sourcecode:: r
+    
+
+    library("ledger")
+    options(width=180)
+    ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
+    register(ledger_file)
+
+
+::
 
     ## # A tibble: 42 x 8
     ##    date       mark  payee       description                     account                    amount commodity comment
@@ -112,12 +109,15 @@ register(ledger\_file)
     ## 10 2016-01-01 *     Supermarket Grocery store ;; Link: ^grocery Liabilities:JT-Credit-Card  -501. USD       <NA>   
     ## # … with 32 more rows
 
-::: {.sourcecode}
-r
 
-hledger\_file \<- system.file(\"extdata\", \"example.hledger\", package
-= \"ledger\") register(hledger\_file)
-:::
+.. sourcecode:: r
+    
+
+    hledger_file <- system.file("extdata", "example.hledger", package = "ledger") 
+    register(hledger_file)
+
+
+::
 
     ## # A tibble: 42 x 11
     ##    date       mark  payee       description      account                    amount commodity historical_cost hc_commodity market_value mv_commodity
@@ -134,12 +134,15 @@ hledger\_file \<- system.file(\"extdata\", \"example.hledger\", package
     ## 10 2016-01-01 *     Supermarket Grocery store    Liabilities:JT-Credit-Card  -501. USD                 -501. USD                 -501. USD         
     ## # … with 32 more rows
 
-::: {.sourcecode}
-r
 
-beancount\_file \<- system.file(\"extdata\", \"example.beancount\",
-package = \"ledger\") register(beancount\_file)
-:::
+.. sourcecode:: r
+    
+
+    beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
+    register(beancount_file)
+
+
+::
 
     ## # A tibble: 42 x 12
     ##    date       mark  payee       description      account                    amount commodity historical_cost hc_commodity market_value mv_commodity tags 
@@ -156,17 +159,22 @@ package = \"ledger\") register(beancount\_file)
     ## 10 2016-01-01 *     Supermarket Grocery store    Liabilities:JT-Credit-Card  -501. USD                 -501. USD                 -501. USD          ""   
     ## # … with 32 more rows
 
-Here is an example reading in a beancount file generated by
-`bean-example`:
 
-::: {.sourcecode}
-r
 
-bean\_example\_file \<- tempfile(fileext = \".beancount\")
-system(paste(\"bean-example -o\", bean\_example\_file),
-ignore.stderr=TRUE) df \<- register(bean\_example\_file)
-options(width=240) print(df)
-:::
+Here is an example reading in a beancount file generated by ``bean-example``:
+
+
+.. sourcecode:: r
+    
+
+    bean_example_file <- tempfile(fileext = ".beancount")
+    system(paste("bean-example -o", bean_example_file), ignore.stderr=TRUE)
+    df <- register(bean_example_file)
+    options(width=240)
+    print(df)
+
+
+::
 
     ## # A tibble: 2,674 x 12
     ##    date       mark  payee                description                          account                       amount commodity historical_cost hc_commodity market_value mv_commodity tags 
@@ -183,13 +191,17 @@ options(width=240) print(df)
     ## 10 2017-01-05 *     Babble               Payroll                              Assets:US:Vanguard:Cash        1200  USD                 1200  USD                 1200  USD          ""   
     ## # … with 2,664 more rows
 
-::: {.sourcecode}
-r
 
-suppressPackageStartupMessages(library(\"dplyr\")) dplyr::filter(df,
-grepl(\"Expenses\", account), grepl(\"trip\", tags)) %\>% group\_by(trip
-= tags, account) %\>% summarise(trip\_total = sum(amount))
-:::
+.. sourcecode:: r
+    
+
+    suppressPackageStartupMessages(library("dplyr"))
+    dplyr::filter(df, grepl("Expenses", account), grepl("trip", tags)) %>% 
+        group_by(trip = tags, account) %>% 
+        summarise(trip_total = sum(amount))
+
+
+::
 
     ## # A tibble: 4 x 3
     ## # Groups:   trip [2]
@@ -200,40 +212,48 @@ grepl(\"Expenses\", account), grepl(\"trip\", tags)) %\>% group\_by(trip
     ## 3 trip-san-francisco-2018 Expenses:Food:Coffee           28.7
     ## 4 trip-san-francisco-2018 Expenses:Food:Restaurant      704.
 
-#### Using rio::import and rio::convert
 
-If one has loaded in the `ledger` package one can also use `rio::import`
-to read in the register:
 
-::: {.sourcecode}
-r
+Using rio::import and rio::convert
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-df \<- rio::import(beancount\_file) all.equal(register(ledger\_file),
-rio::import(ledger\_file))
-:::
+If one has loaded in the ``ledger`` package one can also use ``rio::import`` to read in the register:
+
+
+.. sourcecode:: r
+    
+
+    df <- rio::import(beancount_file)
+    all.equal(register(ledger_file), rio::import(ledger_file))
+
+
+::
 
     ## [1] TRUE
 
-The main advantage of this is that it allows one to use `rio::convert`
-to easily convert plaintext accounting files to several other file
-formats such as a csv file. Here is a shell example:
 
-``` {.sourceCode .bash}
-bean-example -o example.beancount
-Rscript --default-packages=ledger,rio -e 'convert("example.beancount", "example.csv")'
-```
 
-#### net\_worth
+The main advantage of this is that it allows one to use ``rio::convert`` to easily convert plaintext accounting files to several other file formats such as a csv file.  Here is a shell example:
 
-Some examples of using the `net_worth` function using the example files
-from the `register` examples:
+.. code:: bash
 
-::: {.sourcecode}
-r
+    bean-example -o example.beancount
+    Rscript --default-packages=ledger,rio -e 'convert("example.beancount", "example.csv")'
 
-dates \<- seq(as.Date(\"2016-01-01\"), as.Date(\"2018-01-01\"),
-by=\"years\") net\_worth(ledger\_file, dates)
-:::
+net_worth
+~~~~~~~~~
+
+Some examples of using the ``net_worth`` function using the example files from the ``register`` examples:
+
+
+.. sourcecode:: r
+    
+
+    dates <- seq(as.Date("2016-01-01"), as.Date("2018-01-01"), by="years")
+    net_worth(ledger_file, dates)
+
+
+::
 
     ## # A tibble: 3 x 6
     ##   date       commodity net_worth assets liabilities revalued
@@ -242,24 +262,14 @@ by=\"years\") net\_worth(ledger\_file, dates)
     ## 2 2017-01-01 USD           4361.   4882       -521.        0
     ## 3 2018-01-01 USD           6743.   6264       -521.     1000
 
-::: {.sourcecode}
-r
 
-net\_worth(hledger\_file, dates)
-:::
+.. sourcecode:: r
+    
 
-    ## # A tibble: 3 x 5
-    ##   date       commodity net_worth assets liabilities
-    ##   <date>     <chr>         <dbl>  <dbl>       <dbl>
-    ## 1 2016-01-01 USD           5000    5000          0 
-    ## 2 2017-01-01 USD           4361.   4882       -521.
-    ## 3 2018-01-01 USD           6743.   7264       -521.
+    net_worth(hledger_file, dates)
 
-::: {.sourcecode}
-r
 
-net\_worth(beancount\_file, dates)
-:::
+::
 
     ## # A tibble: 3 x 5
     ##   date       commodity net_worth assets liabilities
@@ -268,11 +278,30 @@ net\_worth(beancount\_file, dates)
     ## 2 2017-01-01 USD           4361.   4882       -521.
     ## 3 2018-01-01 USD           6743.   7264       -521.
 
-::: {.sourcecode}
-r
 
-net\_worth(bean\_example\_file, dates)
-:::
+.. sourcecode:: r
+    
+
+    net_worth(beancount_file, dates)
+
+
+::
+
+    ## # A tibble: 3 x 5
+    ##   date       commodity net_worth assets liabilities
+    ##   <date>     <chr>         <dbl>  <dbl>       <dbl>
+    ## 1 2016-01-01 USD           5000    5000          0 
+    ## 2 2017-01-01 USD           4361.   4882       -521.
+    ## 3 2018-01-01 USD           6743.   7264       -521.
+
+
+.. sourcecode:: r
+    
+
+    net_worth(bean_example_file, dates)
+
+
+::
 
     ## # A tibble: 3 x 5
     ##   date       commodity net_worth assets liabilities
@@ -281,19 +310,25 @@ net\_worth(bean\_example\_file, dates)
     ## 2 2018-01-01 USD          42112. 42939.       -827.
     ## 3 2018-01-01 VACHR           18     18           0
 
-#### prune\_coa
 
-Some examples using the `prune_coa` function to simplify the \"Chart of
-Account\" names to a given maximum depth:
 
-::: {.sourcecode}
-r
+prune_coa
+~~~~~~~~~
 
-suppressPackageStartupMessages(library(\"dplyr\")) df \<-
-register(bean\_example\_file) %\>% dplyr::filter(!is.na(commodity)) df
-%\>% prune\_coa() %\>% group\_by(account, mv\_commodity) %\>%
-summarize(market\_value = sum(market\_value))
-:::
+Some examples using the ``prune_coa`` function to simplify the "Chart of Account" names to a given maximum depth:
+
+
+.. sourcecode:: r
+    
+
+    suppressPackageStartupMessages(library("dplyr"))
+    df <- register(bean_example_file) %>% dplyr::filter(!is.na(commodity))
+    df %>% prune_coa() %>% 
+        group_by(account, mv_commodity) %>% 
+        summarize(market_value = sum(market_value))
+
+
+::
 
     ## # A tibble: 11 x 3
     ## # Groups:   account [5]
@@ -311,14 +346,16 @@ summarize(market\_value = sum(market\_value))
     ## 10 Income      VACHR               -290 
     ## 11 Liabilities USD                -1996.
 
-::: {.sourcecode}
-r
 
-df %\>% prune\_coa(2) %\>%
+.. sourcecode:: r
+    
 
-:   group\_by(account, mv\_commodity) %\>% summarize(market\_value =
-    sum(market\_value))
-:::
+    df %>% prune_coa(2) %>% 
+        group_by(account, mv_commodity) %>%
+        summarize(market_value = sum(market_value))
+
+
+::
 
     ## # A tibble: 17 x 3
     ## # Groups:   account [12]
@@ -342,68 +379,79 @@ df %\>% prune\_coa(2) %\>%
     ## 16 Liabilities:AccountsPayable USD             -5.68e-14
     ## 17 Liabilities:US              USD             -2.00e+ 3
 
-### Basic personal accounting reports
 
-Here is some examples using the functions in the package to help
-generate various personal accounting reports of the beancount example
-generated by `bean-example`.
+    
+Basic personal accounting reports
++++++++++++++++++++++++++++++++++
 
-First we load the (mainly tidyverse) libraries we\'ll be using and
-adjusting terminal output:
+Here is some examples using the functions in the package to help generate
+various personal accounting reports of the 
+beancount example generated by ``bean-example``.
 
-::: {.sourcecode}
-r
+First we load the (mainly tidyverse) libraries we'll be using and adjusting terminal output:
 
-options(width=240) \# tibble output looks better in wide terminal output
-library(\"ledger\") library(\"dplyr\") filter \<- dplyr::filter
-library(\"ggplot2\") library(\"scales\") library(\"tidyr\")
-library(\"zoo\") filename \<- tempfile(fileext = \".beancount\")
-system(paste(\"bean-example -o\", filename), ignore.stderr=TRUE) df \<-
-register(filename) %\>% mutate(yearmon = zoo::as.yearmon(date)) nw \<-
-net\_worth(filename)
-:::
 
-Then we\'ll write some convenience functions we\'ll use over and over
-again:
+.. sourcecode:: r
+    
 
-::: {.sourcecode}
-r
+    options(width=240) # tibble output looks better in wide terminal output
+    library("ledger")
+    library("dplyr")
+    filter <- dplyr::filter
+    library("ggplot2")
+    library("scales")
+    library("tidyr")
+    library("zoo")
+    filename <- tempfile(fileext = ".beancount")
+    system(paste("bean-example -o", filename), ignore.stderr=TRUE)
+    df <- register(filename) %>% mutate(yearmon = zoo::as.yearmon(date))
+    nw <- net_worth(filename)
 
-print\_tibble\_rows \<- function(df) {
 
-:   print(df, n=nrow(df))
+Then we'll write some convenience functions we'll use over and over again:
 
-} count\_beans \<- function(df, filter\_str = \"\", \..., amount =
-\"amount\", commodity=\"commodity\", cutoff=1e-3) { commodity \<-
-sym(commodity) amount\_var \<- sym(amount) filter(df, grepl(filter\_str,
-account)) %\>% group\_by(account, !!commodity, \...) %\>%
-summarize(!!amount := sum(!!amount\_var)) %\>% filter(abs(!!amount\_var)
-\> cutoff & !is.na(!!amount\_var)) %\>%
-arrange(desc(abs(!!amount\_var))) }
-:::
 
-#### Basic balance sheets
+.. sourcecode:: r
+    
 
-Here is some basic balance sheets (using the market value of our
-assets):
+    print_tibble_rows <- function(df) {
+        print(df, n=nrow(df))
+    }
+    count_beans <- function(df, filter_str = "", ..., 
+                            amount = "amount",
+                            commodity="commodity", 
+                            cutoff=1e-3) {
+        commodity <- sym(commodity)
+        amount_var <- sym(amount)
+        filter(df, grepl(filter_str, account)) %>% 
+            group_by(account, !!commodity, ...) %>%
+            summarize(!!amount := sum(!!amount_var)) %>% 
+            filter(abs(!!amount_var) > cutoff & !is.na(!!amount_var)) %>%
+            arrange(desc(abs(!!amount_var)))
+    }
 
-::: {.sourcecode}
-r
+    
+Basic balance sheets
+~~~~~~~~~~~~~~~~~~~~
 
-print\_balance\_sheet \<- function(df) {
+Here is some basic balance sheets (using the market value of our assets):
 
-:   
 
-    assets \<- count\_beans(df, \"\^Assets\",
+.. sourcecode:: r
+    
 
-    :   amount=\"market\_value\", commodity=\"mv\_commodity\")
+    print_balance_sheet <- function(df) {
+        assets <- count_beans(df, "^Assets", 
+                     amount="market_value", commodity="mv_commodity")
+        print_tibble_rows(assets)
+        liabilities <- count_beans(df, "^Liabilities", 
+                           amount="market_value", commodity="mv_commodity")
+        print_tibble_rows(liabilities)
+    }
+    print(nw)
 
-    print\_tibble\_rows(assets) liabilities \<- count\_beans(df,
-    \"\^Liabilities\", amount=\"market\_value\",
-    commodity=\"mv\_commodity\") print\_tibble\_rows(liabilities)
 
-} print(nw)
-:::
+::
 
     ## # A tibble: 3 x 5
     ##   date       commodity net_worth   assets liabilities
@@ -412,11 +460,14 @@ print\_balance\_sheet \<- function(df) {
     ## 2 2019-03-22 USD         102125.  104731.      -2607.
     ## 3 2019-03-22 VACHR          -14      -14           0
 
-::: {.sourcecode}
-r
 
-print\_balance\_sheet(prune\_coa(df, 2))
-:::
+.. sourcecode:: r
+    
+
+    print_balance_sheet(prune_coa(df, 2))
+
+
+::
 
     ## # A tibble: 3 x 3
     ## # Groups:   account [1]
@@ -431,11 +482,14 @@ print\_balance\_sheet(prune\_coa(df, 2))
     ##   <chr>          <chr>               <dbl>
     ## 1 Liabilities:US USD                -2607.
 
-::: {.sourcecode}
-r
 
-print\_balance\_sheet(df)
-:::
+.. sourcecode:: r
+    
+
+    print_balance_sheet(df)
+
+
+::
 
     ## # A tibble: 11 x 3
     ## # Groups:   account [11]
@@ -458,48 +512,75 @@ print\_balance\_sheet(df)
     ##   <chr>                      <chr>               <dbl>
     ## 1 Liabilities:US:Chase:Slate USD                -2607.
 
-#### Basic net worth chart
 
-Here is a basic chart of one\'s net worth from the beginning of the
-plaintext accounting file to today by month:
 
-``` {.sourceCode .r}
-next_month <- function(date) {
-    zoo::as.Date(zoo::as.yearmon(date) + 1/12)
-}
-nw_dates <- seq(next_month(min(df$date)), next_month(Sys.Date()), by="months")
-df_nw <- net_worth(filename, nw_dates) %>% filter(!is.na(commodity))
-ggplot(df_nw, aes(x=date, y=net_worth, colour=commodity, group=commodity)) + 
-  geom_line() + scale_y_continuous(labels=scales::dollar)
-```
+Basic net worth chart
+~~~~~~~~~~~~~~~~~~~~~
 
-![Monthly net worth chart](https://www.trevorldavis.com/share/ledger/basic_net_worth_plot.svg)
+Here is a basic chart of one's net worth from the beginning of the plaintext accounting file to today by month:
 
-#### Basic income sheets
+.. code:: r
 
-::: {.sourcecode}
-r
+    next_month <- function(date) {
+        zoo::as.Date(zoo::as.yearmon(date) + 1/12)
+    }
+    nw_dates <- seq(next_month(min(df$date)), next_month(Sys.Date()), by="months")
+    df_nw <- net_worth(filename, nw_dates) %>% filter(!is.na(commodity))
+    ggplot(df_nw, aes(x=date, y=net_worth, colour=commodity, group=commodity)) + 
+      geom_line() + scale_y_continuous(labels=scales::dollar)
 
-month\_cutoff \<- zoo::as.yearmon(Sys.Date()) - 2/12 compute\_income \<-
-function(df) { count\_beans(df, \"\^Income\", yearmon) %\>%
-mutate(income = -amount) %\>% select(-amount) %\>% ungroup() }
-print\_income \<- function(df) { compute\_income(df) %\>% filter(yearmon
-\>= month\_cutoff) %\>% spread(yearmon, income, fill=0) %\>%
-print\_tibble\_rows() } compute\_expenses \<- function(df) {
-count\_beans(df, \"\^Expenses\", yearmon) %\>% mutate(expenses = amount)
-%\>% select(-amount) %\>% ungroup() } print\_expenses \<- function(df) {
-compute\_expenses(df) %\>% filter(yearmon \>= month\_cutoff) %\>%
-spread(yearmon, expenses, fill=0) %\>% print\_tibble\_rows() }
-compute\_total \<- function(df) {
-full\_join(compute\_income(prune\_coa(df)) %\>% select(-account),
-compute\_expenses(prune\_coa(df)) %\>% select(-account),
-by=c(\"yearmon\", \"commodity\")) %\>% mutate(income =
-ifelse(is.na(income), 0, income), expenses = ifelse(is.na(expenses), 0,
-expenses), net = income - expenses) %\>% gather(type, amount, -yearmon,
--commodity) } print\_total \<- function(df) { compute\_total(df) %\>%
-filter(yearmon \>= month\_cutoff) %\>% spread(yearmon, amount, fill=0)
-%\>% print\_tibble\_rows() } print\_total(df)
-:::
+.. image:: https://www.trevorldavis.com/share/ledger/basic_net_worth_plot.svg
+   :alt: Monthly net worth chart
+
+Basic income sheets
+~~~~~~~~~~~~~~~~~~~
+
+
+.. sourcecode:: r
+    
+
+    month_cutoff <- zoo::as.yearmon(Sys.Date()) - 2/12
+    compute_income <- function(df) {
+        count_beans(df, "^Income", yearmon) %>% 
+            mutate(income = -amount) %>%
+            select(-amount) %>% ungroup()
+    }
+    print_income <- function(df) {
+        compute_income(df) %>% 
+            filter(yearmon >= month_cutoff) %>%
+            spread(yearmon, income, fill=0) %>%
+            print_tibble_rows()
+    }
+    compute_expenses <- function(df) {
+        count_beans(df, "^Expenses", yearmon) %>% 
+            mutate(expenses = amount) %>%
+            select(-amount) %>% ungroup()
+    }
+    print_expenses <- function(df) {
+        compute_expenses(df) %>%
+            filter(yearmon >= month_cutoff) %>%
+            spread(yearmon, expenses, fill=0) %>%
+            print_tibble_rows()
+    }
+    compute_total <- function(df) {
+    full_join(compute_income(prune_coa(df)) %>% select(-account),
+              compute_expenses(prune_coa(df)) %>% select(-account), 
+              by=c("yearmon", "commodity")) %>%
+        mutate(income = ifelse(is.na(income), 0, income),
+               expenses = ifelse(is.na(expenses), 0, expenses),
+               net = income - expenses) %>%
+        gather(type, amount, -yearmon, -commodity)
+    }
+    print_total <- function(df) {
+        compute_total(df) %>%
+            filter(yearmon >= month_cutoff) %>%
+            spread(yearmon, amount, fill=0) %>%
+            print_tibble_rows()
+    }
+    print_total(df)
+
+
+::
 
     ## # A tibble: 9 x 5
     ##   commodity type     `Jan 2019` `Feb 2019` `Mar 2019`
@@ -514,11 +595,14 @@ filter(yearmon \>= month\_cutoff) %\>% spread(yearmon, amount, fill=0)
     ## 8 VACHR     income          15         10          5 
     ## 9 VACHR     net             15         10          5
 
-::: {.sourcecode}
-r
 
-print\_income(prune\_coa(df, 2))
-:::
+.. sourcecode:: r
+    
+
+    print_income(prune_coa(df, 2))
+
+
+::
 
     ## # A tibble: 3 x 5
     ##   account   commodity `Jan 2019` `Feb 2019` `Mar 2019`
@@ -527,11 +611,14 @@ print\_income(prune\_coa(df, 2))
     ## 2 Income:US USD           15211.     10552.      5967.
     ## 3 Income:US VACHR            15         10          5
 
-::: {.sourcecode}
-r
 
-print\_expenses(prune\_coa(df, 2))
-:::
+.. sourcecode:: r
+    
+
+    print_expenses(prune_coa(df, 2))
+
+
+::
 
     ## # A tibble: 7 x 5
     ##   account            commodity `Jan 2019` `Feb 2019` `Mar 2019`
@@ -544,11 +631,14 @@ print\_expenses(prune\_coa(df, 2))
     ## 6 Expenses:Taxes     USD           5977.      3984.      1992. 
     ## 7 Expenses:Transport USD            120        120        120
 
-::: {.sourcecode}
-r
 
-print\_income(df)
-:::
+.. sourcecode:: r
+    
+
+     print_income(df)
+
+
+::
 
     ## # A tibble: 7 x 5
     ##   account                        commodity `Jan 2019` `Feb 2019` `Mar 2019`
@@ -561,11 +651,14 @@ print\_income(df)
     ## 6 Income:US:ETrade:Gains         USD             92.2       72.2        0  
     ## 7 Income:US:Federal:PreTax401k   IRAUSD       18500          0          0
 
-::: {.sourcecode}
-r
 
-print\_expenses(df)
-:::
+.. sourcecode:: r
+    
+
+    print_expenses(df)
+
+
+::
 
     ## # A tibble: 20 x 5
     ##    account                                    commodity `Jan 2019` `Feb 2019` `Mar 2019`
@@ -591,13 +684,17 @@ print\_expenses(df)
     ## 19 Expenses:Taxes:Y2019:US:State              USD          1095.       730.       365.  
     ## 20 Expenses:Transport:Tram                    USD           120        120        120
 
+
+
 And here is a plot of income, expenses, and net income over time:
 
-``` {.sourceCode .r
-ggplot(compute_total(df), aes(x=yearmon, y=amount, group=commodity, colour=commodity)) +
-facet_grid(type ~ .) +
-geom_line() + geom_hline(yintercept=0, linetype="dashed") +
-scale_x_continuous() + scale_y_continuous(labels=scales::comma)}
-```
+.. code:: r
 
-![Monthly income chart](https://www.trevorldavis.com/share/ledger/basic_income_plot.svg)
+    ggplot(compute_total(df), aes(x=yearmon, y=amount, group=commodity, colour=commodity)) +
+      facet_grid(type ~ .) +
+      geom_line() + geom_hline(yintercept=0, linetype="dashed") +
+      scale_x_continuous() + scale_y_continuous(labels=scales::comma) 
+
+.. image:: https://www.trevorldavis.com/share/ledger/basic_income_plot.svg
+   :alt: Monthly income chart
+

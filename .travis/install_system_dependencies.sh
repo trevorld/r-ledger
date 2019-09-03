@@ -9,7 +9,8 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     mkdir -p ~/.local/bin ~/.stack
     export PATH=$HOME/.local/bin:$PATH
     wget -qO- https://get.haskellstack.org/ | sh -s - -f
-    stack install --resolver=lts-12 megaparsec-7.0.4 cassava-megaparsec-2.0.0 config-ini-0.2.3.0 hledger-lib-1.12 hledger-1.12
+    stack update
+    stack install --resolver=lts-14.3 hledger-lib-1.15.1 hledger-1.15.1 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
     # Beancount
     brew upgrade python
     # pip3 install beancount
@@ -25,7 +26,8 @@ else
     mkdir -p ~/.local/bin ~/.stack
     export PATH=$HOME/.local/bin:$PATH
     wget -qO- https://get.haskellstack.org/ | sh -s - -f
-    stack install --resolver=lts-12 megaparsec-7.0.4 cassava-megaparsec-2.0.0 config-ini-0.2.3.0 hledger-lib-1.12 hledger-1.12
+    stack update
+    stack install --resolver=lts-14.3 hledger-lib-1.15.1 hledger-1.15.1 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
     # Beancount
     sudo apt-get install -y python3 python3-pip
     pip3 install beancount

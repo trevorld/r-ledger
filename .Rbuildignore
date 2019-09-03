@@ -1,6 +1,7 @@
 Rakefile
 CONTRIBUTING
 examples.rst
+README.html
 README.Rrst
 README.rst
 ^\.appveyor\.yml$

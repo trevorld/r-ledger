@@ -64,7 +64,7 @@ To install hledger run the following in your shell:
 
 .. code:: bash
 
-    stack update && stack install --resolver=lts-14.3 hledger-lib-1.15.1 hledger-1.15.1 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
+    stack update && stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
 
 To install beancount run the following in your shell:
 

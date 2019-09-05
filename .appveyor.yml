@@ -36,7 +36,7 @@ test_script:
   - cinst ledger
   - cinst haskell-stack
   - cmd: stack update
-  - cmd: stack install --resolver=lts-14.3 hledger-lib-1.15.1 hledger-1.15.1 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
+  - cmd: stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
   - cmd: "%PYTHON3%\\pip --quiet install beancount"
   - cmd: ledger --version
   - cmd: hledger --version

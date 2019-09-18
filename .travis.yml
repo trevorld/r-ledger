@@ -17,13 +17,13 @@ cache:
   packages: true
   pip: true
   directories:
-    - $HOME/.stack/
+#   - $HOME/.stack/
     - $HOME/.local/bin/
     - $HOME/Library/Caches/Homebrew
 before_install:
     - bash ./.travis/install_system_dependencies.sh
     - ledger --version
-    - hledger --version
+#   - hledger --version
     - bean-query --version
 notifications:
   email:

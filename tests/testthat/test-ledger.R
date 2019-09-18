@@ -37,6 +37,7 @@ skip_toolchain <- function(file, toolchain) {
         expect_error(ledger::register(file, toolchain=toolchain))
         skip(paste(toolchain, "binaries not found"))
     }
+    if (toolchain == "bean-report_hledger") { skip_on_appveyor() }
 }
 
 for (ii in 1:nrow(df_file)) {

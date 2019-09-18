@@ -6,11 +6,11 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     # Ledger
     brew install ledger
     # HLedger
-    mkdir -p ~/.local/bin ~/.stack
-    export PATH=$HOME/.local/bin:$PATH
-    wget -qO- https://get.haskellstack.org/ | sh -s - -f
-    stack update
-    stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
+    # mkdir -p ~/.local/bin ~/.stack
+    # export PATH=$HOME/.local/bin:$PATH
+    # wget -qO- https://get.haskellstack.org/ | sh -s - -f
+    # stack update
+    # stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
     # Beancount
     brew upgrade python
     # pip3 install beancount
@@ -23,11 +23,11 @@ else
     # Ledger
     sudo apt-get install -y ledger
     # HLedger
-    mkdir -p ~/.local/bin ~/.stack
-    export PATH=$HOME/.local/bin:$PATH
-    wget -qO- https://get.haskellstack.org/ | sh -s - -f
-    stack update
-    stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
+    # mkdir -p ~/.local/bin ~/.stack
+    # export PATH=$HOME/.local/bin:$PATH
+    # wget -qO- https://get.haskellstack.org/ | sh -s - -f
+    # stack update
+    # stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
     # Beancount
     sudo apt-get install -y python3 python3-pip python3-setuptools
     pip3 install beancount

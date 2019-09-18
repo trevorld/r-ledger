@@ -25,7 +25,7 @@ register_ledger(file, flags = "", date = NULL)
 Either "ledger", "hledger", "beancount", "bean-report_ledger", or "bean-report_hledger".}
 
 \item{date}{End date.
-Only transactions (and implicitly price statements) before this date are used.}
+Only transactions (and implicitly price statements) strictly before this date are used.}
 
 \item{flags}{Character vector of additional command line flags to pass 
 to either \code{ledger csv} or \code{hledger register}.}

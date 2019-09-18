@@ -38,7 +38,7 @@ default_toolchain <- function(file) {
 #' @param toolchain Toolchain used to read in register. 
 #'     Either "ledger", "hledger", "beancount", "bean-report_ledger", or "bean-report_hledger".
 #' @param date End date.  
-#'     Only transactions (and implicitly price statements) before this date are used.  
+#'     Only transactions (and implicitly price statements) strictly before this date are used.  
 #' @return  \code{register} returns a tibble.
 #'    
 #' @importFrom dplyr bind_rows
@@ -121,11 +121,11 @@ register_beancount <- function(file, date=NULL) {
                   "number(cost(position)) as historical_cost,",
                   "currency(cost(position)) as hc_commodity,",
                   "tags,")
-    #            "value(position), tags") 
     if (!is.null(date)) {
+       date <- as.Date(date)
        query <- paste(query, 
-                  sprintf("number(value(position,%s)) as market_value,", date),
-                  sprintf("currency(value(position,%s)) as mv_commodity", date),
+                  sprintf("number(value(position,%s)) as market_value,", date-1),
+                  sprintf("currency(value(position,%s)) as mv_commodity", date-1),
                   "from close on", date) 
     } else {
        query <- paste(query, "number(value(position)) as market_value,",

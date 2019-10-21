@@ -6,10 +6,10 @@ Depending on the type of plaintext accounting file to be imported this package h
 
 * local (linux, R 3.4.4) with all of the system dependencies installed
 * win-builder (windows, R devel) with none of the system dependencies installed
-* travis-ci (linux, R devel) with all of the system dependencies installed
+* travis-ci (linux, R devel) with ledger and beancount installed
 * appveyor (windows, R release) with all of the system dependencies installed
-* travis-ci (OSX, R release) with all of the system dependencies installed
-* travis-ci (linux, R release) with all of the system dependencies installed
+* travis-ci (OSX, R release) with ledger and beancount installed
+* travis-ci (linux, R release) with ledger and beancount installed
 
 **R CMD check --as-cran results**
 

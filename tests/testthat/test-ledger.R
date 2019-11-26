@@ -9,7 +9,7 @@ befile <- system.file("extdata", "empty.beancount", package = "ledger")
 df_file <- data.frame(file = c(lfile, hfile, bfile, bfile, bfile),
                       efile = c(lefile, hefile, befile, befile, befile),
                       toolchain = c("ledger", "hledger", "beancount", "bean-report_ledger", "bean-report_hledger"),
-                      stringsAsFactors=FALSE)
+                      stringsAsFactors = FALSE)
 
 context("Various assertions work as expected")
 test_that(".assert_toolchain works as expected", {
@@ -19,40 +19,40 @@ test_that("default_toolchain works as expected", {
     expect_error(ledger::register("test.docx"), "Couldn't find an acceptable toolchain for docx")
 })
 test_that("register works as expected", {
-    expect_error(ledger::register("test.docx", toolchain="docx"), "docx binaries not found on path")
-    if(.is_toolchain_supported("ledger"))
-        expect_error(ledger::register("test.docx", toolchain="ledger"), "ledger had an import error")
+    expect_error(ledger::register("test.docx", toolchain = "docx"), "docx binaries not found on path")
+    if (.is_toolchain_supported("ledger"))
+        expect_error(ledger::register("test.docx", toolchain = "ledger"), "ledger had an import error")
 })
 test_that("default_toolchain works as expected", {
-    if(.is_toolchain_supported("ledger"))
+    if (.is_toolchain_supported("ledger"))
         expect_equal(default_toolchain("test.ledger"), "ledger")
-    if(.is_toolchain_supported("hledger"))
+    if (.is_toolchain_supported("hledger"))
         expect_equal(default_toolchain("test.hledger"), "hledger")
-    if(.is_toolchain_supported("beancount"))
+    if (.is_toolchain_supported("beancount"))
         expect_equal(default_toolchain("test.beancount"), "beancount")
 })
 
 skip_toolchain <- function(file, toolchain) {
-    if(!.is_toolchain_supported(toolchain)) {
-        expect_error(ledger::register(file, toolchain=toolchain))
+    if (!.is_toolchain_supported(toolchain)) {
+        expect_error(ledger::register(file, toolchain = toolchain))
         skip(paste(toolchain, "binaries not found"))
     }
-    if (toolchain == "bean-report_hledger") { skip_on_appveyor() }
+    if (toolchain == "bean-report_hledger") skip_on_appveyor()
 }
 
-for (ii in 1:nrow(df_file)) {
+for (ii in seq_len(nrow(df_file))) {
     toolchain <- df_file$toolchain[ii]
     file <- df_file$file[ii]
     empty_file <- df_file$efile[ii]
     context(paste(file, toolchain, "works as expected"))
-    register <- function(...) { ledger::register(..., toolchain=toolchain) }
-    net_worth <- function(...) { ledger::net_worth(..., toolchain=toolchain) }
+    register <- function(...) ledger::register(..., toolchain = toolchain)
+    net_worth <- function(...) ledger::net_worth(..., toolchain = toolchain)
 
     test_that(paste("register works as expected on", basename(file), "using", toolchain), {
         skip_toolchain(file, toolchain)
 
         df <- register(file)
-        expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 3*82.55)
+        expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 3 * 82.55)
         expect_true(tibble::is_tibble(df))
 
         mark <- unique(dplyr::filter(df, description == "Federal Income Tax Withholding")$mark)
@@ -64,21 +64,21 @@ for (ii in 1:nrow(df_file)) {
         investment <- dplyr::filter(df, account == "Assets:JT-Brokerage")
         expect_equal(investment$amount, 4)
 
-        if (system.file(package="rio") != "") {
-            df2 <- rio::import(file, toolchain=toolchain)
+        if (system.file(package = "rio") != "") {
+            df2 <- rio::import(file, toolchain = toolchain)
             ftax_sum <- sum(dplyr::filter(df2, account == "Expenses:Taxes:Federal")$amount)
-            expect_equal(ftax_sum, 3*82.55)
+            expect_equal(ftax_sum, 3 * 82.55)
             expect_equal(df, df2)
         }
 
         if (toolchain %in% c("hledger", "bean-report_hledger")) {
             expect_equal(investment$historical_cost, 1000)
             expect_equal(investment$market_value, 2000)
-            df <- register(file, flags="tag:Tag=#restaurant")
+            df <- register(file, flags = "tag:Tag=#restaurant")
             expect_equal(dplyr::filter(df, account == "Expenses:Food:Restaurant")$amount, 20.07)
         } else {
-            expect_error(register(file, flags="tag:Tag=#restaurant"))
-            expect_error(register(file, flags="tag:Link=^grocery"))
+            expect_error(register(file, flags = "tag:Tag=#restaurant"))
+            expect_error(register(file, flags = "tag:Link=^grocery"))
         }
         if (toolchain %in% c("ledger", "bean-report_ledger")) {
             expect_warning(investment$market_value)
@@ -88,14 +88,14 @@ for (ii in 1:nrow(df_file)) {
     test_that(paste("net_worth works as expected on", basename(file), "using", toolchain), {
         skip_toolchain(file, toolchain)
 
-        if(!.is_toolchain_supported(toolchain)) {
+        if (!.is_toolchain_supported(toolchain)) {
             expect_error(register(file))
             skip(paste(toolchain, "not supported"))
         }
         df <- net_worth(file)
         expect_true(tibble::is_tibble(df))
         expect_equal(df$net_worth, 8125.39)
-        expect_equal(net_worth(file, include=".*", exclude=c("^Equity", "^Income", "^Expenses"))$net_worth, 8125.39)
+        expect_equal(net_worth(file, include = ".*", exclude = c("^Equity", "^Income", "^Expenses"))$net_worth, 8125.39)
         expect_equal(net_worth(file, c("2016-01-01", "2017-01-01", "2018-01-01"))$net_worth,
                      c(5000, 4361.39, 6743.39))
     })

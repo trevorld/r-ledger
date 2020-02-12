@@ -11,23 +11,30 @@ register(file, ..., toolchain = default_toolchain(file), date = NULL)
 
 register_beancount(file, date = NULL)
 
-register_hledger(file, flags = "", date = NULL, add_mark = TRUE,
-  add_cost = TRUE, add_value = TRUE)
+register_hledger(
+  file,
+  flags = "",
+  date = NULL,
+  add_mark = TRUE,
+  add_cost = TRUE,
+  add_value = TRUE
+)
 
 register_ledger(file, flags = "", date = NULL)
 }
 \arguments{
 \item{file}{Filename for a ledger, hledger, or beancount file.}
 
-\item{...}{Arguments passed on to either \code{register_ledger}, \code{register_hledger}, or \code{register_beancount}}
+\item{...}{Arguments passed on to either \code{register_ledger},
+\code{register_hledger}, or \code{register_beancount}}
 
-\item{toolchain}{Toolchain used to read in register. 
+\item{toolchain}{Toolchain used to read in register.
 Either "ledger", "hledger", "beancount", "bean-report_ledger", or "bean-report_hledger".}
 
 \item{date}{End date.
 Only transactions (and implicitly price statements) strictly before this date are used.}
 
-\item{flags}{Character vector of additional command line flags to pass 
+\item{flags}{Character vector of additional command line flags to pass
 to either \code{ledger csv} or \code{hledger register}.}
 
 \item{add_mark}{Whether to add a column with the mark information.  Only relevant for hledger files.}
@@ -44,17 +51,17 @@ to either \code{ledger csv} or \code{hledger register}.}
 }
 \examples{
  if (Sys.which("ledger") != "") {
-     example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger") 
+     example_ledger_file <- system.file("extdata", "example.ledger", package = "ledger")
      dfl <- register(example_ledger_file)
      head(dfl)
  }
  if (Sys.which("hledger") != "") {
-     example_hledger_file <- system.file("extdata", "example.hledger", package = "ledger") 
+     example_hledger_file <- system.file("extdata", "example.hledger", package = "ledger")
      dfh <- register(example_hledger_file)
      head(dfh)
  }
  if (Sys.which("bean-query") != "") {
-     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
+     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger")
      dfb <- register(example_beancount_file)
      head(dfb)
  }

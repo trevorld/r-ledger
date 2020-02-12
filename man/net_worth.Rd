@@ -4,9 +4,15 @@
 \alias{net_worth}
 \title{Compute net worth}
 \usage{
-net_worth(file, date = Sys.Date() + 1, include = c("^asset",
-  "^liabilit", "^<revalued>"), exclude = NULL, flags = "-V",
-  toolchain = default_toolchain(file), ignore_case = TRUE)
+net_worth(
+  file,
+  date = Sys.Date() + 1,
+  include = c("^asset", "^liabilit", "^<revalued>"),
+  exclude = NULL,
+  flags = "-V",
+  toolchain = default_toolchain(file),
+  ignore_case = TRUE
+)
 }
 \arguments{
 \item{file}{Filename for a ledger, hledger, or beancount file.}
@@ -23,7 +29,7 @@ Use \code{NULL} to exclude nothing.}
 \item{flags}{Extra flags to pass to \code{register}.
 If using \code{ledger} may want to try something like \code{"-X USD"}.}
 
-\item{toolchain}{Toolchain used to read in register. 
+\item{toolchain}{Toolchain used to read in register.
 Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 
 \item{ignore_case}{logical value of whether to ignore case in regular expressions or not.}
@@ -32,12 +38,12 @@ Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".}
 \code{net_worth} returns a tibble
 }
 \description{
-Computes net worth for a vector of dates.  
+Computes net worth for a vector of dates.
 Computes net worth at the beginning of the day before any transactions have occurred.
 }
 \examples{
    \dontrun{
-     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger") 
+     example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger")
      net_worth(example_beancount_file)
      net_worth(example_beancount_file, c("2016-01-01", "2017-01-01", "2018-01-01"))
    }

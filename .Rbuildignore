@@ -5,6 +5,7 @@ README.html
 README.Rrst
 README.rst
 ^\.appveyor\.yml$
+^\.lintr$
 ^\.travis\.yml$
 ^\.travis$
 ^.appveyor\.yml$

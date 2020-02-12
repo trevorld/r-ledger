@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Trevor L. Davis <trevor.l.davis@gmail.com>
+# Copyright (c) 2018-2020 Trevor L. Davis <trevor.l.davis@gmail.com>
 # Copyright (c) 2018 Jenya Sovetkin <e.sovetkin@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -253,7 +253,7 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
         df <- mutate(df, payee = ifelse(.data$payee == "", NA, .data$payee),
                     description = ifelse(.data$description == "", NA, .data$description))
         df <- mutate(df, commodity = .right_of_split(.data$amount, " "))
-        df <- mutate(df, amount = as.numeric(.left_of_split(.data$amount, " ")))
+        df <- mutate(df, amount = to_numeric(.left_of_split(.data$amount, " ")))
     } else {
         df <- mutate(df, payee = .data$description, commodity = .data$amount)
     }

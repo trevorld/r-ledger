@@ -6,6 +6,7 @@ README.Rrst
 README.rst
 ^\.appveyor\.yml$
 ^\.lintr$
+^\_pkgdown$
 ^\.travis\.yml$
 ^\.travis$
 ^.appveyor\.yml$

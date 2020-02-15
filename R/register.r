@@ -39,7 +39,7 @@ default_toolchain <- function(file) {
     toolchain
 }
 
-#' Import a hledger or beancount register
+#' Import a ledger, hledger, or beancount register
 #'
 #' \code{register} imports the register from a ledger, hledger, or beancount file as a tibble.
 #'
@@ -203,26 +203,18 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
 }
 
 .register_hledger_helper <- function(hfile, flags = "", add_mark = TRUE) {
-    if (add_mark) {
-        df_c <- .read_hledger(hfile, c(flags, "--cleared"))
-        df_c <- mutate(df_c, mark = "*")
-        df_p <- .read_hledger(hfile, c(flags, "--pending"))
-        df_p <- mutate(df_p, mark = "!")
-        df_u <- .read_hledger(hfile, c(flags, "--unmarked"))
-        df_u <- mutate(df_u, mark = "")
-        df <- bind_rows(df_c, df_p, df_u)
-    } else {
-        df <- .read_hledger(hfile, flags)
-    }
-    .clean_hledger(df)
+    df <- .read_hledger(hfile, flags)
+    if (!add_mark) df <- select(df, -.data$mark)
+    df
 }
 
 .read_hledger <- function(hfile, flags) {
     cfile <- tempfile(fileext = ".csv")
     on.exit(unlink(cfile))
-    args <- c("register", "-f", .nf(hfile), "-o", .nf(cfile), flags)
+    args <- c("print", "-f", .nf(hfile), "-o", .nf(cfile), flags)
     .system("hledger", args)
-    .read_csv(cfile)
+    df <- .read_csv(cfile)
+    .clean_hledger(df)
 }
 
 #' @importFrom tibble tibble
@@ -242,6 +234,7 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
 .clean_hledger <- function(df) {
     if (nrow(df)) {
         df <- mutate(df, date = as.Date(date, "%Y/%m/%d"))
+
         df <- mutate(df, description = ifelse(grepl("\\|$", .data$description),
                                                      paste0(.data$description, " "),
                                                      .data$description))
@@ -252,8 +245,12 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
         df <- mutate(df, description = .right_of_split(.data$description, " \\| "))
         df <- mutate(df, payee = ifelse(.data$payee == "", NA, .data$payee),
                     description = ifelse(.data$description == "", NA, .data$description))
-        df <- mutate(df, commodity = .right_of_split(.data$amount, " "))
-        df <- mutate(df, amount = to_numeric(.left_of_split(.data$amount, " ")))
+
+        df <- mutate(df, amount = gsub(" @.*$", "", .data$amount))
+        df <- mutate(df, amount = to_numeric(.data$amount))
+
+        df <- select(df, .data$date, .data$description, .data$payee, .data$amount,
+                     .data$commodity, .data$account, mark = .data$status)
     } else {
         df <- mutate(df, payee = .data$description, commodity = .data$amount)
     }

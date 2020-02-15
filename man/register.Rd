@@ -5,7 +5,7 @@
 \alias{register_beancount}
 \alias{register_hledger}
 \alias{register_ledger}
-\title{Import a hledger or beancount register}
+\title{Import a ledger, hledger, or beancount register}
 \usage{
 register(file, ..., toolchain = default_toolchain(file), date = NULL)
 

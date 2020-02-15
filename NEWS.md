@@ -1,8 +1,9 @@
 ledger 2.0.6
 ============
 
-* Fixes bug when importing ``hledger`` files with amounts that use comma decimal marks.
+* Fixes bug when importing ``hledger`` files with amounts that use comma decimal marks and/or commodity prefixes (#18).
   Thanks @StefanBRas for bug report.
+* System dependency for importing ``hledger`` files has been relaxed to ``hledger (>= 1.2)``.  Previously depended on ``hledger (>=1.4)``.
 
 ledger 2.0.4
 ============

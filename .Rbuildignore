@@ -6,8 +6,8 @@ README.Rrst
 README.rst
 ^\.appveyor\.yml$
 ^\.lintr$
-^\_pkgdown$
+^_pkgdown.yml$
 ^\.travis\.yml$
 ^\.travis$
-^.appveyor\.yml$
+^\.appveyor\.yml$
 ^cran-comments.rst$

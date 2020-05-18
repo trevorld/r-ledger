@@ -4,7 +4,7 @@ Depending on the type of plaintext accounting file to be imported this package h
 
 **Test environments**
 
-* local (linux, R 3.6.2) with all of the system dependencies installed
+* local (linux, R 3.6.3) with all of the system dependencies installed
 * win-builder (windows, R devel) with none of the system dependencies installed
 * travis-ci (linux, R devel) with ledger and beancount installed
 * appveyor (windows, R release) with all of the system dependencies installed

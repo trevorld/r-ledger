@@ -1,7 +1,7 @@
 Package: ledger
 Type: Package
 Title: Utilities for Importing Data from Plain Text Accounting Files
-Version: 2.0.7
+Version: 2.0.8
 Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"), email="trevor.l.davis@gmail.com"),
     person("Jenya", "Sovetkin", role="ctb"),
     person("Chris", "Lloyd", role="ctb"))
@@ -11,7 +11,7 @@ Description: Utilities for querying plain text accounting files from 'Ledger', '
 Imports:
     dplyr (>= 0.7.0), rio, rlang, stringr, tidyr (>= 0.7.0), tibble, tidyselect, tools
 Suggests:
-    covr, testthat
+    testthat
 SystemRequirements: ledger (>= 3.1), hledger (>= 1.2), beancount (>= 2.0)
 License: MIT + file LICENSE
 RoxygenNote: 7.1.0

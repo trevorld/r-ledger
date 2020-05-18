@@ -233,7 +233,7 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
 
 .clean_hledger <- function(df) {
     if (nrow(df)) {
-        df <- mutate(df, date = as.Date(date, "%Y/%m/%d"))
+        df <- mutate(df, date = as.Date(date, "%Y-%m-%d"))
 
         df <- mutate(df, description = ifelse(grepl("\\|$", .data$description),
                                                      paste0(.data$description, " "),

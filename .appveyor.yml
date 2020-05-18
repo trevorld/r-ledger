@@ -22,6 +22,7 @@ environment:
       PYTHON3: C:\Python35\Scripts
       PYTHON3ALT: C:\python35\Scripts
       USE_RTOOLS: true
+      PKGTYPE: both
   matrix:
     - R_VERSION: devel
 

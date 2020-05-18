@@ -1,3 +1,9 @@
+ledger 2.0.7
+============
+
+* Fixes importing ``hledger`` date for newer versions of ``hledger`` (#19).
+  Thanks @chrislloyd for bug report and patch.
+
 ledger 2.0.6
 ============
 

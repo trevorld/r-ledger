@@ -9,13 +9,9 @@ knitr::opts_chunk$set(fig.path = "man/figures/README-")
     :target: https://cran.r-project.org/package=ledger
     :alt: CRAN Status Badge
 
-.. image:: https://travis-ci.org/trevorld/r-ledger.png?branch=master
-    :target: https://travis-ci.org/trevorld/r-ledger
-    :alt: Travis-CI Build Status
-
-.. image:: https://ci.appveyor.com/api/projects/status/github/trevorld/r-ledger?branch=master&svg=true
-    :target: https://ci.appveyor.com/project/trevorld/r-ledger
-    :alt: AppVeyor Build Status
+.. image:: https://github.com/trevorld/r-ledger/workflows/R-CMD-check/badge.svg
+    :target: https://github.com/trevorld/r-ledger/actions
+    :alt: R-CMD-check
 
 .. image:: https://img.shields.io/codecov/c/github/trevorld/r-ledger/master.svg
     :target: https://codecov.io/github/trevorld/r-ledger?branch=master
@@ -24,10 +20,6 @@ knitr::opts_chunk$set(fig.path = "man/figures/README-")
 .. image:: https://cranlogs.r-pkg.org/badges/ledger
     :target: https://cran.r-project.org/package=ledger
     :alt: RStudio CRAN mirror downloads
-
-.. image:: http://www.repostatus.org/badges/latest/inactive.svg
-   :alt: Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed: support/maintenance will be provided as time allows.
-   :target: http://www.repostatus.org/#inactive
 
 ``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <http://hledger.org/>`_, and `Beancount <http://furius.ca/beancount/>`_ into an R data frame for convenient analysis, plotting, and export.
 
@@ -122,8 +114,8 @@ Using rio::import and rio::convert
 If one has loaded in the ``ledger`` package one can also use ``rio::import`` to read in the register:
 
 .. {r rio}
-df <- rio::import(beancount_file)
-all.equal(register(ledger_file), rio::import(ledger_file))
+df2 <- rio::import(bean_example_file)
+all.equal(df, tibble::as_tibble(df2))
 .. ..
 
 The main advantage of this is that it allows one to use ``rio::convert`` to easily convert plaintext accounting files to several other file formats such as a csv file.  Here is a shell example:
@@ -156,10 +148,10 @@ suppressPackageStartupMessages(library("dplyr"))
 df <- register(bean_example_file) %>% dplyr::filter(!is.na(commodity))
 df %>% prune_coa() %>% 
     group_by(account, mv_commodity) %>% 
-    summarize(market_value = sum(market_value))
+    summarize(market_value = sum(market_value), .groups = "drop")
 df %>% prune_coa(2) %>% 
     group_by(account, mv_commodity) %>%
-    summarize(market_value = sum(market_value))
+    summarize(market_value = sum(market_value), .groups = "drop")
 .. ..
     
 Basic personal accounting reports
@@ -201,7 +193,7 @@ count_beans <- function(df, filter_str = "", ...,
     amount_var <- sym(amount)
     filter(df, grepl(filter_str, account)) %>% 
         group_by(account, !!commodity, ...) %>%
-        summarize(!!amount := sum(!!amount_var)) %>% 
+        summarize(!!amount := sum(!!amount_var), .groups = "drop") %>% 
         filter(abs(!!amount_var) > cutoff & !is.na(!!amount_var)) %>%
         arrange(desc(abs(!!amount_var)))
 }

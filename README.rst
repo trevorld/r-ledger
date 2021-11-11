@@ -7,13 +7,9 @@ ledger
     :target: https://cran.r-project.org/package=ledger
     :alt: CRAN Status Badge
 
-.. image:: https://travis-ci.org/trevorld/r-ledger.png?branch=master
-    :target: https://travis-ci.org/trevorld/r-ledger
-    :alt: Travis-CI Build Status
-
-.. image:: https://ci.appveyor.com/api/projects/status/github/trevorld/r-ledger?branch=master&svg=true
-    :target: https://ci.appveyor.com/project/trevorld/r-ledger
-    :alt: AppVeyor Build Status
+.. image:: https://github.com/trevorld/r-ledger/workflows/R-CMD-check/badge.svg
+    :target: https://github.com/trevorld/r-ledger/actions
+    :alt: R-CMD-check
 
 .. image:: https://img.shields.io/codecov/c/github/trevorld/r-ledger/master.svg
     :target: https://codecov.io/github/trevorld/r-ledger?branch=master
@@ -22,10 +18,6 @@ ledger
 .. image:: https://cranlogs.r-pkg.org/badges/ledger
     :target: https://cran.r-project.org/package=ledger
     :alt: RStudio CRAN mirror downloads
-
-.. image:: http://www.repostatus.org/badges/latest/inactive.svg
-   :alt: Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed: support/maintenance will be provided as time allows.
-   :target: http://www.repostatus.org/#inactive
 
 ``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <http://hledger.org/>`_, and `Beancount <http://furius.ca/beancount/>`_ into an R data frame for convenient analysis, plotting, and export.
 
@@ -82,7 +74,7 @@ Examples
 API
 +++
 
-The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also exports S3 methods so one can use ``rio::import`` to read in a register, a ``net_worth`` convenience function, and a ``prune_coa`` convenience function.
+The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also registers S3 methods so one can use ``rio::import`` to read in a register, a ``net_worth`` convenience function, and a ``prune_coa`` convenience function.
 
 register
 ~~~~~~~~
@@ -101,7 +93,7 @@ Here are some examples of very basic files stored within the package:
 
 ::
 
-    ## # A tibble: 42 x 8
+    ## # A tibble: 42 × 8
     ##    date       mark  payee       description                     account                    amount commodity comment
     ##    <date>     <chr> <chr>       <chr>                           <chr>                       <dbl> <chr>     <chr>  
     ##  1 2015-12-31 *     <NA>        Opening Balances                Assets:JT-Checking          5000  USD       <NA>   
@@ -126,7 +118,7 @@ Here are some examples of very basic files stored within the package:
 
 ::
 
-    ## # A tibble: 42 x 11
+    ## # A tibble: 42 × 11
     ##    date       mark  payee       description      account                    amount commodity historical_cost hc_commodity market_value mv_commodity
     ##    <date>     <chr> <chr>       <chr>            <chr>                       <dbl> <chr>               <dbl> <chr>               <dbl> <chr>       
     ##  1 2015-12-31 *     <NA>        Opening Balances Assets:JT-Checking          5000  USD                 5000  USD                 5000  USD         
@@ -151,19 +143,19 @@ Here are some examples of very basic files stored within the package:
 
 ::
 
-    ## # A tibble: 42 x 12
-    ##    date       mark  payee       description      account                    amount commodity historical_cost hc_commodity market_value mv_commodity tags 
-    ##    <chr>      <chr> <chr>       <chr>            <chr>                       <dbl> <chr>               <dbl> <chr>               <dbl> <chr>        <chr>
-    ##  1 2015-12-31 *     ""          Opening Balances Assets:JT-Checking          5000  USD                 5000  USD                 5000  USD          ""   
-    ##  2 2015-12-31 *     ""          Opening Balances Equity:Opening             -5000  USD                -5000  USD                -5000  USD          ""   
-    ##  3 2016-01-01 *     Landlord    Rent             Assets:JT-Checking         -1500  USD                -1500  USD                -1500  USD          ""   
-    ##  4 2016-01-01 *     Landlord    Rent             Expenses:Shelter:Rent       1500  USD                 1500  USD                 1500  USD          ""   
-    ##  5 2016-01-01 *     Brokerage   Buy Stock        Assets:JT-Checking         -1000  USD                -1000  USD                -1000  USD          ""   
-    ##  6 2016-01-01 *     Brokerage   Buy Stock        Equity:Transfer             1000  USD                 1000  USD                 1000  USD          ""   
-    ##  7 2016-01-01 *     Brokerage   Buy Stock        Assets:JT-Brokerage            4  SP                  1000  USD                 2000  USD          ""   
-    ##  8 2016-01-01 *     Brokerage   Buy Stock        Equity:Transfer            -1000  USD                -1000  USD                -1000  USD          ""   
-    ##  9 2016-01-01 *     Supermarket Grocery store    Expenses:Food:Grocery        501. USD                  501. USD                  501. USD          ""   
-    ## 10 2016-01-01 *     Supermarket Grocery store    Liabilities:JT-Credit-Card  -501. USD                 -501. USD                 -501. USD          ""   
+    ## # A tibble: 42 × 12
+    ##    date       mark  payee         description      account                    amount commodity historical_cost hc_commodity market_value mv_commodity tags 
+    ##    <chr>      <chr> <chr>         <chr>            <chr>                       <dbl> <chr>               <dbl> <chr>               <dbl> <chr>        <chr>
+    ##  1 2015-12-31 *     ""            Opening Balances Assets:JT-Checking          5000  USD                 5000  USD                 5000  USD          ""   
+    ##  2 2015-12-31 *     ""            Opening Balances Equity:Opening             -5000  USD                -5000  USD                -5000  USD          ""   
+    ##  3 2016-01-01 *     "Landlord"    Rent             Assets:JT-Checking         -1500  USD                -1500  USD                -1500  USD          ""   
+    ##  4 2016-01-01 *     "Landlord"    Rent             Expenses:Shelter:Rent       1500  USD                 1500  USD                 1500  USD          ""   
+    ##  5 2016-01-01 *     "Brokerage"   Buy Stock        Assets:JT-Checking         -1000  USD                -1000  USD                -1000  USD          ""   
+    ##  6 2016-01-01 *     "Brokerage"   Buy Stock        Equity:Transfer             1000  USD                 1000  USD                 1000  USD          ""   
+    ##  7 2016-01-01 *     "Brokerage"   Buy Stock        Assets:JT-Brokerage            4  SP                  1000  USD                 2000  USD          ""   
+    ##  8 2016-01-01 *     "Brokerage"   Buy Stock        Equity:Transfer            -1000  USD                -1000  USD                -1000  USD          ""   
+    ##  9 2016-01-01 *     "Supermarket" Grocery store    Expenses:Food:Grocery        501. USD                  501. USD                  501. USD          ""   
+    ## 10 2016-01-01 *     "Supermarket" Grocery store    Liabilities:JT-Credit-Card  -501. USD                 -501. USD                 -501. USD          ""   
     ## # … with 32 more rows
 
 
@@ -183,20 +175,20 @@ Here is an example reading in a beancount file generated by ``bean-example``:
 
 ::
 
-    ## # A tibble: 3,206 x 12
-    ##    date       mark  payee                description                          account                        amount commodity historical_cost hc_commodity market_value mv_commodity tags 
-    ##    <chr>      <chr> <chr>                <chr>                                <chr>                           <dbl> <chr>               <dbl> <chr>               <dbl> <chr>        <chr>
-    ##  1 2017-01-01 *     ""                   Opening Balance for checking account Assets:US:BofA:Checking        3682.  USD                3682.  USD                3682.  USD          ""   
-    ##  2 2017-01-01 *     ""                   Opening Balance for checking account Equity:Opening-Balances       -3682.  USD               -3682.  USD               -3682.  USD          ""   
-    ##  3 2017-01-01 *     ""                   Allowed contributions for one year   Income:US:Federal:PreTax401k -18500   IRAUSD           -18500   IRAUSD           -18500   IRAUSD       ""   
-    ##  4 2017-01-01 *     ""                   Allowed contributions for one year   Assets:US:Federal:PreTax401k  18500   IRAUSD            18500   IRAUSD            18500   IRAUSD       ""   
-    ##  5 2017-01-03 *     RiverBank Properties Paying the rent                      Assets:US:BofA:Checking       -2400   USD               -2400   USD               -2400   USD          ""   
-    ##  6 2017-01-03 *     RiverBank Properties Paying the rent                      Expenses:Home:Rent             2400   USD                2400   USD                2400   USD          ""   
-    ##  7 2017-01-04 *     BANK FEES            Monthly bank fee                     Assets:US:BofA:Checking          -4   USD                  -4   USD                  -4   USD          ""   
-    ##  8 2017-01-04 *     BANK FEES            Monthly bank fee                     Expenses:Financial:Fees           4   USD                   4   USD                   4   USD          ""   
-    ##  9 2017-01-05 *     Uncle Boons          Eating out with Julie                Liabilities:US:Chase:Slate      -58.9 USD                 -58.9 USD                 -58.9 USD          ""   
-    ## 10 2017-01-05 *     Uncle Boons          Eating out with Julie                Expenses:Food:Restaurant         58.9 USD                  58.9 USD                  58.9 USD          ""   
-    ## # … with 3,196 more rows
+    ## # A tibble: 3,468 × 12
+    ##    date       mark  payee   description                          account                              amount commodity historical_cost hc_commodity market_value mv_commodity tags 
+    ##    <chr>      <chr> <chr>   <chr>                                <chr>                                 <dbl> <chr>               <dbl> <chr>               <dbl> <chr>        <chr>
+    ##  1 2019-01-01 *     ""      Opening Balance for checking account Assets:US:BofA:Checking              3402.  USD                3402.  USD                3402.  USD          ""   
+    ##  2 2019-01-01 *     ""      Opening Balance for checking account Equity:Opening-Balances             -3402.  USD               -3402.  USD               -3402.  USD          ""   
+    ##  3 2019-01-01 *     ""      Allowed contributions for one year   Income:US:Federal:PreTax401k       -18500   IRAUSD           -18500   IRAUSD           -18500   IRAUSD       ""   
+    ##  4 2019-01-01 *     ""      Allowed contributions for one year   Assets:US:Federal:PreTax401k        18500   IRAUSD            18500   IRAUSD            18500   IRAUSD       ""   
+    ##  5 2019-01-03 *     "Hooli" Payroll                              Assets:US:BofA:Checking              1351.  USD                1351.  USD                1351.  USD          ""   
+    ##  6 2019-01-03 *     "Hooli" Payroll                              Assets:US:Vanguard:Cash              1200   USD                1200   USD                1200   USD          ""   
+    ##  7 2019-01-03 *     "Hooli" Payroll                              Income:US:Hooli:Salary              -4615.  USD               -4615.  USD               -4615.  USD          ""   
+    ##  8 2019-01-03 *     "Hooli" Payroll                              Income:US:Hooli:GroupTermLife         -24.3 USD                 -24.3 USD                 -24.3 USD          ""   
+    ##  9 2019-01-03 *     "Hooli" Payroll                              Expenses:Health:Life:GroupTermLife     24.3 USD                  24.3 USD                  24.3 USD          ""   
+    ## 10 2019-01-03 *     "Hooli" Payroll                              Expenses:Health:Dental:Insurance        2.9 USD                   2.9 USD                   2.9 USD          ""   
+    ## # … with 3,458 more rows
 
 
 .. sourcecode:: r
@@ -210,17 +202,23 @@ Here is an example reading in a beancount file generated by ``bean-example``:
 
 ::
 
-    ## # A tibble: 7 x 3
+    ## `summarise()` has grouped output by 'trip'. You can override using the `.groups` argument.
+
+
+
+::
+
+    ## # A tibble: 7 × 3
     ## # Groups:   trip [3]
     ##   trip                    account                  trip_total
     ##   <chr>                   <chr>                         <dbl>
-    ## 1 trip-boston-2019        Expenses:Food:Coffee           29.2
-    ## 2 trip-boston-2019        Expenses:Food:Restaurant      425. 
-    ## 3 trip-chicago-2018       Expenses:Food:Alcohol          47.5
-    ## 4 trip-chicago-2018       Expenses:Food:Coffee           28.0
-    ## 5 trip-chicago-2018       Expenses:Food:Restaurant      602  
-    ## 6 trip-san-francisco-2017 Expenses:Food:Coffee           35.1
-    ## 7 trip-san-francisco-2017 Expenses:Food:Restaurant      700.
+    ## 1 trip-los-angeles-2021   Expenses:Food:Alcohol         97.7 
+    ## 2 trip-los-angeles-2021   Expenses:Food:Coffee          59.0 
+    ## 3 trip-los-angeles-2021   Expenses:Food:Restaurant    1019.  
+    ## 4 trip-new-york-2019      Expenses:Food:Coffee           9.63
+    ## 5 trip-new-york-2019      Expenses:Food:Restaurant     438.  
+    ## 6 trip-san-francisco-2020 Expenses:Food:Coffee          39.1 
+    ## 7 trip-san-francisco-2020 Expenses:Food:Restaurant     659.
 
 
 
@@ -233,24 +231,8 @@ If one has loaded in the ``ledger`` package one can also use ``rio::import`` to 
 .. sourcecode:: r
     
 
-    df <- rio::import(beancount_file)
-
-
-::
-
-    ## Unrecognized file format. Try specifying with the format argument.
-
-
-.. sourcecode:: r
-    
-
-    all.equal(register(ledger_file), rio::import(ledger_file))
-
-
-::
-
-    ## Unrecognized file format. Try specifying with the format argument.
-
+    df2 <- rio::import(bean_example_file)
+    all.equal(df, tibble::as_tibble(df2))
 
 
 ::
@@ -281,7 +263,7 @@ Some examples of using the ``net_worth`` function using the example files from t
 
 ::
 
-    ## # A tibble: 3 x 6
+    ## # A tibble: 3 × 6
     ##   date       commodity net_worth assets liabilities revalued
     ##   <date>     <chr>         <dbl>  <dbl>       <dbl>    <dbl>
     ## 1 2016-01-01 USD           5000    5000          0         0
@@ -297,7 +279,7 @@ Some examples of using the ``net_worth`` function using the example files from t
 
 ::
 
-    ## # A tibble: 3 x 5
+    ## # A tibble: 3 × 5
     ##   date       commodity net_worth assets liabilities
     ##   <date>     <chr>         <dbl>  <dbl>       <dbl>
     ## 1 2016-01-01 USD           5000    5000          0 
@@ -313,7 +295,7 @@ Some examples of using the ``net_worth`` function using the example files from t
 
 ::
 
-    ## # A tibble: 3 x 5
+    ## # A tibble: 3 × 5
     ##   date       commodity net_worth assets liabilities
     ##   <date>     <chr>         <dbl>  <dbl>       <dbl>
     ## 1 2016-01-01 USD           5000    5000          0 
@@ -329,12 +311,8 @@ Some examples of using the ``net_worth`` function using the example files from t
 
 ::
 
-    ## # A tibble: 3 x 5
-    ##   date       commodity net_worth assets liabilities
-    ##   <date>     <chr>         <dbl>  <dbl>       <dbl>
-    ## 1 2018-01-01 IRAUSD           0      0           0 
-    ## 2 2018-01-01 USD          40382. 41529.      -1147.
-    ## 3 2018-01-01 VACHR           34     34           0
+    ## # A tibble: 0 × 3
+    ## # … with 3 variables: date <date>, commodity <chr>, net_worth <lgl>
 
 
 
@@ -351,26 +329,25 @@ Some examples using the ``prune_coa`` function to simplify the "Chart of Account
     df <- register(bean_example_file) %>% dplyr::filter(!is.na(commodity))
     df %>% prune_coa() %>% 
         group_by(account, mv_commodity) %>% 
-        summarize(market_value = sum(market_value))
+        summarize(market_value = sum(market_value), .groups = "drop")
 
 
 ::
 
-    ## # A tibble: 11 x 3
-    ## # Groups:   account [5]
+    ## # A tibble: 11 × 3
     ##    account     mv_commodity market_value
     ##    <chr>       <chr>               <dbl>
     ##  1 Assets      IRAUSD                 0 
-    ##  2 Assets      USD               109301.
-    ##  3 Assets      VACHR                 -2 
-    ##  4 Equity      USD                -3682.
+    ##  2 Assets      USD               113070.
+    ##  3 Assets      VACHR                -25 
+    ##  4 Equity      USD                -3402.
     ##  5 Expenses    IRAUSD             55500 
-    ##  6 Expenses    USD               252946.
-    ##  7 Expenses    VACHR                352 
+    ##  6 Expenses    USD               270092.
+    ##  7 Expenses    VACHR                400 
     ##  8 Income      IRAUSD            -55500 
-    ##  9 Income      USD              -353352.
-    ## 10 Income      VACHR               -350 
-    ## 11 Liabilities USD                -2926.
+    ##  9 Income      USD              -377742.
+    ## 10 Income      VACHR               -375 
+    ## 11 Liabilities USD                -2817.
 
 
 .. sourcecode:: r
@@ -378,32 +355,31 @@ Some examples using the ``prune_coa`` function to simplify the "Chart of Account
 
     df %>% prune_coa(2) %>% 
         group_by(account, mv_commodity) %>%
-        summarize(market_value = sum(market_value))
+        summarize(market_value = sum(market_value), .groups = "drop")
 
 
 ::
 
-    ## # A tibble: 17 x 3
-    ## # Groups:   account [12]
+    ## # A tibble: 17 × 3
     ##    account                     mv_commodity market_value
     ##    <chr>                       <chr>               <dbl>
-    ##  1 Assets:US                   IRAUSD           0.      
-    ##  2 Assets:US                   USD              1.09e+ 5
-    ##  3 Assets:US                   VACHR           -2.00e+ 0
-    ##  4 Equity:Opening-Balances     USD             -3.68e+ 3
-    ##  5 Expenses:Financial          USD              4.14e+ 2
-    ##  6 Expenses:Food               USD              1.78e+ 4
-    ##  7 Expenses:Health             USD              6.78e+ 3
-    ##  8 Expenses:Home               USD              8.34e+ 4
+    ##  1 Assets:US                   IRAUSD           0       
+    ##  2 Assets:US                   USD              1.13e+ 5
+    ##  3 Assets:US                   VACHR           -2.5 e+ 1
+    ##  4 Equity:Opening-Balances     USD             -3.40e+ 3
+    ##  5 Expenses:Financial          USD              5.25e+ 2
+    ##  6 Expenses:Food               USD              1.97e+ 4
+    ##  7 Expenses:Health             USD              7.27e+ 3
+    ##  8 Expenses:Home               USD              8.87e+ 4
     ##  9 Expenses:Taxes              IRAUSD           5.55e+ 4
-    ## 10 Expenses:Taxes              USD              1.41e+ 5
-    ## 11 Expenses:Transport          USD              3.72e+ 3
-    ## 12 Expenses:Vacation           VACHR            3.52e+ 2
+    ## 10 Expenses:Taxes              USD              1.50e+ 5
+    ## 11 Expenses:Transport          USD              4.08e+ 3
+    ## 12 Expenses:Vacation           VACHR            4   e+ 2
     ## 13 Income:US                   IRAUSD          -5.55e+ 4
-    ## 14 Income:US                   USD             -3.53e+ 5
-    ## 15 Income:US                   VACHR           -3.50e+ 2
-    ## 16 Liabilities:AccountsPayable USD              5.68e-14
-    ## 17 Liabilities:US              USD             -2.93e+ 3
+    ## 14 Income:US                   USD             -3.78e+ 5
+    ## 15 Income:US                   VACHR           -3.75e+ 2
+    ## 16 Liabilities:AccountsPayable USD             -1.14e-13
+    ## 17 Liabilities:US              USD             -2.82e+ 3
 
 
     
@@ -452,7 +428,7 @@ Then we'll write some convenience functions we'll use over and over again:
         amount_var <- sym(amount)
         filter(df, grepl(filter_str, account)) %>% 
             group_by(account, !!commodity, ...) %>%
-            summarize(!!amount := sum(!!amount_var)) %>% 
+            summarize(!!amount := sum(!!amount_var), .groups = "drop") %>% 
             filter(abs(!!amount_var) > cutoff & !is.na(!!amount_var)) %>%
             arrange(desc(abs(!!amount_var)))
     }
@@ -480,12 +456,12 @@ Here is some basic balance sheets (using the market value of our assets):
 
 ::
 
-    ## # A tibble: 3 x 5
+    ## # A tibble: 3 × 5
     ##   date       commodity net_worth  assets liabilities
     ##   <date>     <chr>         <dbl>   <dbl>       <dbl>
-    ## 1 2019-09-03 IRAUSD           0       0           0 
-    ## 2 2019-09-03 USD         118656. 121202.      -2546.
-    ## 3 2019-09-03 VACHR           78      78           0
+    ## 1 2021-11-12 IRAUSD           0       0           0 
+    ## 2 2021-11-12 USD         118837. 121158.      -2321.
+    ## 3 2021-11-12 VACHR           63      63           0
 
 
 .. sourcecode:: r
@@ -496,16 +472,14 @@ Here is some basic balance sheets (using the market value of our assets):
 
 ::
 
-    ## # A tibble: 1 x 3
-    ## # Groups:   account [1]
+    ## # A tibble: 1 × 3
     ##   account   mv_commodity market_value
     ##   <chr>     <chr>               <dbl>
-    ## 1 Assets:US USD                 3626.
-    ## # A tibble: 1 x 3
-    ## # Groups:   account [1]
+    ## 1 Assets:US USD                 4646.
+    ## # A tibble: 1 × 3
     ##   account        mv_commodity market_value
     ##   <chr>          <chr>               <dbl>
-    ## 1 Liabilities:US USD                -2546.
+    ## 1 Liabilities:US USD                -2321.
 
 
 .. sourcecode:: r
@@ -516,18 +490,16 @@ Here is some basic balance sheets (using the market value of our assets):
 
 ::
 
-    ## # A tibble: 3 x 3
-    ## # Groups:   account [3]
+    ## # A tibble: 3 × 3
     ##   account                 mv_commodity market_value
     ##   <chr>                   <chr>               <dbl>
-    ## 1 Assets:US:BofA:Checking USD               2946.  
-    ## 2 Assets:US:ETrade:Cash   USD                680.  
-    ## 3 Assets:US:Vanguard:Cash USD                  0.11
-    ## # A tibble: 1 x 3
-    ## # Groups:   account [1]
+    ## 1 Assets:US:BofA:Checking USD             3188.    
+    ## 2 Assets:US:ETrade:Cash   USD             1458.    
+    ## 3 Assets:US:Vanguard:Cash USD                0.0100
+    ## # A tibble: 1 × 3
     ##   account                    mv_commodity market_value
     ##   <chr>                      <chr>               <dbl>
-    ## 1 Liabilities:US:Chase:Slate USD                -2546.
+    ## 1 Liabilities:US:Chase:Slate USD                -2321.
 
 
 
@@ -603,12 +575,12 @@ Basic income sheets
 
 ::
 
-    ## # A tibble: 3 x 4
-    ##   commodity type     `Jul 2019` `Aug 2019`
-    ##   <chr>     <chr>         <dbl>      <dbl>
-    ## 1 USD       expenses      7421.      9528.
-    ## 2 USD       income       10479.     14169.
-    ## 3 USD       net           3059.      4641.
+    ## # A tibble: 3 × 5
+    ##   commodity type     `Sep 2021` `Oct 2021` `Nov 2021`
+    ##   <chr>     <chr>         <dbl>      <dbl>      <dbl>
+    ## 1 USD       expenses      7357.      7567.      2281.
+    ## 2 USD       income        9538.      9258.      4640.
+    ## 3 USD       net           2181.      1691.      2359.
 
 
 .. sourcecode:: r
@@ -619,10 +591,10 @@ Basic income sheets
 
 ::
 
-    ## # A tibble: 1 x 4
-    ##   account   commodity `Jul 2019` `Aug 2019`
-    ##   <chr>     <chr>          <dbl>      <dbl>
-    ## 1 Income:US USD           10479.     14169.
+    ## # A tibble: 1 × 5
+    ##   account   commodity `Sep 2021` `Oct 2021` `Nov 2021`
+    ##   <chr>     <chr>          <dbl>      <dbl>      <dbl>
+    ## 1 Income:US USD            9538.      9258.      4640.
 
 
 .. sourcecode:: r
@@ -633,15 +605,15 @@ Basic income sheets
 
 ::
 
-    ## # A tibble: 6 x 4
-    ##   account            commodity `Jul 2019` `Aug 2019`
-    ##   <chr>              <chr>          <dbl>      <dbl>
-    ## 1 Expenses:Financial USD               4        21.9
-    ## 2 Expenses:Food      USD             519.      512. 
-    ## 3 Expenses:Health    USD             194.      291. 
-    ## 4 Expenses:Home      USD            2600.     2606. 
-    ## 5 Expenses:Taxes     USD            3984.     5977. 
-    ## 6 Expenses:Transport USD             120       120
+    ## # A tibble: 6 × 5
+    ##   account            commodity `Sep 2021` `Oct 2021` `Nov 2021`
+    ##   <chr>              <chr>          <dbl>      <dbl>      <dbl>
+    ## 1 Expenses:Financial USD               4        57.7        4  
+    ## 2 Expenses:Food      USD             479.      602.       188. 
+    ## 3 Expenses:Health    USD             194.      194.        96.9
+    ## 4 Expenses:Home      USD            2576.     2609.         0  
+    ## 5 Expenses:Taxes     USD            3984.     3984.      1992. 
+    ## 6 Expenses:Transport USD             120       120          0
 
 
 .. sourcecode:: r
@@ -652,12 +624,13 @@ Basic income sheets
 
 ::
 
-    ## # A tibble: 3 x 4
-    ##   account                       commodity `Jul 2019` `Aug 2019`
-    ##   <chr>                         <chr>          <dbl>      <dbl>
-    ## 1 Income:US:Hooli:GroupTermLife USD             48.6       73.0
-    ## 2 Income:US:Hooli:Match401k     USD           1200        250  
-    ## 3 Income:US:Hooli:Salary        USD           9231.     13846.
+    ## # A tibble: 4 × 5
+    ##   account                         commodity `Sep 2021` `Oct 2021` `Nov 2021`
+    ##   <chr>                           <chr>          <dbl>      <dbl>      <dbl>
+    ## 1 Income:US:BayBook:GroupTermLife USD             48.6       48.6       24.3
+    ## 2 Income:US:BayBook:Salary        USD           9231.      9231.      4615. 
+    ## 3 Income:US:ETrade:ITOT:Dividend  USD            258.         0          0  
+    ## 4 Income:US:ETrade:PnL            USD              0        -21.8        0
 
 
 .. sourcecode:: r
@@ -668,28 +641,28 @@ Basic income sheets
 
 ::
 
-    ## # A tibble: 19 x 4
-    ##    account                            commodity `Jul 2019` `Aug 2019`
-    ##    <chr>                              <chr>          <dbl>      <dbl>
-    ##  1 Expenses:Financial:Commissions     USD             0         17.9 
-    ##  2 Expenses:Financial:Fees            USD             4          4   
-    ##  3 Expenses:Food:Groceries            USD           219.       156.  
-    ##  4 Expenses:Food:Restaurant           USD           301.       357.  
-    ##  5 Expenses:Health:Dental:Insurance   USD             5.8        8.7 
-    ##  6 Expenses:Health:Life:GroupTermLife USD            48.6       73.0 
-    ##  7 Expenses:Health:Medical:Insurance  USD            54.8       82.1 
-    ##  8 Expenses:Health:Vision:Insurance   USD            84.6      127.  
-    ##  9 Expenses:Home:Electricity          USD            65         65   
-    ## 10 Expenses:Home:Internet             USD            80.0       79.9 
-    ## 11 Expenses:Home:Phone                USD            54.5       61.3 
-    ## 12 Expenses:Home:Rent                 USD          2400       2400   
-    ## 13 Expenses:Taxes:Y2019:US:CityNYC    USD           350.       525.  
-    ## 14 Expenses:Taxes:Y2019:US:Federal    USD          2126.      3189.  
-    ## 15 Expenses:Taxes:Y2019:US:Medicare   USD           213.       320.  
-    ## 16 Expenses:Taxes:Y2019:US:SDI        USD             2.24       3.36
-    ## 17 Expenses:Taxes:Y2019:US:SocSec     USD           563.       845.  
-    ## 18 Expenses:Taxes:Y2019:US:State      USD           730.      1095.  
-    ## 19 Expenses:Transport:Tram            USD           120        120
+    ## # A tibble: 19 × 5
+    ##    account                            commodity `Sep 2021` `Oct 2021` `Nov 2021`
+    ##    <chr>                              <chr>          <dbl>      <dbl>      <dbl>
+    ##  1 Expenses:Financial:Commissions     USD             0         53.7        0   
+    ##  2 Expenses:Financial:Fees            USD             4          4          4   
+    ##  3 Expenses:Food:Groceries            USD           158.       228.        84.7 
+    ##  4 Expenses:Food:Restaurant           USD           321.       374.       103.  
+    ##  5 Expenses:Health:Dental:Insurance   USD             5.8        5.8        2.9 
+    ##  6 Expenses:Health:Life:GroupTermLife USD            48.6       48.6       24.3 
+    ##  7 Expenses:Health:Medical:Insurance  USD            54.8       54.8       27.4 
+    ##  8 Expenses:Health:Vision:Insurance   USD            84.6       84.6       42.3 
+    ##  9 Expenses:Home:Electricity          USD            65         65          0   
+    ## 10 Expenses:Home:Internet             USD            80.0       80.0        0   
+    ## 11 Expenses:Home:Phone                USD            30.8       64.3        0   
+    ## 12 Expenses:Home:Rent                 USD          2400       2400          0   
+    ## 13 Expenses:Taxes:Y2021:US:CityNYC    USD           350.       350.       175.  
+    ## 14 Expenses:Taxes:Y2021:US:Federal    USD          2126.      2126.      1063.  
+    ## 15 Expenses:Taxes:Y2021:US:Medicare   USD           213.       213.       107.  
+    ## 16 Expenses:Taxes:Y2021:US:SDI        USD             2.24       2.24       1.12
+    ## 17 Expenses:Taxes:Y2021:US:SocSec     USD           563.       563.       282.  
+    ## 18 Expenses:Taxes:Y2021:US:State      USD           730.       730.       365.  
+    ## 19 Expenses:Transport:Tram            USD           120        120          0
 
 
 

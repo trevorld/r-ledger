@@ -335,16 +335,3 @@ register_ledger <- function(file, flags = "", date = NULL) {
     if (!.is_toolchain_supported(toolchain))
         stop(paste(toolchain, "binaries not found on path"))
 }
-
-#' @importFrom rio .import
-#' @export
-.import.rio_beancount <- register # nolint
-
-#' @export
-.import.rio_bean <- register # nolint
-
-#' @export
-.import.rio_ledger <- register # nolint
-
-#' @export
-.import.rio_hledger <- register # nolint

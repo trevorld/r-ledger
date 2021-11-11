@@ -1,3 +1,10 @@
+ledger 2.0.9
+============
+
+* The R packgae `{rio}` has been downgraded from "Imports" to "Suggests".
+  Users who want to use `rio::import()` or `rio::convert()`
+  will need to manually install `{rio}`.
+
 ledger 2.0.7
 ============
 

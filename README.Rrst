@@ -84,7 +84,7 @@ Examples
 API
 +++
 
-The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also exports S3 methods so one can use ``rio::import`` to read in a register, a ``net_worth`` convenience function, and a ``prune_coa`` convenience function.
+The main function of this package is ``register`` which reads in the register of a plaintext accounting file.  This package also registers S3 methods so one can use ``rio::import`` to read in a register, a ``net_worth`` convenience function, and a ``prune_coa`` convenience function.
 
 register
 ~~~~~~~~

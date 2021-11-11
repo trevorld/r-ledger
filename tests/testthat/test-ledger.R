@@ -1,4 +1,4 @@
-# Copyright 2018 Trevor L Davis <trevor.l.davis@gmail.com>
+# Copyright 2021 Trevor L Davis <trevor.l.davis@gmail.com>
 
 lfile <- system.file("extdata", "example.ledger", package = "ledger")
 hfile <- system.file("extdata", "example.hledger", package = "ledger")
@@ -45,13 +45,13 @@ for (ii in seq_len(nrow(df_file))) {
     file <- df_file$file[ii]
     empty_file <- df_file$efile[ii]
     context(paste(file, toolchain, "works as expected"))
-    register <- function(...) ledger::register(..., toolchain = toolchain)
-    net_worth <- function(...) ledger::net_worth(..., toolchain = toolchain)
+    register_ <- function(...) ledger::register(..., toolchain = toolchain)
+    net_worth_ <- function(...) ledger::net_worth(..., toolchain = toolchain)
 
     test_that(paste("register works as expected on", basename(file), "using", toolchain), {
         skip_toolchain(file, toolchain)
 
-        df <- register(file)
+        df <- register_(file)
         expect_equal(sum(dplyr::filter(df, account == "Expenses:Taxes:Federal")$amount), 3 * 82.55)
         expect_true(tibble::is_tibble(df))
 
@@ -64,8 +64,9 @@ for (ii in seq_len(nrow(df_file))) {
         investment <- dplyr::filter(df, account == "Assets:JT-Brokerage")
         expect_equal(investment$amount, 4)
 
-        if (system.file(package = "rio") != "") {
+        if (require("rio")) {
             df2 <- rio::import(file, toolchain = toolchain)
+            df2 <- tibble::as_tibble(df2)
             ftax_sum <- sum(dplyr::filter(df2, account == "Expenses:Taxes:Federal")$amount)
             expect_equal(ftax_sum, 3 * 82.55)
             expect_equal(df, df2)
@@ -74,11 +75,11 @@ for (ii in seq_len(nrow(df_file))) {
         if (toolchain %in% c("hledger", "bean-report_hledger")) {
             expect_equal(investment$historical_cost, 1000)
             expect_equal(investment$market_value, 2000)
-            df <- register(file, flags = "tag:Tag=#restaurant")
+            df <- register_(file, flags = "tag:restaurant")
             expect_equal(dplyr::filter(df, account == "Expenses:Food:Restaurant")$amount, 20.07)
         } else {
-            expect_error(register(file, flags = "tag:Tag=#restaurant"))
-            expect_error(register(file, flags = "tag:Link=^grocery"))
+            expect_error(register_(file, flags = "tag:restaurant"))
+            expect_error(register_(file, flags = "tag:Link=grocery"))
         }
         if (toolchain %in% c("ledger", "bean-report_ledger")) {
             expect_warning(investment$market_value)
@@ -89,14 +90,14 @@ for (ii in seq_len(nrow(df_file))) {
         skip_toolchain(file, toolchain)
 
         if (!.is_toolchain_supported(toolchain)) {
-            expect_error(register(file))
+            expect_error(register_(file))
             skip(paste(toolchain, "not supported"))
         }
-        df <- net_worth(file)
+        df <- net_worth_(file)
         expect_true(tibble::is_tibble(df))
         expect_equal(df$net_worth, 8125.39)
-        expect_equal(net_worth(file, include = ".*", exclude = c("^Equity", "^Income", "^Expenses"))$net_worth, 8125.39)
-        expect_equal(net_worth(file, c("2016-01-01", "2017-01-01", "2018-01-01"))$net_worth,
+        expect_equal(net_worth_(file, include = ".*", exclude = c("^Equity", "^Income", "^Expenses"))$net_worth, 8125.39)
+        expect_equal(net_worth_(file, c("2016-01-01", "2017-01-01", "2018-01-01"))$net_worth,
                      c(5000, 4361.39, 6743.39))
     })
 
@@ -104,10 +105,10 @@ for (ii in seq_len(nrow(df_file))) {
         skip_toolchain(file, toolchain)
 
         if (! toolchain %in% c("ledger", "bean-report_ledger")) {
-            df <- register(empty_file)
+            df <- register_(empty_file)
             expect_equal(nrow(df), 0)
         } else {
-            expect_error(register(empty_file))
+            expect_error(register_(empty_file))
         }
     })
 }

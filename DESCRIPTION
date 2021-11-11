@@ -1,7 +1,7 @@
 Package: ledger
 Type: Package
 Title: Utilities for Importing Data from Plain Text Accounting Files
-Version: 2.0.8
+Version: 2.0.9
 Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"), email="trevor.l.davis@gmail.com"),
     person("Jenya", "Sovetkin", role="ctb"),
     person("Chris", "Lloyd", role="ctb"))
@@ -9,10 +9,17 @@ URL: https://github.com/trevorld/r-ledger, https://trevorldavis.com/R/ledger
 BugReports: https://github.com/trevorld/r-ledger/issues
 Description: Utilities for querying plain text accounting files from 'Ledger', 'HLedger', and 'Beancount'.
 Imports:
-    dplyr (>= 0.7.0), rio, rlang, stringr, tidyr (>= 0.7.0), tibble, tidyselect, tools
+    dplyr (>= 0.7.0), 
+    rlang, 
+    stringr, 
+    tidyr (>= 0.7.0), 
+    tibble, 
+    tidyselect, 
+    tools
 Suggests:
+    rio, 
     testthat
 SystemRequirements: ledger (>= 3.1), hledger (>= 1.2), beancount (>= 2.0)
 License: MIT + file LICENSE
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
 Encoding: UTF-8

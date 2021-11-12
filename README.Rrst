@@ -21,7 +21,7 @@ knitr::opts_chunk$set(fig.path = "man/figures/README-")
     :target: https://cran.r-project.org/package=ledger
     :alt: RStudio CRAN mirror downloads
 
-``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <http://hledger.org/>`_, and `Beancount <http://furius.ca/beancount/>`_ into an R data frame for convenient analysis, plotting, and export.
+``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <https://hledger.org/>`_, and `Beancount <https://github.com/beancount/beancount>`_ into an R data frame for convenient analysis, plotting, and export.
 
 Right now it supports reading in the register from ``ledger``, ``hledger``, and ``beancount`` files.  
 
@@ -49,10 +49,10 @@ ledger
     `ledger <https://www.ledger-cli.org/>`_ (>= 3.1) 
 
 hledger
-    `hledger <http://hledger.org/>`_ (>= 1.4)
+    `hledger <https://hledger.org/>`_ (>= 1.4)
 
 beancount
-    `beancount <http://furius.ca/beancount/>`_ (>= 2.0)
+    `beancount <https://github.com/beancount/beancount>`_ (>= 2.0)
 
 To install hledger run the following in your shell:
 

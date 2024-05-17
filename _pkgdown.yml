@@ -1,4 +1,4 @@
-destination: "/home/trevorld/a/projects/websites/R/ledger/"
+destination: "../../websites/R/ledger/"
 url: "https://trevorldavis.com/R/ledger"
 development:
     mode: auto

@@ -13,8 +13,8 @@ knitr::opts_chunk$set(fig.path = "man/figures/README-")
     :target: https://github.com/trevorld/r-ledger/actions
     :alt: R-CMD-check
 
-.. image:: https://img.shields.io/codecov/c/github/trevorld/r-ledger/master.svg
-    :target: https://codecov.io/github/trevorld/r-ledger?branch=master
+.. image:: https://codecov.io/github/trevorld/r-ledger/branch/master/graph/badge.svg
+    :target: https://app.codecov.io/github/trevorld/r-ledger?branch=master
     :alt: Coverage Status
 
 .. image:: https://cranlogs.r-pkg.org/badges/ledger

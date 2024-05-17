@@ -104,7 +104,8 @@ register <- function(file, ..., toolchain = default_toolchain(file), date = NULL
              tidyselect::matches("market_value"),
              tidyselect::matches("mv_commodity"),
              tidyselect::matches("comment"),
-             tidyselect::matches("tags"))
+             tidyselect::matches("tags"),
+             tidyselect::matches("id"))
 }
 
 .nf <- function(filename) shQuote(normalizePath(filename, mustWork = FALSE))
@@ -133,7 +134,7 @@ register_beancount <- function(file, date = NULL) {
                   "number as amount, currency as commodity,",
                   "number(cost(position)) as historical_cost,",
                   "currency(cost(position)) as hc_commodity,",
-                  "tags,")
+                  "tags, id,")
     if (!is.null(date)) {
        date <- as.Date(date)
        query <- paste(query,
@@ -156,17 +157,18 @@ register_beancount <- function(file, date = NULL) {
     df <- .read_csv(cfile)
     if (nrow(df) == 0) {
         df <- tibble(date = as.Date(character()),
-                             mark = character(),
-                             account = character(),
-                             payee = character(),
-                             description = character(),
-                             amount = numeric(),
-                             commodity = character(),
-                             historical_cost = numeric(),
-                             hc_commodity = character(),
-                             market_value = numeric(),
-                             mv_commodity = character(),
-                             tags = character())
+                     mark = character(),
+                     account = character(),
+                     payee = character(),
+                     description = character(),
+                     amount = numeric(),
+                     commodity = character(),
+                     historical_cost = numeric(),
+                     hc_commodity = character(),
+                     market_value = numeric(),
+                     mv_commodity = character(),
+                     tags = character(),
+                     id = character())
     }
     df <- mutate(df,
                         mark = str_trim(.data$mark),
@@ -176,7 +178,8 @@ register_beancount <- function(file, date = NULL) {
                         commodity = str_trim(.data$commodity),
                         hc_commodity = str_trim(.data$hc_commodity),
                         mv_commodity = str_trim(.data$mv_commodity),
-                        tags = str_squish(.data$tags))
+                        tags = str_squish(.data$tags),
+                        id = str_trim(.data$id))
     .select_columns(df)
 }
 
@@ -204,7 +207,7 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
 
 .register_hledger_helper <- function(hfile, flags = "", add_mark = TRUE) {
     df <- .read_hledger(hfile, flags)
-    if (!add_mark) df <- select(df, -.data$mark)
+    if (!add_mark) df <- select(df, -"mark")
     df
 }
 

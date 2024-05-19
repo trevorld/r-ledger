@@ -18,7 +18,7 @@ ledger
 
 |CRAN-status| |R-CMD-check| |codecov| |downloads|
 
-``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://www.ledger-cli.org/>`_, `HLedger <https://hledger.org/>`_, and `Beancount <https://github.com/beancount/beancount>`_ into an R data frame for convenient analysis, plotting, and export.
+``ledger`` is an R package to import data from `plain text accounting <https://plaintextaccounting.org/>`_ software like `Ledger <https://ledger-cli.org/>`_, `HLedger <https://hledger.org/>`_, and `Beancount <https://github.com/beancount/beancount>`_ into an R data frame for convenient analysis, plotting, and export.
 
 Right now it supports reading in the register from ``ledger``, ``hledger``, and ``beancount`` files.  
 
@@ -43,7 +43,7 @@ To install the development version of the ``ledger`` package (and its R package 
 This package also has some system dependencies that need to be installed depending on which plaintext accounting files you wish to read to be able to read in:
 
 ledger
-    `ledger <https://www.ledger-cli.org/>`_ (>= 3.1) 
+    `ledger <https://ledger-cli.org/>`_ (>= 3.1)
 
 hledger
     `hledger <https://hledger.org/>`_ (>= 1.4)
@@ -63,7 +63,7 @@ To install beancount run the following in your shell:
 
     pip3 install beancount
 
-`Several pre-compiled Ledger binaries are available <https://www.ledger-cli.org/download.html>`_ (often found in several open source repos).
+`Several pre-compiled Ledger binaries are available <https://ledger-cli.org/download.html>`_ (often found in several open source repos).
 
 To run the unit tests you'll also need the suggested R package ``testthat``.
 

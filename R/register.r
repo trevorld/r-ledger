@@ -155,7 +155,7 @@ register_beancount <- function(file, date = NULL) {
         .system("bean-query", args)
     }
     df <- .read_csv(cfile)
-    if (nrow(df) == 0) {
+    if (nrow(df) == 0L) {
         df <- tibble(date = as.Date(character()),
                      mark = character(),
                      account = character(),
@@ -169,18 +169,20 @@ register_beancount <- function(file, date = NULL) {
                      mv_commodity = character(),
                      tags = character(),
                      id = character())
+    } else {
+        df <- mutate(df,
+                     date = as.Date(str_trim(.data$date)),
+                     mark = str_trim(.data$mark),
+                     account = str_trim(.data$account),
+                     payee = str_trim(.data$payee),
+                     description = str_trim(.data$description),
+                     commodity = str_trim(.data$commodity),
+                     hc_commodity = str_trim(.data$hc_commodity),
+                     mv_commodity = str_trim(.data$mv_commodity),
+                     tags = str_squish(.data$tags),
+                     id = str_trim(.data$id))
+        .select_columns(df)
     }
-    df <- mutate(df,
-                        mark = str_trim(.data$mark),
-                        account = str_trim(.data$account),
-                        payee = str_trim(.data$payee),
-                        description = str_trim(.data$description),
-                        commodity = str_trim(.data$commodity),
-                        hc_commodity = str_trim(.data$hc_commodity),
-                        mv_commodity = str_trim(.data$mv_commodity),
-                        tags = str_squish(.data$tags),
-                        id = str_trim(.data$id))
-    .select_columns(df)
 }
 
 #' @rdname register
@@ -235,7 +237,7 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
 }
 
 .clean_hledger <- function(df) {
-    if (nrow(df)) {
+    if (nrow(df) > 0L) {
         df <- mutate(df, date = as.Date(date, tryFormats = c("%Y-%m-%d", "%Y/%m/%d")))
         df <- mutate(df, description = ifelse(grepl("\\|$", .data$description),
                                                      paste0(.data$description, " "),
@@ -250,15 +252,22 @@ register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add
 
         df <- mutate(df, amount = gsub(" @.*$", "", .data$amount))
         df <- mutate(df, amount = to_numeric(.data$amount))
+        df <- mutate(df, id = as.character(.data$txnidx))
 
-        df <- select(df, .data$date, .data$description, .data$payee, .data$amount,
-                     .data$commodity, .data$account, mark = .data$status)
+        df <- select(df, "date", "description", "payee", "amount",
+                     "commodity", "account", mark = "status", "id")
     } else {
-        df <- mutate(df, payee = .data$description, commodity = .data$amount)
+        df <- tibble(date = as.Date(character()),
+                     description = character(),
+                     payee = character(),
+                     amount = numeric(),
+                     commodity = character(),
+                     account = character(),
+                     mark = character(),
+                     id = character())
     }
     df
 }
-
 
 .left_of_split <- function(strings, split) {
     sapply(strsplit(strings, split), function(x) x[1])
@@ -298,7 +307,6 @@ register_ledger <- function(file, flags = "", date = NULL) {
 
 .clean_ledger <- function(df) {
     names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "comment")
-
     df <- mutate(df,
                 date = as.Date(date, "%Y/%m/%d"),
                 description = ifelse(grepl("\\|$", .data$description), paste0(.data$description, " "),
@@ -310,7 +318,7 @@ register_ledger <- function(file, flags = "", date = NULL) {
                 payee = ifelse(.data$payee == "", NA, .data$payee),
                 description = ifelse(.data$description == "", NA, .data$description),
                 payee = as.character(.data$payee),
-                comment = as.character(.data$comment)
+                comment = str_trim(as.character(.data$comment))
                 )
     df
 }

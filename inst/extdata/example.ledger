@@ -54,7 +54,7 @@ P 2016/01/01 00:00:00 SP                        250 USD
   Assets:JT-Brokerage                                              4 SP {250 USD}
   Equity:Transfer                                                  -1000 USD
 
-2016/01/01 * Supermarket | Grocery store ;; Link: ^grocery 
+2016/01/01 * Supermarket | Grocery store  ; Link: grocery 
   Expenses:Food:Grocery                                            500.54 USD
   Liabilities:JT-Credit-Card                                       -500.54 USD
 

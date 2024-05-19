@@ -1,8 +1,11 @@
 ledger 2.0.10 (development)
 ===========================
 
-* ``register_beancount()`` now imports a transaction `id` column (#21).
+* ``register_beancount()`` and ``register_hledger()`` now import a transaction `id` column (#21).
   Thanks @vikasrawal for suggestion.
+* ``register_beancount()`` now coerces the `date` column to a "Date" object.
+  ``register_ledger()`` and ``register_hledger()`` already did so.
+* ``register_ledger()`` now trims the `comment` column with `stringr::str_trim()`.
 
 ledger 2.0.9
 ============

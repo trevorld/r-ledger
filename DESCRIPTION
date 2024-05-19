@@ -1,7 +1,7 @@
 Package: ledger
 Type: Package
 Title: Utilities for Importing Data from Plain Text Accounting Files
-Version: 2.0.10-0
+Version: 2.0.10-2
 Authors@R: c(person("Trevor L.", "Davis", role=c("aut", "cre"),
              email="trevor.l.davis@gmail.com",
              comment = c(ORCID = "0000-0001-6341-4639")),
@@ -16,7 +16,7 @@ Imports:
     stringr, 
     tidyr (>= 0.7.0), 
     tibble, 
-    tidyselect, 
+    tidyselect (>= 1.2.0),
     tools
 Suggests:
     rio, 

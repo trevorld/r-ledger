@@ -1,5 +1,5 @@
-ledger 2.0.10 (development)
-===========================
+ledger 2.0.11
+=============
 
 * ``register_beancount()`` and ``register_hledger()`` now import a transaction `id` column (#21).
   Thanks @vikasrawal for suggestion.

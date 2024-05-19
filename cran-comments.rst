@@ -4,7 +4,7 @@ Depending on the type of plaintext accounting file to be imported this package h
 
 **Test environments**
 
-* local (linux, R 4.1.1) with all of the system dependencies installed
+* local (linux, R 4.4.0) with all of the system dependencies installed
 * win-builder (windows, R devel) with none of the system dependencies installed
 * Github Actions (linux, R devel, R release, R oldrel) with all dependencies installed
 

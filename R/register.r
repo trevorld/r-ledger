@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020 Trevor L. Davis <trevor.l.davis@gmail.com>
+# Copyright (c) 2024 Trevor L. Davis <trevor.l.davis@gmail.com>
 # Copyright (c) 2018 Jenya Sovetkin <e.sovetkin@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy

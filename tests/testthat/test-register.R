@@ -55,7 +55,14 @@ for (ii in seq_len(nrow(df_file))) {
 	toolchain <- df_file$toolchain[ii]
 	file <- df_file$file[ii]
 	empty_file <- df_file$efile[ii]
-	register_ <- function(...) ledger::register(..., toolchain = toolchain)
+	deprecated_toolchains <- c("bean-report_ledger", "bean-report_hledger")
+	register_ <- function(...) {
+		if (toolchain %in% deprecated_toolchains) {
+			suppressWarnings(ledger::register(..., toolchain = toolchain))
+		} else {
+			ledger::register(..., toolchain = toolchain)
+		}
+	}
 
 	test_that(paste("register works as expected on", basename(file), "using", toolchain), {
 		skip_toolchain(file, toolchain)

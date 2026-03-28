@@ -7,18 +7,15 @@ lefile <- system.file("extdata", "empty.ledger", package = "ledger")
 hefile <- system.file("extdata", "empty.hledger", package = "ledger")
 befile <- system.file("extdata", "empty.beancount", package = "ledger")
 df_file <- data.frame(
-	file = c(lfile, hfile, bfile, bfile, bfile),
-	efile = c(lefile, hefile, befile, befile, befile),
-	toolchain = c("ledger", "hledger", "beancount", "bean-report_ledger", "bean-report_hledger"),
+	file = c(lfile, hfile, bfile),
+	toolchain = c("ledger", "hledger", "beancount"),
 	stringsAsFactors = FALSE
 )
 
 skip_toolchain <- function(file, toolchain) {
 	if (!.is_toolchain_supported(toolchain)) {
-		expect_error(ledger::register(file, toolchain = toolchain))
 		skip(paste(toolchain, "binaries not found"))
 	}
-	if (toolchain == "bean-report_hledger") skip_on_appveyor()
 }
 
 for (ii in seq_len(nrow(df_file))) {
@@ -29,10 +26,6 @@ for (ii in seq_len(nrow(df_file))) {
 	test_that(paste("net_worth works as expected on", basename(file), "using", toolchain), {
 		skip_toolchain(file, toolchain)
 
-		if (!.is_toolchain_supported(toolchain)) {
-			expect_error(ledger::register(file, toolchain = toolchain))
-			skip(paste(toolchain, "not supported"))
-		}
 		df <- net_worth_(file)
 		expect_true(tibble::is_tibble(df))
 		expect_equal(df$net_worth, 8125.39)

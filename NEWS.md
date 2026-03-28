@@ -1,7 +1,11 @@
 ledger 2.0.12 (development)
 ===========================
 
-* No user facing changes.
+Deprecated features
+-------------------
+
+* The `"bean-report_ledger"` and `"bean-report_hledger"` toolchains are deprecated since `bean-report` was removed from `beancount` in 2020.
+  Use the `"beancount"` toolchain that uses `bean-query` instead.
 
 ledger 2.0.11
 =============

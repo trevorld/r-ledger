@@ -32,7 +32,7 @@
 #' @param flags Extra flags to pass to \code{register}.
 #'    If using \code{ledger} may want to try something like \code{"-X USD"}.
 #' @param toolchain Toolchain used to read in register.
-#'     Either "ledger", "hledger", "bean-report_ledger", or "bean-report_hledger".
+#'     Either "ledger", "hledger", or "beancount".
 #' @param ignore_case logical value of whether to ignore case in regular expressions or not.
 #' @return  \code{net_worth} returns a tibble
 #' @examples
@@ -93,7 +93,7 @@ net_worth <- function(
 			commodity = .data$mv_commodity
 		),
 		register(file, flags = flags, date = date, toolchain = toolchain)
-	) # deprecated toolchains
+	)
 	include <- paste(include, collapse = "|")
 	df <- filter(df, grepl(include, .data$account, ignore.case = ignore_case))
 	if (!is.null(exclude)) {

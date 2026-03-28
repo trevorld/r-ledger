@@ -52,7 +52,7 @@ default_toolchain <- function(file) {
 #' @param flags Character vector of additional command line flags to pass
 #'     to either \code{ledger csv} or \code{hledger register}.
 #' @param toolchain Toolchain used to read in register.
-#'     Either "ledger", "hledger", "beancount", "bean-report_ledger", or "bean-report_hledger".
+#'     Either "ledger", "hledger", or "beancount".
 #' @param date End date.
 #'     Only transactions (and implicitly price statements) strictly before this date are used.
 #' @return  \code{register} returns a tibble.
@@ -87,11 +87,23 @@ register <- function(file, ..., toolchain = default_toolchain(file), date = NULL
 		"hledger" = register_hledger(file, ..., date = date),
 		"beancount" = register_beancount(file, ..., date = date),
 		"bean-report_ledger" = {
+			.Deprecated(
+				msg = paste(
+					'`toolchain = "bean-report_ledger" is deprecated.',
+					'Use `toolchain = "beancount"` instead.'
+				)
+			)
 			file <- .bean_report(file, "ledger")
 			on.exit(unlink(file))
 			register_ledger(file, ..., date = date)
 		},
 		"bean-report_hledger" = {
+			.Deprecated(
+				msg = paste(
+					'`toolchain = "bean-report_hledger" is deprecated.',
+					'Use `toolchain = "beancount"` instead.'
+				)
+			)
 			file <- .bean_report(file, "hledger")
 			on.exit(unlink(file))
 			register_hledger(file, ..., date = date)

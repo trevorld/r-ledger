@@ -7,6 +7,17 @@ Deprecated features
 * The `"bean-report_ledger"` and `"bean-report_hledger"` toolchains are deprecated since `bean-report` was removed from `beancount` in 2020.
   Use the `"beancount"` toolchain that uses `bean-query` instead.
 
+New features
+------------
+
+* `register_ledger()` now imports a transaction `code` column (#25).
+
+Bug fixes and minor improvements
+--------------------------------
+
+* `register_ledger()` now extracts marks that are embedded in the descriptions which
+  `ledger`'s csv output sometimes does when when both transaction codes and marks are present in the transaction.
+
 ledger 2.0.11
 =============
 

@@ -119,6 +119,7 @@ register <- function(file, ..., toolchain = default_toolchain(file), date = NULL
 		tidyselect::matches("mark$"),
 		"payee",
 		"description",
+		tidyselect::matches("^code$"),
 		"account",
 		"amount",
 		"commodity",
@@ -376,10 +377,31 @@ register_ledger <- function(file, flags = "", date = NULL) {
 }
 
 .clean_ledger <- function(df) {
-	names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "comment")
+	names(df) <- c(
+		"date",
+		"code",
+		"description",
+		"account",
+		"commodity",
+		"amount",
+		"mark",
+		"comment"
+	)
 	df <- mutate(
 		df,
 		date = as.Date(date, "%Y/%m/%d"),
+		# When a transaction code is present, ledger embeds the mark in the
+		# description instead of the mark column
+		mark = ifelse(
+			.data$mark == "" & grepl("^[*!] ", .data$description),
+			sub("^([*!]) .*", "\\1", .data$description),
+			.data$mark
+		),
+		description = ifelse(
+			grepl("^[*!] ", .data$description),
+			sub("^[*!] ", "", .data$description),
+			.data$description
+		),
 		description = ifelse(
 			grepl("\\|$", .data$description),
 			paste0(.data$description, " "),
@@ -392,9 +414,10 @@ register_ledger <- function(file, flags = "", date = NULL) {
 		),
 		payee = .left_of_split(.data$description, " \\| "),
 		description = .right_of_split(.data$description, " \\| "),
-		payee = ifelse(.data$payee == "", NA, .data$payee),
-		description = ifelse(.data$description == "", NA, .data$description),
+		payee = ifelse(.data$payee == "", NA_character_, .data$payee),
+		description = ifelse(.data$description == "", NA_character_, .data$description),
 		payee = as.character(.data$payee),
+		code = ifelse(.data$code == "", NA_character_, as.character(.data$code)),
 		comment = str_trim(as.character(.data$comment))
 	)
 	df

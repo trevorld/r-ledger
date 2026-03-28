@@ -1,3 +1,8 @@
+ledger 2.0.12 (development)
+===========================
+
+* No user facing changes.
+
 ledger 2.0.11
 =============
 
@@ -31,7 +36,7 @@ ledger 2.0.4
 ============
 
 * For ``beancount`` files read in with ``register_beancount()`` with the end ``date`` argument set
-  we no longer use any price directives on the end date to determine market value 
+  we no longer use any price directives on the end date to determine market value
   but only those strictly before the end date.
   This matches the filtering of transactions and the new ``hledger`` market value behavior.
 
@@ -47,7 +52,7 @@ Breaking changes
 ----------------
 
 * Now ``register()`` returns a ``tibble`` instead of a ``data.frame``.
-* By default now reads in ``beancount`` files using the output from ``bean-query`` 
+* By default now reads in ``beancount`` files using the output from ``bean-query``
   instead of ``bean-report`` followed up by ``hledger``.
 * Most users of the ``ledger`` R package won't need to change any code.
 
@@ -60,7 +65,7 @@ New functions
 Minor improvements and fixes
 ----------------------------
 
-* ``register()`` now has a ``date`` argument than can be used to exclude transactions 
+* ``register()`` now has a ``date`` argument than can be used to exclude transactions
   (and implicitly price statements) before that date.
 * ``register()`` now preserves transaction comments when importing ledger files (#16).  Thanks Jenya Sovetkin for patch.
 * ``register()`` now preserves tags when importing beancount files.
@@ -78,7 +83,7 @@ ledger 0.8.0
 ledger 0.7.0
 ============
 
-* Removed ``regex`` argument from ``net_worth`` while adding ``include``, ``exlude``, and ``ignore_case`` arguments.  
+* Removed ``regex`` argument from ``net_worth`` while adding ``include``, ``exlude``, and ``ignore_case`` arguments.
 
 ledger 0.6.0
 ============

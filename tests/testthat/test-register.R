@@ -13,7 +13,6 @@ df_file <- data.frame(
 	stringsAsFactors = FALSE
 )
 
-context("Various assertions work as expected")
 test_that(".assert_toolchain works as expected", {
 	expect_error(.assert_toolchain("does-not-exist"), "does-not-exist binaries not found on path")
 })
@@ -56,7 +55,6 @@ for (ii in seq_len(nrow(df_file))) {
 	toolchain <- df_file$toolchain[ii]
 	file <- df_file$file[ii]
 	empty_file <- df_file$efile[ii]
-	context(paste(file, toolchain, "works as expected"))
 	register_ <- function(...) ledger::register(..., toolchain = toolchain)
 
 	test_that(paste("register works as expected on", basename(file), "using", toolchain), {
@@ -101,7 +99,7 @@ for (ii in seq_len(nrow(df_file))) {
 		}
 	})
 
-	test_that(paste("register works as expected on", basename(file), "using", toolchain), {
+	test_that(paste("register works as expected on empty file using", toolchain), {
 		skip_toolchain(file, toolchain)
 
 		if (!toolchain %in% c("ledger", "bean-report_ledger")) {

@@ -24,7 +24,6 @@ skip_toolchain <- function(file, toolchain) {
 for (ii in seq_len(nrow(df_file))) {
 	toolchain <- df_file$toolchain[ii]
 	file <- df_file$file[ii]
-	context(paste(file, toolchain, "works as expected"))
 	net_worth_ <- function(...) ledger::net_worth(..., toolchain = toolchain)
 
 	test_that(paste("net_worth works as expected on", basename(file), "using", toolchain), {

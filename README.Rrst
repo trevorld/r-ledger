@@ -9,7 +9,7 @@ options(width=80)
 .. |CRAN-status| image:: https://www.r-pkg.org/badges/version/ledger
     :target: https://cran.r-project.org/package=ledger
     :alt: CRAN Status Badge
-.. |R-CMD-check| image:: https://github.com/trevorld/r-ledger/workflows/R-CMD-check/badge.svg
+.. |R-CMD-check| image:: https://github.com/trevorld/r-ledger/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master
     :target: https://github.com/trevorld/r-ledger/actions
     :alt: R-CMD-check
 .. |codecov| image:: https://codecov.io/github/trevorld/r-ledger/branch/master/graph/badge.svg

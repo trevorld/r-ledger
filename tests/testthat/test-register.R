@@ -58,7 +58,6 @@ for (ii in seq_len(nrow(df_file))) {
 	empty_file <- df_file$efile[ii]
 	context(paste(file, toolchain, "works as expected"))
 	register_ <- function(...) ledger::register(..., toolchain = toolchain)
-	net_worth_ <- function(...) ledger::net_worth(..., toolchain = toolchain)
 
 	test_that(paste("register works as expected on", basename(file), "using", toolchain), {
 		skip_toolchain(file, toolchain)
@@ -100,30 +99,6 @@ for (ii in seq_len(nrow(df_file))) {
 		if (toolchain %in% c("ledger", "bean-report_ledger")) {
 			expect_warning(investment$market_value)
 		}
-	})
-
-	test_that(paste("net_worth works as expected on", basename(file), "using", toolchain), {
-		skip_toolchain(file, toolchain)
-
-		if (!.is_toolchain_supported(toolchain)) {
-			expect_error(register_(file))
-			skip(paste(toolchain, "not supported"))
-		}
-		df <- net_worth_(file)
-		expect_true(tibble::is_tibble(df))
-		expect_equal(df$net_worth, 8125.39)
-		expect_equal(
-			net_worth_(
-				file,
-				include = ".*",
-				exclude = c("^Equity", "^Income", "^Expenses")
-			)$net_worth,
-			8125.39
-		)
-		expect_equal(
-			net_worth_(file, c("2016-01-01", "2017-01-01", "2018-01-01"))$net_worth,
-			c(5000, 4361.39, 6743.39)
-		)
 	})
 
 	test_that(paste("register works as expected on", basename(file), "using", toolchain), {

@@ -18,6 +18,7 @@
 ^cran-comments.md$
 ^data-raw$
 ^docs$
+^examples.rst$
 ^pkgdown$
 ^revdep$
 ^share$

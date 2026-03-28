@@ -66,7 +66,7 @@ P 2016/01/01 00:00:00 SP                        250 USD
   Income:Wages:Salary                                              -1500.00 USD
   Equity:Employer                                                  1500.00 USD
 
-2016/01/05 * Uncle Sam | Federal Income Tax Withholding
+2016/01/05 (TAX-001) * Uncle Sam | Federal Income Tax Withholding
   Expenses:Taxes:Federal                                           82.55 USD
   Equity:Employer                                                  -82.55 USD
 
@@ -109,7 +109,7 @@ P 2016/01/01 00:00:00 SP                        250 USD
 
 P 2017/12/31 00:00:00 SP                        500 USD
 
-2018/01/05 ! Deposit to Checking Account
+2018/01/05 (DEP-001) ! Deposit to Checking Account
   Assets:JT-Checking                                               1382.00 USD
   Equity:Transfer                                                  -1382.00 USD
 

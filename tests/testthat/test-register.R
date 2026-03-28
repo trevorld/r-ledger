@@ -73,6 +73,29 @@ for (ii in seq_len(nrow(df_file))) {
 
 		mark <- unique(dplyr::filter(df, description == "Federal Income Tax Withholding")$mark)
 		expect_equal(mark, "*")
+
+		if (toolchain == "ledger") {
+			# code column
+			code <- dplyr::filter(
+				df,
+				description == "Federal Income Tax Withholding",
+				date == "2016-01-05"
+			)$code
+			expect_equal(unique(code), "TAX-001")
+			code_na <- dplyr::filter(
+				df,
+				description == "Federal Income Tax Withholding",
+				date == "2017-01-05"
+			)$code
+			expect_true(all(is.na(code_na)))
+			# mark is correctly extracted from description when code is present
+			tax_mark <- unique(dplyr::filter(df, code == "TAX-001")$mark)
+			expect_equal(tax_mark, "*")
+			dep_mark <- unique(dplyr::filter(df, code == "DEP-001")$mark)
+			expect_equal(dep_mark, "!")
+			# description does not contain leftover mark prefix
+			expect_false(any(grepl("^[*!] ", df$description), na.rm = TRUE))
+		}
 		mark <- dplyr::filter(
 			df,
 			date == "2018-01-05",

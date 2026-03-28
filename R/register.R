@@ -27,16 +27,19 @@
 #'
 #' @export
 default_toolchain <- function(file) {
-    ext <- tools::file_ext(file)
-    toolchain <- switch(ext,
-                        ledger = "ledger",
-                        hledger = "hledger",
-                        bean = "beancount",
-                        beancount = "beancount",
-                        NULL)
-    if (is.null(toolchain))
-        stop(paste("Couldn't find an acceptable toolchain for", ext))
-    toolchain
+	ext <- tools::file_ext(file)
+	toolchain <- switch(
+		ext,
+		ledger = "ledger",
+		hledger = "hledger",
+		bean = "beancount",
+		beancount = "beancount",
+		NULL
+	)
+	if (is.null(toolchain)) {
+		stop(paste("Couldn't find an acceptable toolchain for", ext))
+	}
+	toolchain
 }
 
 #' Import a ledger, hledger, or beancount register
@@ -77,49 +80,58 @@ default_toolchain <- function(file) {
 #'      head(dfb)
 #'  }
 register <- function(file, ..., toolchain = default_toolchain(file), date = NULL) {
-    .assert_toolchain(toolchain)
-    switch(toolchain,
-        "ledger" = register_ledger(file, ..., date = date),
-        "hledger" = register_hledger(file, ..., date = date),
-        "beancount" = register_beancount(file, ..., date = date),
-        "bean-report_ledger" = {
-            file <- .bean_report(file, "ledger")
-            on.exit(unlink(file))
-            register_ledger(file, ..., date = date)
-        },
-        "bean-report_hledger" = {
-            file <- .bean_report(file, "hledger")
-            on.exit(unlink(file))
-            register_hledger(file, ..., date = date)
-        }
-    )
+	.assert_toolchain(toolchain)
+	switch(
+		toolchain,
+		"ledger" = register_ledger(file, ..., date = date),
+		"hledger" = register_hledger(file, ..., date = date),
+		"beancount" = register_beancount(file, ..., date = date),
+		"bean-report_ledger" = {
+			file <- .bean_report(file, "ledger")
+			on.exit(unlink(file))
+			register_ledger(file, ..., date = date)
+		},
+		"bean-report_hledger" = {
+			file <- .bean_report(file, "hledger")
+			on.exit(unlink(file))
+			register_hledger(file, ..., date = date)
+		}
+	)
 }
 
 #' @importFrom tidyselect matches
 .select_columns <- function(df) {
-    select(df, "date", tidyselect::matches("mark$"),
-              "payee", "description", "account", "amount", "commodity",
-             tidyselect::matches("historical_cost"),
-             tidyselect::matches("hc_commodity"),
-             tidyselect::matches("market_value"),
-             tidyselect::matches("mv_commodity"),
-             tidyselect::matches("comment"),
-             tidyselect::matches("tags"),
-             tidyselect::matches("id"))
+	select(
+		df,
+		"date",
+		tidyselect::matches("mark$"),
+		"payee",
+		"description",
+		"account",
+		"amount",
+		"commodity",
+		tidyselect::matches("historical_cost"),
+		tidyselect::matches("hc_commodity"),
+		tidyselect::matches("market_value"),
+		tidyselect::matches("mv_commodity"),
+		tidyselect::matches("comment"),
+		tidyselect::matches("tags"),
+		tidyselect::matches("id")
+	)
 }
 
 .nf <- function(filename) shQuote(normalizePath(filename, mustWork = FALSE))
 
 .bean_report <- function(file, format) {
-    tfile <- tempfile(fileext = paste0(".", format))
-    args <- c("-o", .nf(tfile), .nf(file), format)
-    if (.Platform$OS.type == "windows") {
-        # bean-report on Windows seems to choke when called from system2
-        shell(paste("bean-report -o", .nf(tfile), .nf(file), format), mustWork = TRUE)
-    } else {
-        .system("bean-report", args)
-    }
-    tfile
+	tfile <- tempfile(fileext = paste0(".", format))
+	args <- c("-o", .nf(tfile), .nf(file), format)
+	if (.Platform$OS.type == "windows") {
+		# bean-report on Windows seems to choke when called from system2
+		shell(paste("bean-report -o", .nf(tfile), .nf(file), format), mustWork = TRUE)
+	} else {
+		.system("bean-report", args)
+	}
+	tfile
 }
 
 #' @importFrom stringr str_squish
@@ -128,61 +140,73 @@ register <- function(file, ..., toolchain = default_toolchain(file), date = NULL
 #' @rdname register
 #' @export
 register_beancount <- function(file, date = NULL) {
-    cfile <- tempfile(fileext = paste0(".csv"))
-    query <- paste("select date, flag as mark, account, payee,",
-                  "narration as description,",
-                  "number as amount, currency as commodity,",
-                  "number(cost(position)) as historical_cost,",
-                  "currency(cost(position)) as hc_commodity,",
-                  "tags, id,")
-    if (!is.null(date)) {
-       date <- as.Date(date)
-       query <- paste(query,
-                  sprintf("number(value(position,%s)) as market_value,", date - 1),
-                  sprintf("currency(value(position,%s)) as mv_commodity", date - 1),
-                  "from close on", date)
-    } else {
-       query <- paste(query, "number(value(position)) as market_value,",
-                      "currency(value(position)) as mv_commodity")
-    }
+	cfile <- tempfile(fileext = paste0(".csv"))
+	query <- paste(
+		"select date, flag as mark, account, payee,",
+		"narration as description,",
+		"number as amount, currency as commodity,",
+		"number(cost(position)) as historical_cost,",
+		"currency(cost(position)) as hc_commodity,",
+		"tags, id,"
+	)
+	if (!is.null(date)) {
+		date <- as.Date(date)
+		query <- paste(
+			query,
+			sprintf("number(value(position,%s)) as market_value,", date - 1),
+			sprintf("currency(value(position,%s)) as mv_commodity", date - 1),
+			"from close on",
+			date
+		)
+	} else {
+		query <- paste(
+			query,
+			"number(value(position)) as market_value,",
+			"currency(value(position)) as mv_commodity"
+		)
+	}
 
-    args <- c("-f", "csv", "-o", .nf(cfile), .nf(file), shQuote(query))
+	args <- c("-f", "csv", "-o", .nf(cfile), .nf(file), shQuote(query))
 
-    if (.Platform$OS.type == "windows") {
-        # bean-report on Windows seems to choke when called from system2
-        shell(paste("bean-query -f csv -o", .nf(cfile), .nf(file), shQuote(query)), mustWork = TRUE)
-    } else {
-        .system("bean-query", args)
-    }
-    df <- .read_csv(cfile)
-    if (nrow(df) == 0L) {
-        df <- tibble(date = as.Date(character()),
-                     mark = character(),
-                     account = character(),
-                     payee = character(),
-                     description = character(),
-                     amount = numeric(),
-                     commodity = character(),
-                     historical_cost = numeric(),
-                     hc_commodity = character(),
-                     market_value = numeric(),
-                     mv_commodity = character(),
-                     tags = character(),
-                     id = character())
-    } else {
-        df <- mutate(df,
-                     date = as.Date(str_trim(.data$date)),
-                     mark = str_trim(.data$mark),
-                     account = str_trim(.data$account),
-                     payee = str_trim(.data$payee),
-                     description = str_trim(.data$description),
-                     commodity = str_trim(.data$commodity),
-                     hc_commodity = str_trim(.data$hc_commodity),
-                     mv_commodity = str_trim(.data$mv_commodity),
-                     tags = str_squish(.data$tags),
-                     id = str_trim(.data$id))
-        .select_columns(df)
-    }
+	if (.Platform$OS.type == "windows") {
+		# bean-report on Windows seems to choke when called from system2
+		shell(paste("bean-query -f csv -o", .nf(cfile), .nf(file), shQuote(query)), mustWork = TRUE)
+	} else {
+		.system("bean-query", args)
+	}
+	df <- .read_csv(cfile)
+	if (nrow(df) == 0L) {
+		df <- tibble(
+			date = as.Date(character()),
+			mark = character(),
+			account = character(),
+			payee = character(),
+			description = character(),
+			amount = numeric(),
+			commodity = character(),
+			historical_cost = numeric(),
+			hc_commodity = character(),
+			market_value = numeric(),
+			mv_commodity = character(),
+			tags = character(),
+			id = character()
+		)
+	} else {
+		df <- mutate(
+			df,
+			date = as.Date(str_trim(.data$date)),
+			mark = str_trim(.data$mark),
+			account = str_trim(.data$account),
+			payee = str_trim(.data$payee),
+			description = str_trim(.data$description),
+			commodity = str_trim(.data$commodity),
+			hc_commodity = str_trim(.data$hc_commodity),
+			mv_commodity = str_trim(.data$mv_commodity),
+			tags = str_squish(.data$tags),
+			id = str_trim(.data$id)
+		)
+		.select_columns(df)
+	}
 }
 
 #' @rdname register
@@ -190,159 +214,201 @@ register_beancount <- function(file, date = NULL) {
 #' @param add_cost Whether to add historical cost columns.  Only relevant for hledger files.
 #' @param add_value Whether to add market value columns.  Only relevant for hledger files.
 #' @export
-register_hledger <- function(file, flags = "", date = NULL, add_mark = TRUE, add_cost = TRUE, add_value = TRUE) {
-    if (!is.null(date))
-        flags <- c(flags, paste0("--end=", date))
-    df <- .register_hledger_helper(file, flags, add_mark)
-    if (add_cost) {
-        df_c <- .register_hledger_helper(file, c(flags, "--cost"), add_mark)
-        df$historical_cost <- df_c$amount
-        df$hc_commodity <- df_c$commodity
-    }
-    if (add_value) {
-        df_m <- .register_hledger_helper(file, c(flags, "-V"), add_mark)
-        df$market_value <- df_m$amount
-        df$mv_commodity <- df_m$commodity
-    }
-    .select_columns(df)
+register_hledger <- function(
+	file,
+	flags = "",
+	date = NULL,
+	add_mark = TRUE,
+	add_cost = TRUE,
+	add_value = TRUE
+) {
+	if (!is.null(date)) {
+		flags <- c(flags, paste0("--end=", date))
+	}
+	df <- .register_hledger_helper(file, flags, add_mark)
+	if (add_cost) {
+		df_c <- .register_hledger_helper(file, c(flags, "--cost"), add_mark)
+		df$historical_cost <- df_c$amount
+		df$hc_commodity <- df_c$commodity
+	}
+	if (add_value) {
+		df_m <- .register_hledger_helper(file, c(flags, "-V"), add_mark)
+		df$market_value <- df_m$amount
+		df$mv_commodity <- df_m$commodity
+	}
+	.select_columns(df)
 }
 
 .register_hledger_helper <- function(hfile, flags = "", add_mark = TRUE) {
-    df <- .read_hledger(hfile, flags)
-    if (!add_mark) df <- select(df, -"mark")
-    df
+	df <- .read_hledger(hfile, flags)
+	if (!add_mark) {
+		df <- select(df, -"mark")
+	}
+	df
 }
 
 .read_hledger <- function(hfile, flags) {
-    cfile <- tempfile(fileext = ".csv")
-    on.exit(unlink(cfile))
-    args <- c("print", "-f", .nf(hfile), "-o", .nf(cfile), flags)
-    .system("hledger", args)
-    df <- .read_csv(cfile)
-    .clean_hledger(df)
+	cfile <- tempfile(fileext = ".csv")
+	on.exit(unlink(cfile))
+	args <- c("print", "-f", .nf(hfile), "-o", .nf(cfile), flags)
+	.system("hledger", args)
+	df <- .read_csv(cfile)
+	.clean_hledger(df)
 }
 
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
 #' @importFrom utils read.csv
 .read_csv <- function(cfile, ...) {
-    as_tibble(read.csv(cfile, stringsAsFactors = FALSE, ...))
+	as_tibble(read.csv(cfile, stringsAsFactors = FALSE, ...))
 }
 
 .system <- function(cmd, args) {
-    tryCatch(system2(cmd, args, stdout = TRUE, stderr = TRUE),
-             warning = function(w) {
-                stop(paste(c(paste(cmd, "had an import error:"), w), collapse = "\n"))
-             })
+	tryCatch(system2(cmd, args, stdout = TRUE, stderr = TRUE), warning = function(w) {
+		stop(paste(c(paste(cmd, "had an import error:"), w), collapse = "\n"))
+	})
 }
 
 .clean_hledger <- function(df) {
-    if (nrow(df) > 0L) {
-        df <- mutate(df, date = as.Date(date, tryFormats = c("%Y-%m-%d", "%Y/%m/%d")))
-        df <- mutate(df, description = ifelse(grepl("\\|$", .data$description),
-                                                     paste0(.data$description, " "),
-                                                     .data$description))
-        df <- mutate(df, description = ifelse(grepl("\\|", .data$description),
-                                                     .data$description,
-                                                     paste0(" | ", .data$description)))
-        df <- mutate(df, payee = .left_of_split(.data$description, " \\| "))
-        df <- mutate(df, description = .right_of_split(.data$description, " \\| "))
-        df <- mutate(df, payee = ifelse(.data$payee == "", NA, .data$payee),
-                    description = ifelse(.data$description == "", NA, .data$description))
+	if (nrow(df) > 0L) {
+		df <- mutate(df, date = as.Date(date, tryFormats = c("%Y-%m-%d", "%Y/%m/%d")))
+		df <- mutate(
+			df,
+			description = ifelse(
+				grepl("\\|$", .data$description),
+				paste0(.data$description, " "),
+				.data$description
+			)
+		)
+		df <- mutate(
+			df,
+			description = ifelse(
+				grepl("\\|", .data$description),
+				.data$description,
+				paste0(" | ", .data$description)
+			)
+		)
+		df <- mutate(df, payee = .left_of_split(.data$description, " \\| "))
+		df <- mutate(df, description = .right_of_split(.data$description, " \\| "))
+		df <- mutate(
+			df,
+			payee = ifelse(.data$payee == "", NA, .data$payee),
+			description = ifelse(.data$description == "", NA, .data$description)
+		)
 
-        df <- mutate(df, amount = gsub(" @.*$", "", .data$amount))
-        df <- mutate(df, amount = to_numeric(.data$amount))
-        df <- mutate(df, id = as.character(.data$txnidx))
+		df <- mutate(df, amount = gsub(" @.*$", "", .data$amount))
+		df <- mutate(df, amount = to_numeric(.data$amount))
+		df <- mutate(df, id = as.character(.data$txnidx))
 
-        df <- select(df, "date", "description", "payee", "amount",
-                     "commodity", "account", mark = "status", "id")
-    } else {
-        df <- tibble(date = as.Date(character()),
-                     description = character(),
-                     payee = character(),
-                     amount = numeric(),
-                     commodity = character(),
-                     account = character(),
-                     mark = character(),
-                     id = character())
-    }
-    df
+		df <- select(
+			df,
+			"date",
+			"description",
+			"payee",
+			"amount",
+			"commodity",
+			"account",
+			mark = "status",
+			"id"
+		)
+	} else {
+		df <- tibble(
+			date = as.Date(character()),
+			description = character(),
+			payee = character(),
+			amount = numeric(),
+			commodity = character(),
+			account = character(),
+			mark = character(),
+			id = character()
+		)
+	}
+	df
 }
 
 .left_of_split <- function(strings, split) {
-    sapply(strsplit(strings, split), function(x) x[1])
+	sapply(strsplit(strings, split), function(x) x[1])
 }
 .right_of_split <- function(strings, split) {
-    sapply(strsplit(strings, split), function(x) x[2])
+	sapply(strsplit(strings, split), function(x) x[2])
 }
 
 #' @rdname register
 #' @export
 register_ledger <- function(file, flags = "", date = NULL) {
-    if (!is.null(date))
-        flags <- c(flags, paste0("--end=", date))
-    flags <- c(flags, "--empty")
-    df <- .read_ledger(file, flags)
-    .select_columns(df)
+	if (!is.null(date)) {
+		flags <- c(flags, paste0("--end=", date))
+	}
+	flags <- c(flags, "--empty")
+	df <- .read_ledger(file, flags)
+	.select_columns(df)
 }
 
 .read_ledger <- function(lfile, flags) {
-    cfile <- tempfile(fileext = ".csv")
-    on.exit(unlink(cfile))
-    if (.Platform$OS.type == "windows") {
-        # ledger on Windows seems to choke on absolute file paths
-        tlfile <- tempfile(fileext = ".ledger")
-        on.exit(unlink(tlfile))
-        file.copy(lfile, tlfile)
-        wd <- getwd()
-        on.exit(setwd(wd))
-        setwd(tempdir())
-        args <- c("csv", "-f", basename(tlfile), "-o", basename(cfile), flags)
-    } else {
-        args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
-    }
-    .system("ledger", args)
-    .clean_ledger(.read_csv(cfile, header = FALSE))
+	cfile <- tempfile(fileext = ".csv")
+	on.exit(unlink(cfile))
+	if (.Platform$OS.type == "windows") {
+		# ledger on Windows seems to choke on absolute file paths
+		tlfile <- tempfile(fileext = ".ledger")
+		on.exit(unlink(tlfile))
+		file.copy(lfile, tlfile)
+		wd <- getwd()
+		on.exit(setwd(wd))
+		setwd(tempdir())
+		args <- c("csv", "-f", basename(tlfile), "-o", basename(cfile), flags)
+	} else {
+		args <- c("csv", "-f", .nf(lfile), "-o", .nf(cfile), flags)
+	}
+	.system("ledger", args)
+	.clean_ledger(.read_csv(cfile, header = FALSE))
 }
 
 .clean_ledger <- function(df) {
-    names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "comment")
-    df <- mutate(df,
-                date = as.Date(date, "%Y/%m/%d"),
-                description = ifelse(grepl("\\|$", .data$description), paste0(.data$description, " "),
-                                     .data$description),
-                description = ifelse(grepl("\\|", .data$description), .data$description,
-                                     paste0(" | ", .data$description)),
-                payee = .left_of_split(.data$description, " \\| "),
-                description = .right_of_split(.data$description, " \\| "),
-                payee = ifelse(.data$payee == "", NA, .data$payee),
-                description = ifelse(.data$description == "", NA, .data$description),
-                payee = as.character(.data$payee),
-                comment = str_trim(as.character(.data$comment))
-                )
-    df
+	names(df) <- c("date", "V2", "description", "account", "commodity", "amount", "mark", "comment")
+	df <- mutate(
+		df,
+		date = as.Date(date, "%Y/%m/%d"),
+		description = ifelse(
+			grepl("\\|$", .data$description),
+			paste0(.data$description, " "),
+			.data$description
+		),
+		description = ifelse(
+			grepl("\\|", .data$description),
+			.data$description,
+			paste0(" | ", .data$description)
+		),
+		payee = .left_of_split(.data$description, " \\| "),
+		description = .right_of_split(.data$description, " \\| "),
+		payee = ifelse(.data$payee == "", NA, .data$payee),
+		description = ifelse(.data$description == "", NA, .data$description),
+		payee = as.character(.data$payee),
+		comment = str_trim(as.character(.data$comment))
+	)
+	df
 }
 
 .is_binary_on_path <- function(binary) {
-    Sys.which(binary) != ""
+	Sys.which(binary) != ""
 }
 .is_toolchain_supported <- function(toolchain) {
-    if (toolchain == "ledger") {
-        .is_binary_on_path("ledger")
-    } else if (toolchain == "hledger") {
-        .is_binary_on_path("hledger")
-    } else if (toolchain == "beancount") {
-        .is_binary_on_path("bean-query")
-    } else if (toolchain == "bean-report_ledger") {
-        .is_binary_on_path("ledger") && .is_binary_on_path("bean-report")
-    } else if (toolchain == "bean-report_hledger") {
-        .is_binary_on_path("hledger") && .is_binary_on_path("bean-report")
-    } else {
-        FALSE
-    }
+	if (toolchain == "ledger") {
+		.is_binary_on_path("ledger")
+	} else if (toolchain == "hledger") {
+		.is_binary_on_path("hledger")
+	} else if (toolchain == "beancount") {
+		.is_binary_on_path("bean-query")
+	} else if (toolchain == "bean-report_ledger") {
+		.is_binary_on_path("ledger") && .is_binary_on_path("bean-report")
+	} else if (toolchain == "bean-report_hledger") {
+		.is_binary_on_path("hledger") && .is_binary_on_path("bean-report")
+	} else {
+		FALSE
+	}
 }
 
 .assert_toolchain <- function(toolchain) {
-    if (!.is_toolchain_supported(toolchain))
-        stop(paste(toolchain, "binaries not found on path"))
+	if (!.is_toolchain_supported(toolchain)) {
+		stop(paste(toolchain, "binaries not found on path"))
+	}
 }

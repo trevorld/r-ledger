@@ -30,25 +30,27 @@
 #' @importFrom rlang sym
 #' @importFrom rlang enquo
 #' @export
-prune_coa <- function(df, depth=1, variable, name) {
-    if (missing(variable))
-        variable <- sym("account")
-    else
-        variable <- enquo(variable)
-    if (missing(name))
-        name <- variable
-    else
-        name <- enquo(name)
-    mutate(df, !!name := prune_coa_string(!!variable, depth = depth))
+prune_coa <- function(df, depth = 1, variable, name) {
+	if (missing(variable)) {
+		variable <- sym("account")
+	} else {
+		variable <- enquo(variable)
+	}
+	if (missing(name)) {
+		name <- variable
+	} else {
+		name <- enquo(name)
+	}
+	mutate(df, !!name := prune_coa_string(!!variable, depth = depth))
 }
 
 #' @rdname prune_coa
 #' @param x Character vector
 #' @importFrom stringr str_split
 #' @export
-prune_coa_string <- function(x, depth=1) {
-    mm <- str_split(x, pattern = ":", simplify = TRUE)
-    mm <- mm[, 1:min(depth, ncol(mm)), drop = FALSE]
-    rr <- apply(mm, 1, function(x) paste(x, collapse = ":"))
-    gsub(":+$", "", rr)
+prune_coa_string <- function(x, depth = 1) {
+	mm <- str_split(x, pattern = ":", simplify = TRUE)
+	mm <- mm[, 1:min(depth, ncol(mm)), drop = FALSE]
+	rr <- apply(mm, 1, function(x) paste(x, collapse = ":"))
+	gsub(":+$", "", rr)
 }

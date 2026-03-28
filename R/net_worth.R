@@ -42,15 +42,31 @@
 #'      net_worth(example_beancount_file, c("2016-01-01", "2017-01-01", "2018-01-01"))
 #'    }
 #' @export
-net_worth <- function(file, date = Sys.Date() + 1, include = c("^asset", "^liabilit", "^<revalued>"), exclude = NULL,
-                      flags = "-V", toolchain = default_toolchain(file), ignore_case = TRUE) {
-    df <- bind_rows(lapply(date, .net_worth_helper,
-                                  file, include, exclude, flags, toolchain, ignore_case))
-    for (name in names(df)) {
-        if (! name %in% c("commodity", "date"))
-            df[[name]] <- ifelse(is.na(df[[name]]), 0, df[[name]])
-    }
-    df
+net_worth <- function(
+	file,
+	date = Sys.Date() + 1,
+	include = c("^asset", "^liabilit", "^<revalued>"),
+	exclude = NULL,
+	flags = "-V",
+	toolchain = default_toolchain(file),
+	ignore_case = TRUE
+) {
+	df <- bind_rows(lapply(
+		date,
+		.net_worth_helper,
+		file,
+		include,
+		exclude,
+		flags,
+		toolchain,
+		ignore_case
+	))
+	for (name in names(df)) {
+		if (!name %in% c("commodity", "date")) {
+			df[[name]] <- ifelse(is.na(df[[name]]), 0, df[[name]])
+		}
+	}
+	df
 }
 
 #' @importFrom dplyr filter
@@ -60,28 +76,39 @@ net_worth <- function(file, date = Sys.Date() + 1, include = c("^asset", "^liabi
 #' @importFrom tidyr spread
 #' @importFrom tidyselect one_of
 .net_worth_helper <- function(date, file, include, exclude, flags, toolchain, ignore_case) {
-    df <- switch(toolchain,
-                 ledger = register_ledger(file, flags, date),
-                 hledger = register_hledger(file, flags = flags, date = date,
-                                            add_mark = FALSE, add_cost = FALSE, add_value = FALSE),
-                 beancount = mutate(register_beancount(file, date),
-                                       amount = .data$market_value, commodity = .data$mv_commodity),
-                 register(file, flags = flags, date = date, toolchain = toolchain)) # deprecated toolchains
-    include <- paste(include, collapse = "|")
-    df <- filter(df, grepl(include, .data$account, ignore.case = ignore_case))
-    if (!is.null(exclude)) {
-        exclude <- paste(exclude, collapse = "|")
-        df <- filter(df, !grepl(exclude, .data$account, ignore.case = ignore_case))
-    }
-    df <- filter(df, grepl(include, .data$account, ignore.case = ignore_case))
-    df <- mutate(df, account = tolower(gsub("^([[:alnum:]]*)?:.*", "\\1", .data$account)))
-    df <- mutate(df, account = gsub("<revalued>", "revalued", .data$account))
-    df_by <- summarize(group_by(df, .data$account, .data$commodity), total = sum(.data$amount))
-    df_by <- tidyr::spread(df_by, .data$account, .data$total)
-    old_names <- names(df_by)
-    df_nw <- summarize(group_by(df, .data$commodity), net_worth = sum(.data$amount))
-    df_nw <- left_join(df_by, df_nw, by = "commodity")
-    df_nw <- mutate(df_nw, date = as.Date(date))
-    df_nw <- select(df_nw, "date", "commodity", "net_worth", tidyselect::one_of(old_names))
-    df_nw
+	df <- switch(
+		toolchain,
+		ledger = register_ledger(file, flags, date),
+		hledger = register_hledger(
+			file,
+			flags = flags,
+			date = date,
+			add_mark = FALSE,
+			add_cost = FALSE,
+			add_value = FALSE
+		),
+		beancount = mutate(
+			register_beancount(file, date),
+			amount = .data$market_value,
+			commodity = .data$mv_commodity
+		),
+		register(file, flags = flags, date = date, toolchain = toolchain)
+	) # deprecated toolchains
+	include <- paste(include, collapse = "|")
+	df <- filter(df, grepl(include, .data$account, ignore.case = ignore_case))
+	if (!is.null(exclude)) {
+		exclude <- paste(exclude, collapse = "|")
+		df <- filter(df, !grepl(exclude, .data$account, ignore.case = ignore_case))
+	}
+	df <- filter(df, grepl(include, .data$account, ignore.case = ignore_case))
+	df <- mutate(df, account = tolower(gsub("^([[:alnum:]]*)?:.*", "\\1", .data$account)))
+	df <- mutate(df, account = gsub("<revalued>", "revalued", .data$account))
+	df_by <- summarize(group_by(df, .data$account, .data$commodity), total = sum(.data$amount))
+	df_by <- tidyr::spread(df_by, .data$account, .data$total)
+	old_names <- names(df_by)
+	df_nw <- summarize(group_by(df, .data$commodity), net_worth = sum(.data$amount))
+	df_nw <- left_join(df_by, df_nw, by = "commodity")
+	df_nw <- mutate(df_nw, date = as.Date(date))
+	df_nw <- select(df_nw, "date", "commodity", "net_worth", tidyselect::one_of(old_names))
+	df_nw
 }

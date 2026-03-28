@@ -49,19 +49,19 @@ hledger
     `hledger <https://hledger.org/>`_ (>= 1.4)
 
 beancount
-    `beancount <https://github.com/beancount/beancount>`_ (>= 2.0)
+    `beanquery <https://github.com/beancount/beanquery>`_
 
 To install hledger run the following in your shell:
 
 .. code:: bash
 
-    stack update && stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error 
+    stack update && stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error
 
 To install beancount run the following in your shell:
 
 .. code:: bash
 
-    pip3 install beancount
+    pip3 install beanquery
 
 `Several pre-compiled Ledger binaries are available <https://ledger-cli.org/download.html>`_ (often found in several open source repos).
 

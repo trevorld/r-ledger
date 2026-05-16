@@ -21,7 +21,7 @@
 
 #' Determine default tool chain used for reading in register
 #'
-#' \code{default_toolchain} determines default tool chain used for reading in register.
+#' `default_toolchain` determines default tool chain used for reading in register.
 #'
 #' @param file Filename for a ledger, hledger, or beancount file.
 #'
@@ -44,18 +44,21 @@ default_toolchain <- function(file) {
 
 #' Import a ledger, hledger, or beancount register
 #'
-#' \code{register} imports the register from a ledger, hledger, or beancount file as a tibble.
+#' `register` imports the register from a ledger, hledger, or beancount file as a tibble.
 #'
 #' @param file Filename for a ledger, hledger, or beancount file.
-#' @param ... Arguments passed on to either \code{register_ledger},
-#'     \code{register_hledger}, or \code{register_beancount}
+#' @param ... Arguments passed on to either `register_ledger`,
+#'     `register_hledger`, or `register_beancount`
 #' @param flags Character vector of additional command line flags to pass
-#'     to either \code{ledger csv} or \code{hledger register}.
+#'     to either `ledger csv` or `hledger register`.
 #' @param toolchain Toolchain used to read in register.
-#'     Either "ledger", "hledger", or "beancount".
+#'     Either `"ledger"` (uses `ledger`), `"hledger"` (uses `hledger`),
+#'     `"beancount"` (uses `bean-query` if available, else `rledger`),
+#'     `"bean-query"` (uses `bean-query` from `beanquery`),
+#'     or `"rledger"` (uses `rledger` from `rustledger`).
 #' @param date End date.
 #'     Only transactions (and implicitly price statements) strictly before this date are used.
-#' @return  \code{register} returns a tibble.
+#' @return `register` returns a tibble.
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr mutate
@@ -74,7 +77,7 @@ default_toolchain <- function(file) {
 #'      dfh <- register(example_hledger_file)
 #'      head(dfh)
 #'  }
-#'  if (Sys.which("bean-query") != "") {
+#'  if (Sys.which("bean-query") != "" || Sys.which("rledger") != "") {
 #'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger")
 #'      dfb <- register(example_beancount_file)
 #'      head(dfb)
@@ -86,6 +89,8 @@ register <- function(file, ..., toolchain = default_toolchain(file), date = NULL
 		"ledger" = register_ledger(file, ..., date = date),
 		"hledger" = register_hledger(file, ..., date = date),
 		"beancount" = register_beancount(file, ..., date = date),
+		"bean-query" = register_bean_query(file, ..., date = date),
+		"rledger" = register_rledger(file, ..., date = date),
 		"bean-report_ledger" = {
 			.Deprecated(
 				msg = paste(
@@ -147,13 +152,7 @@ register <- function(file, ..., toolchain = default_toolchain(file), date = NULL
 	tfile
 }
 
-#' @importFrom stringr str_squish
-#' @importFrom stringr str_trim
-#' @importFrom tidyr separate
-#' @rdname register
-#' @export
-register_beancount <- function(file, date = NULL) {
-	cfile <- tempfile(fileext = paste0(".csv"))
+.beancount_query <- function(date) {
 	query <- paste(
 		"select date, flag as mark, account, payee,",
 		"narration as description,",
@@ -178,18 +177,14 @@ register_beancount <- function(file, date = NULL) {
 			"currency(value(position)) as mv_commodity"
 		)
 	}
+	query
+}
 
-	args <- c("-f", "csv", "-o", .nf(cfile), .nf(file), shQuote(query))
-
-	if (.Platform$OS.type == "windows") {
-		# bean-report on Windows seems to choke when called from system2
-		shell(paste("bean-query -f csv -o", .nf(cfile), .nf(file), shQuote(query)), mustWork = TRUE)
-	} else {
-		.system("bean-query", args)
-	}
-	df <- .read_csv(cfile)
+#' @importFrom stringr str_squish
+#' @importFrom stringr str_trim
+.clean_beancount <- function(df) {
 	if (nrow(df) == 0L) {
-		df <- tibble(
+		tibble(
 			date = as.Date(character()),
 			mark = character(),
 			account = character(),
@@ -220,6 +215,42 @@ register_beancount <- function(file, date = NULL) {
 		)
 		.select_columns(df)
 	}
+}
+
+#' @rdname register
+#' @export
+register_beancount <- function(file, date = NULL) {
+	if (.is_binary_on_path("bean-query")) {
+		register_bean_query(file, date)
+	} else {
+		register_rledger(file, date)
+	}
+}
+
+#' @importFrom tidyr separate
+#' @rdname register
+#' @export
+register_bean_query <- function(file, date = NULL) {
+	cfile <- tempfile(fileext = ".csv")
+	query <- .beancount_query(date)
+	args <- c("-f", "csv", "-o", .nf(cfile), .nf(file), shQuote(query))
+	if (.Platform$OS.type == "windows") {
+		# bean-query on Windows seems to choke when called from system2
+		shell(paste("bean-query -f csv -o", .nf(cfile), .nf(file), shQuote(query)), mustWork = TRUE)
+	} else {
+		.system("bean-query", args)
+	}
+	.clean_beancount(.read_csv(cfile))
+}
+
+#' @rdname register
+#' @export
+register_rledger <- function(file, date = NULL) {
+	cfile <- tempfile(fileext = ".csv")
+	query <- .beancount_query(date)
+	args <- c("query", "-f", "csv", "-o", .nf(cfile), .nf(file), shQuote(query))
+	.system("rledger", args)
+	.clean_beancount(.read_csv(cfile))
 }
 
 #' @rdname register
@@ -432,7 +463,11 @@ register_ledger <- function(file, flags = "", date = NULL) {
 	} else if (toolchain == "hledger") {
 		.is_binary_on_path("hledger")
 	} else if (toolchain == "beancount") {
+		.is_binary_on_path("bean-query") || .is_binary_on_path("rledger")
+	} else if (toolchain == "bean-query") {
 		.is_binary_on_path("bean-query")
+	} else if (toolchain == "rledger") {
+		.is_binary_on_path("rledger")
 	} else if (toolchain == "bean-report_ledger") {
 		.is_binary_on_path("ledger") && .is_binary_on_path("bean-report")
 	} else if (toolchain == "bean-report_hledger") {

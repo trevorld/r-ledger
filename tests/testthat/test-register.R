@@ -7,9 +7,17 @@ lefile <- system.file("extdata", "empty.ledger", package = "ledger")
 hefile <- system.file("extdata", "empty.hledger", package = "ledger")
 befile <- system.file("extdata", "empty.beancount", package = "ledger")
 df_file <- data.frame(
-	file = c(lfile, hfile, bfile, bfile, bfile),
-	efile = c(lefile, hefile, befile, befile, befile),
-	toolchain = c("ledger", "hledger", "beancount", "bean-report_ledger", "bean-report_hledger"),
+	file = c(lfile, hfile, bfile, bfile, bfile, bfile, bfile),
+	efile = c(lefile, hefile, befile, befile, befile, befile, befile),
+	toolchain = c(
+		"ledger",
+		"hledger",
+		"beancount",
+		"bean-query",
+		"rledger",
+		"bean-report_ledger",
+		"bean-report_hledger"
+	),
 	stringsAsFactors = FALSE
 )
 
@@ -123,6 +131,10 @@ for (ii in seq_len(nrow(df_file))) {
 		} else {
 			expect_error(register_(file, flags = "tag:restaurant"))
 			expect_error(register_(file, flags = "tag:Link=grocery"))
+		}
+		if (toolchain %in% c("beancount", "bean-query", "rledger")) {
+			expect_equal(investment$historical_cost, 1000)
+			expect_equal(investment$market_value, 2000)
 		}
 		if (toolchain %in% c("ledger", "bean-report_ledger")) {
 			expect_warning(investment$market_value)

@@ -1,7 +1,7 @@
 Package: ledger
 Type: Package
 Title: Utilities for Importing Data from Plain Text Accounting Files
-Version: 2.0.13
+Version: 2.1.0-1
 Authors@R: c(person("Trevor L.", "Davis", role=c("aut", "cre"),
              email="trevor.l.davis@gmail.com",
              comment = c(ORCID = "0000-0001-6341-4639")),
@@ -22,7 +22,8 @@ Suggests:
     rio,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-SystemRequirements: ledger (>= 3.1), hledger (>= 1.2), beanquery
+Roxygen: list(markdown = TRUE)
+SystemRequirements: ledger (>= 3.1), hledger (>= 1.2), beanquery or rustledger (>= 0.15.0)
 License: MIT + file LICENSE
-RoxygenNote: 7.3.3
 Encoding: UTF-8
+Config/roxygen2/version: 8.0.0

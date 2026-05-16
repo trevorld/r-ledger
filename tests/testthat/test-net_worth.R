@@ -7,8 +7,8 @@ lefile <- system.file("extdata", "empty.ledger", package = "ledger")
 hefile <- system.file("extdata", "empty.hledger", package = "ledger")
 befile <- system.file("extdata", "empty.beancount", package = "ledger")
 df_file <- data.frame(
-	file = c(lfile, hfile, bfile),
-	toolchain = c("ledger", "hledger", "beancount"),
+	file = c(lfile, hfile, bfile, bfile, bfile),
+	toolchain = c("ledger", "hledger", "beancount", "bean-query", "rledger"),
 	stringsAsFactors = FALSE
 )
 

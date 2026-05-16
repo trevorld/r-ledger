@@ -49,7 +49,7 @@ hledger
     `hledger <https://hledger.org/>`_ (>= 1.4)
 
 beancount
-    `beanquery <https://github.com/beancount/beanquery>`_
+    `beanquery <https://github.com/beancount/beanquery>`_ or `rustledger <https://github.com/rustledger/rustledger>`_ (>= 0.15.0)
 
 To install hledger run the following in your shell:
 
@@ -57,11 +57,13 @@ To install hledger run the following in your shell:
 
     stack update && stack install --resolver=lts-14.3 hledger-lib-1.15.2 hledger-1.15.2 hledger-web-1.15 hledger-ui-1.15 --verbosity=error
 
-To install beancount run the following in your shell:
+To install ``bean-query`` (to read ``beancount`` files) run the following in your shell:
 
 .. code:: bash
 
     pip3 install beanquery
+
+Alternatively, install ``rledger`` from `rustledger <https://github.com/rustledger/rustledger>`_ (>= 0.15.0).
 
 `Several pre-compiled Ledger binaries are available <https://ledger-cli.org/download.html>`_ (often found in several open source repos).
 

@@ -1,11 +1,11 @@
 #' Prune plaintext "Chart of Accounts" names to a given maximum depth
 #'
-#' \code{prune_coa} is a convenience function that modifies a data frame
+#' `prune_coa` is a convenience function that modifies a data frame
 #'  by either editing in place or making
 #'   a new variable containing the plaintext "Chart of Accounts" pruned to a given maximum depth
 #'  e.g. "Assets:Checking:Credit-Union:Account1" at a maximum depth of 2 will be converted to "Assets:Checking".
-#' \code{prune_coa} uses tidyverse non-standard evaluation (NSE).
-#' \code{prune_coa_string} is a convenience function which does the pruning operation on character vectors.
+#' `prune_coa` uses tidyverse non-standard evaluation (NSE).
+#' `prune_coa_string` is a convenience function which does the pruning operation on character vectors.
 #'
 #' @param df A data frame
 #' @param depth How deep should the account structure be.

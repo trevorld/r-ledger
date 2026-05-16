@@ -30,7 +30,7 @@ Use \code{NULL} to exclude nothing.}
 If using \code{ledger} may want to try something like \code{"-X USD"}.}
 
 \item{toolchain}{Toolchain used to read in register.
-Either "ledger", "hledger", or "beancount".}
+Either \code{"ledger"}, \code{"hledger"}, \code{"beancount"}, \code{"bean-query"}, or \code{"rledger"}.}
 
 \item{ignore_case}{logical value of whether to ignore case in regular expressions or not.}
 }

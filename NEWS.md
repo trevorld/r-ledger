@@ -1,3 +1,17 @@
+ledger 2.1.0 (development version)
+==================================
+
+New features
+------------
+
+* For `beancount` files we now support `rustledger` (>= 0.15.0) in addition to `bean-query` (#28):
+
+  + `net_worth()` and `register()` now support `toolchain = "bean-query"` and `toolchain = "rledger"` (in addition to `"ledger"`, `"hledger"`, and `"beancount"`).
+  + `register_rledger()` added to support the `"rledger"` toolchain from `rustledger` (>= 0.15.0).
+  + `register_bean_query()` added to explicitly support the `"bean-query"` toolchain that directly uses the `bean-query` binary.
+  + `register_beancount()` continues to use `bean-query` if present but if `bean-query` is not present it now falls back to `rledger`.
+    Hence the `"beancount"` toolchain now works if either `beanquery` or `rustledger` are installed.
+
 ledger 2.0.13
 =============
 

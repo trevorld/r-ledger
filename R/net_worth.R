@@ -26,15 +26,15 @@
 #' @param date Vector of dates to compute net worth for.
 #'      For each only the transactions (and price statements) before that date are used in the net worth calculation.
 #' @param include Character vector of regular expressions of accounts to include in the net worth calculation.
-#'      Use \code{".*"} to include everything.
+#'      Use `".*"` to include everything.
 #' @param exclude Character vector of regular expressions of accounts to exclude from the net worth calculation.
-#'      Use \code{NULL} to exclude nothing.
-#' @param flags Extra flags to pass to \code{register}.
-#'    If using \code{ledger} may want to try something like \code{"-X USD"}.
+#'      Use `NULL` to exclude nothing.
+#' @param flags Extra flags to pass to `register`.
+#'    If using `ledger` may want to try something like `"-X USD"`.
 #' @param toolchain Toolchain used to read in register.
-#'     Either "ledger", "hledger", or "beancount".
+#'     Either `"ledger"`, `"hledger"`, `"beancount"`, `"bean-query"`, or `"rledger"`.
 #' @param ignore_case logical value of whether to ignore case in regular expressions or not.
-#' @return  \code{net_worth} returns a tibble
+#' @return `net_worth` returns a tibble
 #' @examples
 #'    \dontrun{
 #'      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger")
@@ -89,6 +89,16 @@ net_worth <- function(
 		),
 		beancount = mutate(
 			register_beancount(file, date),
+			amount = .data$market_value,
+			commodity = .data$mv_commodity
+		),
+		`bean-query` = mutate(
+			register_bean_query(file, date),
+			amount = .data$market_value,
+			commodity = .data$mv_commodity
+		),
+		rledger = mutate(
+			register_rledger(file, date),
 			amount = .data$market_value,
 			commodity = .data$mv_commodity
 		),

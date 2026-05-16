@@ -3,6 +3,8 @@
 \name{register}
 \alias{register}
 \alias{register_beancount}
+\alias{register_bean_query}
+\alias{register_rledger}
 \alias{register_hledger}
 \alias{register_ledger}
 \title{Import a ledger, hledger, or beancount register}
@@ -10,6 +12,10 @@
 register(file, ..., toolchain = default_toolchain(file), date = NULL)
 
 register_beancount(file, date = NULL)
+
+register_bean_query(file, date = NULL)
+
+register_rledger(file, date = NULL)
 
 register_hledger(
   file,
@@ -29,13 +35,16 @@ register_ledger(file, flags = "", date = NULL)
 \code{register_hledger}, or \code{register_beancount}}
 
 \item{toolchain}{Toolchain used to read in register.
-Either "ledger", "hledger", or "beancount".}
+Either \code{"ledger"} (uses \code{ledger}), \code{"hledger"} (uses \code{hledger}),
+\code{"beancount"} (uses \code{bean-query} if available, else \code{rledger}),
+\code{"bean-query"} (uses \code{bean-query} from \code{beanquery}),
+or \code{"rledger"} (uses \code{rledger} from \code{rustledger}).}
 
 \item{date}{End date.
 Only transactions (and implicitly price statements) strictly before this date are used.}
 
 \item{flags}{Character vector of additional command line flags to pass
-to either \code{ledger csv} or \code{hledger register}.}
+to either \verb{ledger csv} or \verb{hledger register}.}
 
 \item{add_mark}{Whether to add a column with the mark information.  Only relevant for hledger files.}
 
@@ -60,7 +69,7 @@ to either \code{ledger csv} or \code{hledger register}.}
      dfh <- register(example_hledger_file)
      head(dfh)
  }
- if (Sys.which("bean-query") != "") {
+ if (Sys.which("bean-query") != "" || Sys.which("rledger") != "") {
      example_beancount_file <- system.file("extdata", "example.beancount", package = "ledger")
      dfb <- register(example_beancount_file)
      head(dfb)

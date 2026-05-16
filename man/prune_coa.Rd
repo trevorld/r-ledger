@@ -22,9 +22,9 @@ prune_coa_string(x, depth = 1)
 }
 \description{
 \code{prune_coa} is a convenience function that modifies a data frame
- by either editing in place or making
-  a new variable containing the plaintext "Chart of Accounts" pruned to a given maximum depth
- e.g. "Assets:Checking:Credit-Union:Account1" at a maximum depth of 2 will be converted to "Assets:Checking".
+by either editing in place or making
+a new variable containing the plaintext "Chart of Accounts" pruned to a given maximum depth
+e.g. "Assets:Checking:Credit-Union:Account1" at a maximum depth of 2 will be converted to "Assets:Checking".
 \code{prune_coa} uses tidyverse non-standard evaluation (NSE).
 \code{prune_coa_string} is a convenience function which does the pruning operation on character vectors.
 }

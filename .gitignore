@@ -1,5 +1,6 @@
 *.swp
-README.md
 README.html
 examples.rst
 .claude/
+data-raw/*.png
+pkgdown/

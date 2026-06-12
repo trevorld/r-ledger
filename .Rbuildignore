@@ -2,9 +2,7 @@
 ^CONTRIBUTING$
 ^LICENSE.md$
 ^README.Rmd$
-^README.Rrst$
 ^README.html$
-^README.rst$
 ^Rakefile$
 ^\.air.toml$
 ^\.claude$

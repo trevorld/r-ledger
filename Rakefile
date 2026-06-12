@@ -1,8 +1,7 @@
 desc "Build files for packaging"
 task :default do
     sh 'Rscript -e "devtools::document()"'
-    sh 'Rscript -e "knitr::knit(\"README.Rrst\")"'
-    sh 'pandoc -t markdown_strict -o README.md README.rst'
-    sh 'rst2html README.rst README.html'
+    sh 'Rscript -e "knitr::knit(\"README.Rmd\")"'
+    sh 'pandoc -o README.html README.md'
     sh 'Rscript -e "pkgdown::build_site()"'
 end

@@ -1,5 +1,5 @@
-ledger 2.1.0 (development version)
-==================================
+ledger 2.1.1
+============
 
 New features
 ------------
